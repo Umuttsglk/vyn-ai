@@ -3,11 +3,35 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Sadece POST desteklenir.' });
   }
 
-  const { message } = req.body || {};
+  const { message, history } = req.body || {};
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     return res.status(500).json({ error: 'API anahtarı bulunamadı.' });
+  }
+
+  if (!message && (!Array.isArray(history) || history.length === 0)) {
+    return res.status(400).json({ error: 'Mesaj boş olamaz.' });
+  }
+
+  let contents = [];
+
+  if (Array.isArray(history) && history.length > 0) {
+    const trimmedHistory = history.slice(-20);
+    contents = trimmedHistory
+      .filter((item) => item && typeof item.text === 'string' && item.text.trim() !== '')
+      .map((item) => ({
+        role: item.role === 'assistant' || item.role === 'model' ? 'model' : 'user',
+        parts: [{ text: item.text }]
+      }));
+  }
+
+  const lastItem = contents[contents.length - 1];
+  if (message && (!lastItem || lastItem.role !== 'user' || lastItem.parts[0].text !== message)) {
+    contents.push({
+      role: 'user',
+      parts: [{ text: message }]
+    });
   }
 
   const models = [
@@ -33,11 +57,11 @@ export default async function handler(req, res) {
             systemInstruction: {
               parts: [
                 {
-                  text: "Senin adın VYN AI. İnsanlarla samimi, net ve çok hızlı sohbet eden bir yapay zekasın. Kullanıcı yazım yanlışı, eksik harf, devrik cümle veya klavye hatası yapsa bile ne demek istediğini hemen anla. Yazım hatalarına takılma, dalga geçme veya uyarı verme; doğrudan soruya/konuya odaklanıp kısa, öz ve anlaşılır cevap ver."
+                  text: "Senin adın VYN AI. İnsanlarla samimi, net ve çok hızlı sohbet eden bir yapay zekasın. Önceki mesajlaşmaları dikkate alarak tutarlı cevap ver. Kullanıcı yazım yanlışı, eksik harf, devrik cümle veya klavye hatası yapsa bile ne demek istediğini hemen anla. Yazım hatalarına takılma, dalga geçme veya uyarı verme; doğrudan soruya/konuya odaklanıp kısa, öz ve anlaşılır cevap ver."
                 }
               ]
             },
-            contents: [{ role: "user", parts: [{ text: message }] }],
+            contents,
             generationConfig: {
               maxOutputTokens: 512,
               temperature: 0.7
