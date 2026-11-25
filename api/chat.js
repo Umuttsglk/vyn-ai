@@ -30,9 +30,13 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+    if (!response.ok) {
+      return res.status(500).json({ error: data.error?.message || 'API hatası oluştu.' });
+    }
+
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Şu an yanıt üretemedim.";
     return res.status(200).json({ reply });
-  } catch {
-    return res.status(500).json({ error: 'Sunucu hatası oluştu.' });
+  } catch (err) {
+    return res.status(500).json({ error: 'Sunucu hatası: ' + err.message });
   }
 }
