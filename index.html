@@ -30,6 +30,7 @@
   <script>
     const chat = document.getElementById('chat');
     const inp = document.getElementById('inp');
+    const chatHistory = [];
 
     function addBubble(text, cls) {
       const d = document.createElement('div');
@@ -43,20 +44,34 @@
     async function sendMsg() {
       const q = inp.value.trim();
       if (!q) return;
+
       addBubble(q, 'user');
+      chatHistory.push({ role: 'user', text: q });
       inp.value = '';
+
       const wait = addBubble('Düşünüyorum...', 'ai');
 
       try {
         const r = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: q })
+          body: JSON.stringify({
+            message: q,
+            history: chatHistory
+          })
         });
         const data = await r.json();
-        wait.textContent = data.reply || data.error || 'Cevap alınamadı.';
+
+        if (r.ok && data.reply) {
+          wait.textContent = data.reply;
+          chatHistory.push({ role: 'assistant', text: data.reply });
+        } else {
+          wait.textContent = data.error || 'Cevap alınamadı.';
+          chatHistory.pop();
+        }
       } catch {
         wait.textContent = 'Bağlantı hatası oldu.';
+        chatHistory.pop();
       }
     }
   </script>
