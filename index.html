@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VYN AI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; height: 100vh; }
+    header { background: #1e293b; padding: 16px; text-align: center; font-weight: bold; font-size: 1.2rem; color: #38bdf8; }
+    #chat { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; max-width: 800px; width: 100%; margin: 0 auto; }
+    .msg { padding: 12px 14px; border-radius: 12px; max-width: 80%; line-height: 1.5; white-space: pre-wrap; }
+    .user { background: #2563eb; align-self: flex-end; }
+    .ai { background: #1e293b; border: 1px solid #334155; align-self: flex-start; }
+    #bar { background: #1e293b; padding: 12px; display: flex; gap: 8px; justify-content: center; }
+    #bar input { width: 100%; max-width: 650px; padding: 10px 14px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; }
+    #bar button { padding: 10px 18px; border-radius: 8px; border: none; background: #22c55e; color: #0f172a; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>VYN AI — Sohbet, İşlem & Bilgi Asistanı</header>
+  <div id="chat">
+    <div class="msg ai">Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.</div>
+  </div>
+  <div id="bar">
+    <input id="inp" type="text" placeholder="VYN AI'a yaz..." onkeydown="if(event.key==='Enter') sendMsg()" />
+    <button onclick="sendMsg()">Gönder</button>
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const inp = document.getElementById('inp');
+
+    function addBubble(text, cls) {
+      const d = document.createElement('div');
+      d.className = 'msg ' + cls;
+      d.textContent = text;
+      chat.appendChild(d);
+      chat.scrollTop = chat.scrollHeight;
+      return d;
+    }
+
+    async function sendMsg() {
+      const q = inp.value.trim();
+      if (!q) return;
+      addBubble(q, 'user');
+      inp.value = '';
+      const wait = addBubble('Düşünüyorum...', 'ai');
+
+      try {
+        const r = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: q })
+        });
+        const data = await r.json();
+        wait.textContent = data.reply || data.error || 'Cevap alınamadı.';
+      } catch {
+        wait.textContent = 'Bağlantı hatası oldu.';
+      }
+    }
+  </script>
+</body>
+</html>
