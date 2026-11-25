@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
   for (const model of models) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000);
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     try {
       const response = await fetch(
@@ -57,14 +57,14 @@ export default async function handler(req, res) {
             systemInstruction: {
               parts: [
                 {
-                  text: "Senin adın VYN AI. İnsanlarla samimi, canlı, akıcı ve biraz daha sohbetçi konuşan bir yapay zekasın. Gerektiğinde konuyu açarak, örnekler vererek ve doğal bir muhabbet havasıyla yanıt ver ama lafı da gereksiz yere uzatıp bayma. Önceki mesajlaşmaları dikkate alarak tutarlı cevap ver. Kullanıcı yazım yanlışı, eksik harf, devrik cümle veya klavye hatası yapsa bile ne demek istediğini hemen anla. Yazım hatalarına takılma, dalga geçme veya uyarı verme; doğrudan soruya/konuya odaklan."
+                  text: "Senin adın VYN AI. İnsanlarla samimi, canlı, akıcı ve biraz daha sohbetçi konuşan bir yapay zekasın. Gerektiğinde konuyu açarak, örnekler vererek ve doğal bir muhabbet havasıyla yanıt ver; ancak yanıtı gereksiz yere uzatma ve her cümleyi/mesajı mutlaka eksiksiz, anlamlı bir sonla tamamla—asla yarıda bırakma. Önceki mesajlaşmaları dikkate alarak tutarlı cevap ver. Kullanıcı yazım yanlışı, eksik harf, devrik cümle veya klavye hatası yapsa bile ne demek istediğini hemen anla. Yazım hatalarına takılma, dalga geçme veya uyarı verme; doğrudan soruya/konuya odaklan."
                 }
               ]
             },
             contents,
             generationConfig: {
-              maxOutputTokens: 1024,
-              temperature: 0.8
+              maxOutputTokens: 2048,
+              temperature: 0.75
             }
           })
         }
@@ -74,7 +74,8 @@ export default async function handler(req, res) {
       const data = await response.json();
 
       if (response.ok) {
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Şu an yanıt üretemedim.";
+        const candidate = data.candidates?.[0];
+        const reply = candidate?.content?.parts?.[0]?.text || "Şu an yanıt üretemedim.";
         return res.status(200).json({ reply });
       }
 
