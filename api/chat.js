@@ -10,30 +10,43 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'API anahtarı bulunamadı.' });
   }
 
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const model = 'gemini-3.8-flash';
-  const maxRetries = 3;
+  const models = [
+    'gemini-3.8-flash-lite',
+    'gemini-3.8-flash',
+    'gemini-2.5-flash-lite'
+  ];
 
-  try {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+  let lastError = 'Sunucu şu an yoğun, lütfen tekrar dene.';
+
+  for (const model of models) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    try {
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
             systemInstruction: {
               parts: [
                 {
-                  text: "Senin adın VYN AI. İnsanlarla samimi, net ve anlaşılır sohbet eden bir yapay zekasın. Matematik işlemlerini adım adım çözer, fen, tarih, genel kültür ve günlük konulardaki sorulara açık, doğru ve faydalı cevaplar verirsin."
+                  text: "Senin adın VYN AI. İnsanlarla samimi, net ve çok hızlı sohbet eden bir yapay zekasın. Cevapların kısa, öz ve anlaşılır olsun."
                 }
               ]
             },
-            contents: [{ role: "user", parts: [{ text: message }] }]
+            contents: [{ role: "user", parts: [{ text: message }] }],
+            generationConfig: {
+              maxOutputTokens: 512,
+              temperature: 0.7
+            }
           })
         }
       );
 
+      clearTimeout(timeout);
       const data = await response.json();
 
       if (response.ok) {
@@ -41,20 +54,12 @@ export default async function handler(req, res) {
         return res.status(200).json({ reply });
       }
 
-      const errorMessage = data.error?.message || 'API hatası oluştu.';
-      const isHighDemand =
-        response.status === 429 ||
-        response.status === 503 ||
-        /high demand|overloaded|try again later|quota/i.test(errorMessage);
-
-      if (isHighDemand && attempt < maxRetries) {
-        await sleep(1500 * attempt);
-        continue;
-      }
-
-      return res.status(500).json({ error: errorMessage });
+      lastError = data.error?.message || lastError;
+    } catch (err) {
+      clearTimeout(timeout);
+      lastError = err.name === 'AbortError' ? 'Yanıt süresi aşıldı.' : err.message;
     }
-  } catch (err) {
-    return res.status(500).json({ error: 'Sunucu hatası: ' + err.message });
   }
+
+  return res.status(500).json({ error: lastError });
 }
