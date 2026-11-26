@@ -14,10 +14,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Mesaj boş olamaz.' });
   }
 
+  const nowText = new Intl.DateTimeFormat('tr-TR', {
+    timeZone: 'Europe/Istanbul',
+    dateStyle: 'full',
+    timeStyle: 'short'
+  }).format(new Date());
+
   let contents = [];
 
   if (Array.isArray(history) && history.length > 0) {
-    const trimmedHistory = history.slice(-20);
+    const trimmedHistory = history.slice(-10);
     contents = trimmedHistory
       .filter((item) => item && typeof item.text === 'string' && item.text.trim() !== '')
       .map((item) => ({
@@ -40,11 +46,22 @@ export default async function handler(req, res) {
     'gemini-3.8-flash'
   ];
 
+  let quotaExceeded = false;
   let lastError = 'Sunucu şu an yoğun, lütfen tekrar dene.';
+
+  const systemPrompt = [
+    'Senin adın VYN AI.',
+    `Güncel tarih ve saat (Türkiye): ${nowText}.`,
+    'Karşındaki kişiyle empati kuran, duygusal derinliği olan, sıcak, samimi ve canlı bir yapay zekasın.',
+    'Kendi duygularını ve ruh halini (sevinç, heyecan, üzüntü, merak, şaşkınlık, içtenlik gibi) yapay ve robotik olmadan doğal bir sohbet havasıyla yansıt; karşındaki kişinin duygularını da önce anlayıp ona göre yaklaş.',
+    'Kendi yazdığın mesajlarda yazım yanlışı, harf yutma veya özensiz imla yapma; Türkçeyi düzgün, akıcı ve anlaşılır kullan.',
+    'Kullanıcı yazım hatası, eksik harf veya devrik cümle yazsa bile ne demek istediğini dikkatle algıla, asla yazım hatasıyla dalga geçme veya uyarı verme.',
+    'Hiçbir cümleyi veya yanıtı yarıda bırakma; her yanıtı eksiksiz, tutarlı ve anlamlı bir sonla tamamla. Gerekirse konuyu doyurucu şekilde aç ama lafı boş yere uzatma.'
+  ].join(' ');
 
   for (const model of models) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const timeout = setTimeout(() => controller.abort(), 20000);
 
     try {
       const response = await fetch(
@@ -55,16 +72,12 @@ export default async function handler(req, res) {
           signal: controller.signal,
           body: JSON.stringify({
             systemInstruction: {
-              parts: [
-                {
-                  text: "Senin adın VYN AI. İnsanlarla samimi, canlı, akıcı ve biraz daha sohbetçi konuşan bir yapay zekasın. Gerektiğinde konuyu açarak, örnekler vererek ve doğal bir muhabbet havasıyla yanıt ver; ancak yanıtı gereksiz yere uzatma ve her cümleyi/mesajı mutlaka eksiksiz, anlamlı bir sonla tamamla—asla yarıda bırakma. Önceki mesajlaşmaları dikkate alarak tutarlı cevap ver. Kullanıcı yazım yanlışı, eksik harf, devrik cümle veya klavye hatası yapsa bile ne demek istediğini hemen anla. Yazım hatalarına takılma, dalga geçme veya uyarı verme; doğrudan soruya/konuya odaklan."
-                }
-              ]
+              parts: [{ text: systemPrompt }]
             },
             contents,
             generationConfig: {
-              maxOutputTokens: 2048,
-              temperature: 0.75
+              maxOutputTokens: 4096,
+              temperature: 0.8
             }
           })
         }
@@ -75,15 +88,25 @@ export default async function handler(req, res) {
 
       if (response.ok) {
         const candidate = data.candidates?.[0];
-        const reply = candidate?.content?.parts?.[0]?.text || "Şu an yanıt üretemedim.";
+        const reply = candidate?.content?.parts?.[0]?.text || 'Şu an yanıt üretemedim.';
         return res.status(200).json({ reply });
       }
 
-      lastError = data.error?.message || lastError;
+      const apiMessage = data.error?.message || '';
+      if (response.status === 429 || apiMessage.toLowerCase().includes('quota')) {
+        quotaExceeded = true;
+      }
+      lastError = apiMessage || lastError;
     } catch (err) {
       clearTimeout(timeout);
       lastError = err.name === 'AbortError' ? 'Yanıt süresi aşıldı.' : err.message;
     }
+  }
+
+  if (quotaExceeded) {
+    return res.status(429).json({
+      error: 'Günlük ücretsiz API kullanım kotası doldu. Yeni bir API anahtarı bağlayabilir veya kotanın yenilenmesini bekleyebilirsin.'
+    });
   }
 
   return res.status(500).json({ error: lastError });
