@@ -46,17 +46,73 @@
     })();
   </script>
   <style>
+    :root {
+      --bg-glow-1: rgba(124, 58, 237, 0.24);
+      --bg-glow-2: rgba(56, 189, 248, 0.18);
+      --bg-base: linear-gradient(160deg, #070b14 0%, #0f172a 55%, #091021 100%);
+      --accent-1: #38bdf8;
+      --accent-2: #a855f7;
+      --send-grad: linear-gradient(135deg, #38bdf8, #2563eb);
+      --active-grad: linear-gradient(135deg, #2563eb, #7c3aed);
+      --user-grad: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    body[data-theme="cosmic"] {
+      --bg-glow-1: rgba(124, 58, 237, 0.24);
+      --bg-glow-2: rgba(56, 189, 248, 0.18);
+      --bg-base: linear-gradient(160deg, #070b14 0%, #0f172a 55%, #091021 100%);
+      --accent-1: #38bdf8;
+      --accent-2: #a855f7;
+      --send-grad: linear-gradient(135deg, #38bdf8, #2563eb);
+      --active-grad: linear-gradient(135deg, #2563eb, #7c3aed);
+      --user-grad: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    body[data-theme="cyber"] {
+      --bg-glow-1: rgba(6, 182, 212, 0.26);
+      --bg-glow-2: rgba(59, 130, 246, 0.2);
+      --bg-base: linear-gradient(160deg, #041018 0%, #081c2c 55%, #05121d 100%);
+      --accent-1: #22d3ee;
+      --accent-2: #3b82f6;
+      --send-grad: linear-gradient(135deg, #22d3ee, #0284c7);
+      --active-grad: linear-gradient(135deg, #0891b2, #2563eb);
+      --user-grad: linear-gradient(135deg, #0284c7, #0369a1);
+    }
+
+    body[data-theme="nova"] {
+      --bg-glow-1: rgba(168, 85, 247, 0.28);
+      --bg-glow-2: rgba(236, 72, 153, 0.18);
+      --bg-base: linear-gradient(160deg, #10071a 0%, #1d0e33 55%, #120820 100%);
+      --accent-1: #c084fc;
+      --accent-2: #f472b6;
+      --send-grad: linear-gradient(135deg, #c084fc, #9333ea);
+      --active-grad: linear-gradient(135deg, #9333ea, #db2777);
+      --user-grad: linear-gradient(135deg, #9333ea, #7e22ce);
+    }
+
+    body[data-theme="emerald"] {
+      --bg-glow-1: rgba(16, 185, 129, 0.24);
+      --bg-glow-2: rgba(20, 184, 166, 0.18);
+      --bg-base: linear-gradient(160deg, #05130f 0%, #0b241d 55%, #061712 100%);
+      --accent-1: #34d399;
+      --accent-2: #2dd4bf;
+      --send-grad: linear-gradient(135deg, #34d399, #059669);
+      --active-grad: linear-gradient(135deg, #059669, #0d9488);
+      --user-grad: linear-gradient(135deg, #059669, #047857);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body {
       background:
-        radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.22), transparent 45%),
-        radial-gradient(circle at 85% 80%, rgba(56, 189, 248, 0.16), transparent 45%),
-        linear-gradient(160deg, #070b14 0%, #0f172a 55%, #091021 100%);
+        radial-gradient(circle at 15% 20%, var(--bg-glow-1), transparent 46%),
+        radial-gradient(circle at 85% 80%, var(--bg-glow-2), transparent 46%),
+        var(--bg-base);
       background-attachment: fixed;
       color: #f8fafc;
       display: flex;
       flex-direction: column;
       height: 100vh;
+      transition: background 0.35s ease;
     }
     header {
       background: rgba(15, 23, 42, 0.78);
@@ -87,7 +143,7 @@
       gap: 8px;
       font-weight: bold;
       font-size: 1.05rem;
-      color: #38bdf8;
+      color: var(--accent-1);
       margin-right: 4px;
     }
     .brand-logo {
@@ -106,11 +162,12 @@
       border-radius: 999px;
       padding: 3px 6px;
     }
-    .lang-label {
+    .group-label {
       font-size: 0.78rem;
       color: #94a3b8;
       font-weight: 600;
-      padding-left: 4px;
+      padding-left: 5px;
+      padding-right: 2px;
     }
     .lang-btn, .device-btn {
       border: none;
@@ -132,7 +189,7 @@
     }
     .lang-btn.active, .device-btn.active {
       color: #ffffff;
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      background: var(--active-grad);
       box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
     }
     .device-icon {
@@ -140,13 +197,50 @@
       height: 14px;
       flex-shrink: 0;
     }
+    .theme-swatches {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 4px;
+    }
+    .theme-swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+    .theme-swatch:hover {
+      transform: scale(1.14);
+      border-color: rgba(255, 255, 255, 0.75);
+    }
+    .theme-swatch.active {
+      transform: scale(1.16);
+      border-color: #ffffff;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9), 0 0 12px var(--accent-1);
+    }
+    .theme-swatch[data-theme="cosmic"] {
+      background: linear-gradient(135deg, #38bdf8, #7c3aed);
+    }
+    .theme-swatch[data-theme="cyber"] {
+      background: linear-gradient(135deg, #22d3ee, #2563eb);
+    }
+    .theme-swatch[data-theme="nova"] {
+      background: linear-gradient(135deg, #c084fc, #ec4899);
+    }
+    .theme-swatch[data-theme="emerald"] {
+      background: linear-gradient(135deg, #34d399, #0d9488);
+    }
+
     .header-sub {
       font-size: 0.85rem;
       color: #94a3b8;
       font-weight: 500;
     }
     .action-pill-btn {
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      border: 1px solid rgba(148, 163, 184, 0.3);
       background: rgba(30, 41, 59, 0.75);
       color: #e2e8f0;
       font-size: 0.8rem;
@@ -161,12 +255,12 @@
     }
     .action-pill-btn:hover {
       color: #ffffff;
-      background: rgba(56, 189, 248, 0.18);
-      border-color: rgba(56, 189, 248, 0.65);
+      background: rgba(148, 163, 184, 0.18);
+      border-color: var(--accent-1);
     }
     .action-pill-btn.active-mode {
       color: #ffffff;
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      background: var(--active-grad);
       border-color: transparent;
       box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
     }
@@ -200,10 +294,10 @@
       white-space: pre-wrap;
     }
     .user {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      background: var(--user-grad);
       align-self: flex-end;
       border-bottom-right-radius: 4px;
-      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.35);
     }
     .ai {
       background: rgba(30, 41, 59, 0.82);
@@ -212,6 +306,61 @@
       align-self: flex-start;
       border-bottom-left-radius: 4px;
     }
+
+    /* Gelişmiş Yazıyor Animasyonu */
+    @keyframes typingWave {
+      0%, 60%, 100% {
+        transform: translateY(0) scale(0.88);
+        opacity: 0.45;
+      }
+      30% {
+        transform: translateY(-6px) scale(1.15);
+        opacity: 1;
+      }
+    }
+    @keyframes typingPulse {
+      0%, 100% { opacity: 0.68; }
+      50% { opacity: 1; }
+    }
+    .typing-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 2px 0;
+    }
+    .typing-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      animation: typingPulse 1.6s ease-in-out infinite;
+    }
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: typingWave 1.25s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(1) {
+      background: var(--accent-1);
+      box-shadow: 0 0 8px var(--accent-1);
+      animation-delay: 0s;
+    }
+    .typing-dot:nth-child(2) {
+      background: #e2e8f0;
+      box-shadow: 0 0 8px rgba(248, 250, 252, 0.55);
+      animation-delay: 0.18s;
+    }
+    .typing-dot:nth-child(3) {
+      background: var(--accent-2);
+      box-shadow: 0 0 8px var(--accent-2);
+      animation-delay: 0.36s;
+    }
+
     .copy-btn {
       margin-top: 8px;
       padding: 4px 10px;
@@ -226,12 +375,12 @@
     }
     .copy-btn:hover {
       color: #ffffff;
-      border-color: rgba(56, 189, 248, 0.55);
-      background: rgba(56, 189, 248, 0.16);
+      border-color: var(--accent-1);
+      background: rgba(148, 163, 184, 0.16);
     }
     .copy-btn.copied {
-      color: #38bdf8;
-      border-color: rgba(56, 189, 248, 0.65);
+      color: var(--accent-1);
+      border-color: var(--accent-1);
     }
 
     /* Satranç Oyun Modal / Panel */
@@ -317,9 +466,9 @@
       transition: all 0.16s ease;
     }
     .chess-btn:hover:not(:disabled) {
-      border-color: rgba(56, 189, 248, 0.65);
+      border-color: var(--accent-1);
       color: #ffffff;
-      background: rgba(56, 189, 248, 0.18);
+      background: rgba(148, 163, 184, 0.18);
     }
     .chess-btn:disabled {
       opacity: 0.5;
@@ -474,7 +623,7 @@
     .chess-status {
       font-size: 0.88rem;
       font-weight: 700;
-      color: #38bdf8;
+      color: var(--accent-1);
       line-height: 1.4;
     }
     .chess-hint-box {
@@ -535,7 +684,7 @@
     }
     .starter-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(56, 189, 248, 0.55);
+      border-color: var(--accent-1);
       background: rgba(30, 41, 59, 0.95);
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.45);
     }
@@ -547,7 +696,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(168, 85, 247, 0.22));
+      background: linear-gradient(135deg, rgba(148, 163, 184, 0.16), rgba(148, 163, 184, 0.06));
       border: 1px solid rgba(148, 163, 184, 0.22);
     }
     .starter-icon svg {
@@ -588,8 +737,8 @@
       transition: border-color 0.2s, box-shadow 0.2s, max-width 0.2s ease, padding 0.2s ease;
     }
     #bar:focus-within {
-      border-color: rgba(56, 189, 248, 0.65);
-      box-shadow: 0 10px 32px rgba(56, 189, 248, 0.14);
+      border-color: var(--accent-1);
+      box-shadow: 0 10px 32px rgba(15, 23, 42, 0.45);
     }
     #inp {
       flex: 1;
@@ -613,7 +762,7 @@
       height: 40px;
       border-radius: 50%;
       border: none;
-      background: linear-gradient(135deg, #38bdf8, #2563eb);
+      background: var(--send-grad);
       color: #ffffff;
       display: flex;
       align-items: center;
@@ -621,11 +770,11 @@
       cursor: pointer;
       flex-shrink: 0;
       transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
     }
     #sendBtn:hover {
       transform: scale(1.06);
-      box-shadow: 0 6px 16px rgba(56, 189, 248, 0.45);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.55);
     }
     #sendBtn:active {
       transform: scale(0.95);
@@ -741,7 +890,7 @@
     }
   </style>
 </head>
-<body class="mode-pc">
+<body class="mode-pc" data-theme="cosmic">
   <header>
     <div class="header-left">
       <div class="brand-wrap">
@@ -781,9 +930,19 @@
     </div>
 
     <div class="header-right">
+      <div class="pill-group" role="group" aria-label="Themes">
+        <span id="themesLabel" class="group-label">Temalar:</span>
+        <div class="theme-swatches">
+          <button type="button" class="theme-swatch active" data-theme="cosmic" title="Kozmik" aria-label="Kozmik" onclick="setTheme('cosmic')"></button>
+          <button type="button" class="theme-swatch" data-theme="cyber" title="Siber Mavi" aria-label="Siber Mavi" onclick="setTheme('cyber')"></button>
+          <button type="button" class="theme-swatch" data-theme="nova" title="Süpernova Mor" aria-label="Süpernova Mor" onclick="setTheme('nova')"></button>
+          <button type="button" class="theme-swatch" data-theme="emerald" title="Zümrüt" aria-label="Zümrüt" onclick="setTheme('emerald')"></button>
+        </div>
+      </div>
+
       <button id="playGameBtn" type="button" class="action-pill-btn" onclick="toggleChessModal(true)">
         <svg class="chess-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M7 20h10M9 17h6l-1-5 3-3-1-4-3 1-1-2-1 2-3-1-1 4 3 3-1 5Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7 20h10M9 17h6l-1-5 3-3-1-4-3 1-1-2-1 2-3-1-1 4 3 3-1 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span id="playGameLabel">Oyun Oyna</span>
       </button>
@@ -900,6 +1059,7 @@
     const chat = document.getElementById('chat');
     const inp = document.getElementById('inp');
     const headerSub = document.getElementById('headerSub');
+    const themesLabel = document.getElementById('themesLabel');
     const newChatBtn = document.getElementById('newChatBtn');
     const playGameLabel = document.getElementById('playGameLabel');
     const playGameBtn = document.getElementById('playGameBtn');
@@ -908,13 +1068,16 @@
     const pcModeLabel = document.getElementById('pcModeLabel');
     const mobileModeLabel = document.getElementById('mobileModeLabel');
     const langButtons = document.querySelectorAll('.lang-btn');
+    const themeSwatches = document.querySelectorAll('.theme-swatch');
     const chatHistory = [];
     let currentLang = 'tr';
     let currentDevice = 'pc';
+    let currentTheme = 'cosmic';
 
     const langUI = {
       tr: {
         subtitle: "Sohbet, İşlem & Bilgi Asistanı",
+        themes: "Temalar:",
         pcMode: "PC Mod",
         mobileMode: "Mobil Mod",
         newChat: "Yeni Sohbet",
@@ -963,6 +1126,7 @@
       },
       en: {
         subtitle: "Chat, Actions & Knowledge Assistant",
+        themes: "Themes:",
         pcMode: "PC Mode",
         mobileMode: "Mobile Mode",
         newChat: "New Chat",
@@ -1011,6 +1175,7 @@
       },
       fr: {
         subtitle: "Assistant de Chat, d'Actions & d'Informations",
+        themes: "Thèmes :",
         pcMode: "Mode PC",
         mobileMode: "Mode Mobile",
         newChat: "Nouveau Chat",
@@ -1059,6 +1224,7 @@
       },
       es: {
         subtitle: "Asistente de Chat, Acciones e Información",
+        themes: "Temas:",
         pcMode: "Modo PC",
         mobileMode: "Modo Móvil",
         newChat: "Nuevo Chat",
@@ -1106,6 +1272,15 @@
         ]
       }
     };
+
+    function setTheme(themeName) {
+      const allowed = ['cosmic', 'cyber', 'nova', 'emerald'];
+      currentTheme = allowed.includes(themeName) ? themeName : 'cosmic';
+      document.body.setAttribute('data-theme', currentTheme);
+      themeSwatches.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === currentTheme);
+      });
+    }
 
     function setDeviceMode(mode) {
       currentDevice = mode === 'mobile' ? 'mobile' : 'pc';
@@ -1195,6 +1370,7 @@
       });
 
       headerSub.textContent = ui.subtitle;
+      themesLabel.textContent = ui.themes;
       pcModeLabel.textContent = ui.pcMode;
       mobileModeLabel.textContent = ui.mobileMode;
       newChatBtn.textContent = ui.newChat;
@@ -1276,6 +1452,47 @@
       return textDiv;
     }
 
+    function addTypingBubble(labelText) {
+      const ui = langUI[currentLang] || langUI.tr;
+      const d = document.createElement('div');
+      d.className = 'msg ai';
+
+      const textDiv = document.createElement('div');
+      textDiv.className = 'msg-text';
+
+      const wrap = document.createElement('span');
+      wrap.className = 'typing-wrap';
+
+      const dots = document.createElement('span');
+      dots.className = 'typing-dots';
+      dots.setAttribute('aria-hidden', 'true');
+      for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'typing-dot';
+        dots.appendChild(dot);
+      }
+
+      const lbl = document.createElement('span');
+      lbl.className = 'typing-label';
+      lbl.textContent = labelText;
+
+      wrap.appendChild(dots);
+      wrap.appendChild(lbl);
+      textDiv.appendChild(wrap);
+      d.appendChild(textDiv);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'copy-btn';
+      copyBtn.textContent = ui.copy;
+      copyBtn.onclick = function () { copyBubbleText(this); };
+      d.appendChild(copyBtn);
+
+      chat.appendChild(d);
+      chat.scrollTop = chat.scrollHeight;
+      return textDiv;
+    }
+
     async function sendMsg() {
       const q = inp.value.trim();
       if (!q) return;
@@ -1287,7 +1504,7 @@
       inp.value = '';
       inp.style.height = 'auto';
 
-      const waitText = addBubble(ui.thinking, 'ai', true);
+      const waitText = addTypingBubble(ui.thinking);
 
       try {
         const r = await fetch('/api/chat', {
