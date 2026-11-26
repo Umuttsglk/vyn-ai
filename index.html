@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VYN AI</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.8'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap="round" stroke-linejoin="round' opacity='0.8'/%3E%3C/svg%3E" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body {
@@ -171,13 +171,76 @@
       border-color: rgba(56, 189, 248, 0.65);
     }
 
-    /* Modern Gemini Tarzı Alt Yazı Barı */
+    /* Modern Gemini Tarzı Alt Yazı Barı ve Başlangıç Kartları */
     #bar-wrap {
-      padding: 10px 16px 20px;
+      padding: 6px 16px 20px;
       display: flex;
-      justify-content: center;
-      background: linear-gradient(to top, rgba(7, 11, 20, 0.92) 60%, transparent);
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(to top, rgba(7, 11, 20, 0.94) 65%, transparent);
     }
+    #starter-cards {
+      width: 100%;
+      max-width: 780px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .starter-card {
+      background: rgba(30, 41, 59, 0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 16px;
+      padding: 10px 12px;
+      color: #e2e8f0;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.16s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .starter-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56, 189, 248, 0.55);
+      background: rgba(30, 41, 59, 0.95);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.45);
+    }
+    .starter-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(168, 85, 247, 0.22));
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+    .starter-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+    .starter-meta {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .starter-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .starter-desc {
+      font-size: 0.73rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     #bar {
       width: 100%;
       max-width: 780px;
@@ -240,6 +303,15 @@
       height: 19px;
       fill: currentColor;
     }
+
+    @media (max-width: 680px) {
+      #starter-cards {
+        grid-template-columns: 1fr;
+      }
+      .msg {
+        max-width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -278,6 +350,49 @@
   </div>
 
   <div id="bar-wrap">
+    <div id="starter-cards" aria-label="Starter Prompts">
+      <button type="button" class="starter-card" onclick="useStarter(0)">
+        <span class="starter-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 12a7 7 0 0 1 14 0c0 3.2-2.2 5.8-5.2 6.6L10 21v-2.7C7 17.5 5 15 5 12Z" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="9.5" cy="11.5" r="1" fill="#a855f7"/>
+            <circle cx="14.5" cy="11.5" r="1" fill="#38bdf8"/>
+          </svg>
+        </span>
+        <span class="starter-meta">
+          <span id="cardTitle0" class="starter-title">Serbest Sohbet</span>
+          <span id="cardDesc0" class="starter-desc">Günün nasıl geçiyor? Bana bir fikir anlat.</span>
+        </span>
+      </button>
+
+      <button type="button" class="starter-card" onclick="useStarter(1)">
+        <span class="starter-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3l1.9 4.4L18.5 9l-4.6 1.6L12 15l-1.9-4.4L5.5 9l4.6-1.6L12 3Z" stroke="#a855f7" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M18.5 15.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z" stroke="#38bdf8" stroke-width="1.8" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="starter-meta">
+          <span id="cardTitle1" class="starter-title">Hızlı Bilgi</span>
+          <span id="cardDesc1" class="starter-desc">Karmaşık bir konuyu sade şekilde açıkla.</span>
+        </span>
+      </button>
+
+      <button type="button" class="starter-card" onclick="useStarter(2)">
+        <span class="starter-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M8 8l-4 4 4 4" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 8l4 4-4 4" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13.5 6l-3 12" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="starter-meta">
+          <span id="cardTitle2" class="starter-title">Kod & Plan</span>
+          <span id="cardDesc2" class="starter-desc">Kısa bir plan veya kod taslağı oluştur.</span>
+        </span>
+      </button>
+    </div>
+
     <div id="bar">
       <textarea id="inp" rows="1" placeholder="VYN AI'a bir şey sor..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
       <button id="sendBtn" type="button" onclick="sendMsg()" title="Gönder" aria-label="Gönder">
@@ -307,7 +422,24 @@
         error: "Cevap alınamadı.",
         netErr: "Bağlantı hatası oldu.",
         copy: "Kopyala",
-        copied: "Kopyalandı!"
+        copied: "Kopyalandı!",
+        cards: [
+          {
+            title: "Serbest Sohbet",
+            desc: "Günün nasıl geçiyor? Bana bir fikir anlat.",
+            prompt: "Selam VYN AI! Bugün aklımdaki bir fikri seninle paylaşmak ve üzerine konuşmak istiyorum."
+          },
+          {
+            title: "Hızlı Bilgi",
+            desc: "Karmaşık bir konuyu sade şekilde açıkla.",
+            prompt: "Bana yapay zekanın nasıl çalıştığını kısa, net ve sade örneklerle açıklar mısın?"
+          },
+          {
+            title: "Kod & Plan",
+            desc: "Kısa bir plan veya kod taslağı oluştur.",
+            prompt: "Küçük bir web projesi için adım adım başlangıç planı ve basit bir örnek yapı oluştur."
+          }
+        ]
       },
       en: {
         subtitle: "Chat, Actions & Knowledge Assistant",
@@ -318,7 +450,24 @@
         error: "Could not get a response.",
         netErr: "Network error occurred.",
         copy: "Copy",
-        copied: "Copied!"
+        copied: "Copied!",
+        cards: [
+          {
+            title: "Open Chat",
+            desc: "How's your day going? Share an idea.",
+            prompt: "Hey VYN AI! I want to share an idea with you and brainstorm together."
+          },
+          {
+            title: "Quick Explain",
+            desc: "Break down a topic simply and clearly.",
+            prompt: "Can you explain how artificial intelligence works in simple terms with clear examples?"
+          },
+          {
+            title: "Code & Plan",
+            desc: "Draft a quick plan or code starter.",
+            prompt: "Create a step-by-step starter plan and a clean basic structure for a small web project."
+          }
+        ]
       },
       fr: {
         subtitle: "Assistant de Chat, d'Actions & d'Informations",
@@ -329,7 +478,24 @@
         error: "Impossible d'obtenir une réponse.",
         netErr: "Erreur de connexion.",
         copy: "Copier",
-        copied: "Copié !"
+        copied: "Copié !",
+        cards: [
+          {
+            title: "Discussion Libre",
+            desc: "Comment ça va ? Partage une idée.",
+            prompt: "Salut VYN AI ! J'aimerais partager une idée avec toi et en discuter."
+          },
+          {
+            title: "Explication Rapide",
+            desc: "Explique un sujet simplement et clairement.",
+            prompt: "Peux-tu m'expliquer simplement comment fonctionne l'intelligence artificielle avec des exemples ?"
+          },
+          {
+            title: "Code & Plan",
+            desc: "Prépare un plan rapide ou une base de code.",
+            prompt: "Propose un plan de démarrage étape par étape et une structure simple pour un petit projet web."
+          }
+        ]
       },
       es: {
         subtitle: "Asistente de Chat, Acciones e Información",
@@ -340,9 +506,45 @@
         error: "No se pudo obtener respuesta.",
         netErr: "Ocurrió un error de conexión.",
         copy: "Copiar",
-        copied: "¡Copiado!"
+        copied: "¡Copiado!",
+        cards: [
+          {
+            title: "Charla Libre",
+            desc: "¿Cómo va tu día? Comparte una idea.",
+            prompt: "¡Hola VYN AI! Quiero compartir una idea contigo y darle vueltas juntos."
+          },
+          {
+            title: "Explicación Rápida",
+            desc: "Explica un tema de forma simple y clara.",
+            prompt: "¿Puedes explicarme de forma sencilla cómo funciona la inteligencia artificial con ejemplos?"
+          },
+          {
+            title: "Código y Plan",
+            desc: "Crea un plan rápido o una base de código.",
+            prompt: "Crea un plan inicial paso a paso y una estructura básica para un proyecto web pequeño."
+          }
+        ]
       }
     };
+
+    function updateStarterCardsUI() {
+      const ui = langUI[currentLang] || langUI.tr;
+      ui.cards.forEach((card, idx) => {
+        const titleEl = document.getElementById('cardTitle' + idx);
+        const descEl = document.getElementById('cardDesc' + idx);
+        if (titleEl) titleEl.textContent = card.title;
+        if (descEl) descEl.textContent = card.desc;
+      });
+    }
+
+    function useStarter(index) {
+      const ui = langUI[currentLang] || langUI.tr;
+      const card = ui.cards[index];
+      if (!card) return;
+      inp.value = card.prompt;
+      autoResize(inp);
+      inp.focus();
+    }
 
     function refreshCopyButtons() {
       const ui = langUI[currentLang] || langUI.tr;
@@ -398,6 +600,7 @@
       if (welcomeText) {
         welcomeText.textContent = ui.welcome;
       }
+      updateStarterCardsUI();
       refreshCopyButtons();
     }
 
