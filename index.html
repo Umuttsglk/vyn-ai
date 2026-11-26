@@ -264,7 +264,7 @@
       border-color: transparent;
       box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
     }
-    .chess-pill-icon {
+    .game-pill-icon {
       width: 15px;
       height: 15px;
       flex-shrink: 0;
@@ -393,8 +393,8 @@
       border-color: var(--accent-1);
     }
 
-    /* Satranç Oyun Modal / Panel */
-    #chessOverlay {
+    /* Oyun Merkezi Modal (Seçici + Satranç + X-O-X + Kelime Oyunu) */
+    #gameOverlay {
       display: none;
       position: fixed;
       inset: 0;
@@ -405,10 +405,10 @@
       justify-content: center;
       padding: 16px;
     }
-    #chessOverlay.open {
+    #gameOverlay.open {
       display: flex;
     }
-    #chessModal {
+    #gameModal {
       width: 100%;
       max-width: 900px;
       max-height: 94vh;
@@ -423,19 +423,19 @@
       gap: 16px;
       transition: max-width 0.2s ease, padding 0.2s ease;
     }
-    .chess-top {
+    .game-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
     }
-    .chess-title-wrap {
+    .game-title-wrap {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .chess-badge {
+    .game-badge {
       width: 40px;
       height: 40px;
       border-radius: 13px;
@@ -446,22 +446,22 @@
       justify-content: center;
       flex-shrink: 0;
     }
-    .chess-title {
+    .game-title {
       font-size: 1.1rem;
       font-weight: 700;
       color: #f8fafc;
     }
-    .chess-sub {
+    .game-sub {
       font-size: 0.8rem;
       color: #94a3b8;
     }
-    .chess-controls {
+    .game-controls {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
-    .chess-btn {
+    .game-btn {
       border: 1px solid rgba(148, 163, 184, 0.25);
       background: rgba(30, 41, 59, 0.88);
       color: #e2e8f0;
@@ -475,21 +475,21 @@
       gap: 6px;
       transition: all 0.16s ease;
     }
-    .chess-btn:hover:not(:disabled) {
+    .game-btn:hover:not(:disabled) {
       border-color: var(--accent-1);
       color: #ffffff;
       background: rgba(148, 163, 184, 0.18);
     }
-    .chess-btn:disabled {
+    .game-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    .chess-btn.hint-btn {
+    .game-btn.hint-btn {
       border-color: rgba(250, 204, 21, 0.45);
       background: rgba(250, 204, 21, 0.12);
       color: #fde047;
     }
-    .chess-btn.hint-btn:hover:not(:disabled) {
+    .game-btn.hint-btn:hover:not(:disabled) {
       border-color: rgba(250, 204, 21, 0.85);
       background: rgba(250, 204, 21, 0.22);
       color: #fef08a;
@@ -499,6 +499,57 @@
       height: 15px;
       flex-shrink: 0;
     }
+
+    /* Oyun Seçici Kartları */
+    .game-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .game-hub-card {
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      padding: 18px 16px;
+      text-align: left;
+      color: #f8fafc;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.16s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .game-hub-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-1);
+      background: rgba(30, 41, 59, 0.96);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+    }
+    .hub-icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(168, 85, 247, 0.22));
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--accent-1);
+    }
+    .hub-card-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .hub-card-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    /* Satranç */
     .chess-body {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 255px;
@@ -659,6 +710,173 @@
       color: #cbd5e1;
       line-height: 1.5;
       white-space: pre-wrap;
+    }
+
+    /* X-O-X */
+    .ttt-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 6px 0;
+    }
+    .ttt-status {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--accent-1);
+      text-align: center;
+    }
+    .ttt-board {
+      width: 100%;
+      max-width: 330px;
+      aspect-ratio: 1 / 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .ttt-cell {
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(30, 41, 59, 0.82);
+      font-size: 2.5rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.14s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+    .ttt-cell:hover:not(:disabled) {
+      transform: scale(1.04);
+      border-color: var(--accent-1);
+    }
+    .ttt-cell.x-mark {
+      color: var(--accent-1);
+    }
+    .ttt-cell.o-mark {
+      color: var(--accent-2);
+    }
+    .ttt-cell.win-cell {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: var(--accent-1);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+    }
+    .ttt-score {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      background: rgba(30, 41, 59, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      padding: 8px 16px;
+      border-radius: 999px;
+    }
+
+    /* Kelime Oyunu */
+    .word-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 4px 0;
+    }
+    .word-meta-bar {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: rgba(30, 41, 59, 0.68);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 0.84rem;
+    }
+    .word-clue {
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .word-lives {
+      color: var(--accent-1);
+      font-weight: 700;
+    }
+    .word-slots {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      min-height: 50px;
+    }
+    .word-slot {
+      min-width: 38px;
+      height: 46px;
+      padding: 0 8px;
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #f8fafc;
+      text-transform: uppercase;
+    }
+    .word-slot.revealed {
+      border-color: var(--accent-1);
+      color: var(--accent-1);
+    }
+    .word-status {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fde047;
+      text-align: center;
+      min-height: 22px;
+    }
+    .word-keyboard {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+    .letter-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      background: rgba(30, 41, 59, 0.86);
+      color: #f8fafc;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .letter-btn:hover:not(:disabled) {
+      border-color: var(--accent-1);
+      background: rgba(56, 189, 248, 0.2);
+    }
+    .letter-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .letter-btn.hit {
+      background: rgba(16, 185, 129, 0.25);
+      border-color: #34d399;
+      color: #6ee7b7;
+      opacity: 1;
+    }
+    .letter-btn.miss {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: #fb7185;
+      color: #fda4af;
+      opacity: 0.55;
     }
 
     /* Alt Yazı Barı ve Başlangıç Kartları */
@@ -860,7 +1078,7 @@
     body.mode-pc #inp {
       font-size: 1.03rem;
     }
-    body.mode-pc #chessModal {
+    body.mode-pc #gameModal {
       max-width: 960px;
     }
     body.mode-pc .chess-board {
@@ -915,11 +1133,14 @@
       width: 44px;
       height: 44px;
     }
-    body.mode-mobile #chessModal {
+    body.mode-mobile #gameModal {
       max-width: 460px;
       padding: 14px;
       border-radius: 20px;
       gap: 12px;
+    }
+    body.mode-mobile .game-hub-grid {
+      grid-template-columns: 1fr;
     }
     body.mode-mobile .chess-body {
       grid-template-columns: 1fr;
@@ -936,6 +1157,9 @@
     }
 
     @media (max-width: 760px) {
+      .game-hub-grid {
+        grid-template-columns: 1fr;
+      }
       .chess-body {
         grid-template-columns: 1fr;
       }
@@ -1014,8 +1238,8 @@
         </div>
       </div>
 
-      <button id="playGameBtn" type="button" class="action-pill-btn" onclick="toggleChessModal(true)">
-        <svg class="chess-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <button id="playGameBtn" type="button" class="action-pill-btn" onclick="toggleGameModal(true)">
+        <svg class="game-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M7 20h10M9 17h6l-1-5 3-3-1-4-3 1-1-2-1 2-3-1-1 4 3 3-1 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span id="playGameLabel">Oyun Oyna</span>
@@ -1033,35 +1257,59 @@
     </div>
   </div>
 
-  <div id="chessOverlay" role="dialog" aria-modal="true" aria-labelledby="chessModalTitle">
-    <div id="chessModal">
-      <div class="chess-top">
-        <div class="chess-title-wrap">
-          <div class="chess-badge" aria-hidden="true">
+  <!-- Oyun Merkezi Modal -->
+  <div id="gameOverlay" role="dialog" aria-modal="true" aria-labelledby="gameModalTitle">
+    <div id="gameModal">
+      <div class="game-top">
+        <div class="game-title-wrap">
+          <div class="game-badge" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M6 19h12M8 16h8l-1-4.5 2.5-2.5L16 5l-2.5 1L12 3.5 10.5 6 8 5l-1.5 4L9 11.5 8 16Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
               <circle cx="12" cy="10" r="1.3" fill="#a855f7"/>
             </svg>
           </div>
           <div>
-            <div id="chessModalTitle" class="chess-title">VYN AI Satranç</div>
-            <div id="chessModalSub" class="chess-sub">Sen Beyaz · VYN AI Siyah</div>
+            <div id="gameModalTitle" class="game-title">VYN AI Oyun Merkezi</div>
+            <div id="gameModalSub" class="game-sub">3 oyun · Seçili dil kuralına uyumlu</div>
           </div>
         </div>
-        <div class="chess-controls">
-          <button id="chessHintBtn" type="button" class="chess-btn hint-btn" onclick="showChessHint()">
+        <div class="game-controls">
+          <button id="gameBackHubBtn" type="button" class="game-btn" style="display:none;" onclick="openGameHub()">Oyun Seçimi</button>
+          <button id="chessHintBtn" type="button" class="game-btn hint-btn" style="display:none;" onclick="showChessHint()">
             <svg class="bulb-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.9.7 1.5 1.7 1.6 2.7h4c.1-1 .7-2 1.6-2.7A6 6 0 0 0 12 3Z" stroke="#facc15" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <span id="chessHintLabel">İpucu</span>
           </button>
-          <button id="chessUndoBtn" type="button" class="chess-btn" onclick="undoChessMove()">Geri Al</button>
-          <button id="chessRestartBtn" type="button" class="chess-btn" onclick="initChessGame()">Yeni Oyun</button>
-          <button id="chessCloseBtn" type="button" class="chess-btn" onclick="toggleChessModal(false)">Kapat</button>
+          <button id="chessUndoBtn" type="button" class="game-btn" style="display:none;" onclick="undoChessMove()">Geri Al</button>
+          <button id="gameRestartBtn" type="button" class="game-btn" style="display:none;" onclick="restartActiveGame()">Yeni Oyun</button>
+          <button id="gameCloseBtn" type="button" class="game-btn" onclick="toggleGameModal(false)">Kapat</button>
         </div>
       </div>
 
-      <div class="chess-body">
+      <!-- 1. Oyun Seçici Ekranı -->
+      <div id="gameHubView" class="game-hub-grid">
+        <button type="button" class="game-hub-card" onclick="selectGameMode('chess')">
+          <div class="hub-icon-box">♔</div>
+          <div id="hubChessTitle" class="hub-card-title">Satranç</div>
+          <div id="hubChessDesc" class="hub-card-desc">Sen Beyaz · VYN AI Siyah. İpucu ve Geri Al destekli tam satranç.</div>
+        </button>
+
+        <button type="button" class="game-hub-card" onclick="selectGameMode('ttt')">
+          <div class="hub-icon-box">X/O</div>
+          <div id="hubTttTitle" class="hub-card-title">X-O-X</div>
+          <div id="hubTttDesc" class="hub-card-desc">Sen X · VYN AI O. Hızlı strateji ve skor takibi.</div>
+        </button>
+
+        <button type="button" class="game-hub-card" onclick="selectGameMode('word')">
+          <div class="hub-icon-box">A-Z</div>
+          <div id="hubWordTitle" class="hub-card-title">Kelime Oyunu</div>
+          <div id="hubWordDesc" class="hub-card-desc">Seçili dildeki kelimeleri ipucu ve harf tahminleriyle bul.</div>
+        </button>
+      </div>
+
+      <!-- 2. Satranç Görünümü -->
+      <div id="chessView" class="chess-body" style="display:none;">
         <div id="chessBoard" class="chess-board" aria-label="Chess Board"></div>
         <div class="chess-side">
           <div id="chessStatus" class="chess-status">Sıra sende (Beyaz)</div>
@@ -1073,6 +1321,24 @@
           <div id="chessNote" class="chess-note">Kırmızı çerçeveli kareler taş yiyebileceğin hedeflerdir.</div>
           <div id="chessMoves" class="chess-moves-box"></div>
         </div>
+      </div>
+
+      <!-- 3. X-O-X Görünümü -->
+      <div id="tttView" class="ttt-wrap" style="display:none;">
+        <div id="tttStatus" class="ttt-status">Sıra sende (X)</div>
+        <div id="tttBoard" class="ttt-board" aria-label="Tic Tac Toe Board"></div>
+        <div id="tttScore" class="ttt-score">Sen (X): 0 · Berabere: 0 · VYN AI (O): 0</div>
+      </div>
+
+      <!-- 4. Kelime Oyunu Görünümü -->
+      <div id="wordView" class="word-wrap" style="display:none;">
+        <div class="word-meta-bar">
+          <div id="wordClue" class="word-clue">İpucu: ...</div>
+          <div id="wordLives" class="word-lives">Kalan Hak: 6</div>
+        </div>
+        <div id="wordSlots" class="word-slots" aria-label="Word Slots"></div>
+        <div id="wordStatus" class="word-status"></div>
+        <div id="wordKeyboard" class="word-keyboard" aria-label="Letter Keyboard"></div>
       </div>
     </div>
   </div>
@@ -1164,6 +1430,49 @@
     let currentThinkingMode = 'logical';
     let activeAbortController = null;
     let isGeneratingReply = false;
+    let activeGameView = 'hub'; // 'hub' | 'chess' | 'ttt' | 'word'
+
+    const WORD_BANKS = {
+      tr: [
+        { word: "YILDIZ", clue: "Gökyüzünde parlayan gök cismi" },
+        { word: "GALAKSİ", clue: "Milyarlarca yıldızdan oluşan dev sistem" },
+        { word: "STRATEJİ", clue: "Hedefe ulaşmak için kurulan plan" },
+        { word: "PUSULA", clue: "Yön bulmaya yarayan araç" },
+        { word: "KODLAMA", clue: "Bilgisayarlara komut yazma sanatı" },
+        { word: "EFSANE", clue: "Nesilden nesile anlatılan öykü" }
+      ],
+      en: [
+        { word: "GALAXY", clue: "A vast system of billions of stars" },
+        { word: "STRATEGY", clue: "A careful plan to reach a goal" },
+        { word: "COMPASS", clue: "A tool that shows direction" },
+        { word: "HORIZON", clue: "Where earth and sky seem to meet" },
+        { word: "CIPHER", clue: "A secret code or puzzle key" },
+        { word: "VOYAGE", clue: "A long journey or adventure" }
+      ],
+      fr: [
+        { word: "GALAXIE", clue: "Immense ensemble d'étoiles" },
+        { word: "STRATEGIE", clue: "Plan d'action pour atteindre un but" },
+        { word: "BOUSSOLE", clue: "Instrument qui indique le nord" },
+        { word: "HORIZON", clue: "Ligne où le ciel rencontre la terre" },
+        { word: "MYSTERE", clue: "Ce qui est difficile à expliquer" },
+        { word: "VOYAGE", clue: "Grand déplacement ou aventure" }
+      ],
+      es: [
+        { word: "GALAXIA", clue: "Gran conjunto de estrellas y planetas" },
+        { word: "ESTRATEGIA", clue: "Plan diseñado para lograr una meta" },
+        { word: "BRUJULA", clue: "Instrumento para orientarse" },
+        { word: "HORIZONTE", clue: "Línea donde parece unirse cielo y tierra" },
+        { word: "MISTERIO", clue: "Algo secreto o difícil de resolver" },
+        { word: "VIAJE", clue: "Recorrido o aventura a un lugar" }
+      ]
+    };
+
+    const KEYBOARD_LETTERS = {
+      tr: "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split(""),
+      en: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+      fr: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+      es: "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("")
+    };
 
     const langUI = {
       tr: {
@@ -1174,6 +1483,27 @@
         downloadChat: "İndir",
         newChat: "Yeni Sohbet",
         playGame: "Oyun Oyna",
+        gameHubTitle: "VYN AI Oyun Merkezi",
+        gameHubSub: "3 oyun · Seçili dil kuralına uyumlu",
+        gameBackHub: "Oyun Seçimi",
+        gameRestart: "Yeni Oyun",
+        gameClose: "Kapat",
+        hubChessTitle: "Satranç",
+        hubChessDesc: "Sen Beyaz · VYN AI Siyah. İpucu ve Geri Al destekli tam satranç.",
+        hubTttTitle: "X-O-X",
+        hubTttDesc: "Sen X · VYN AI O. Hızlı strateji ve skor takibi.",
+        hubWordTitle: "Kelime Oyunu",
+        hubWordDesc: "Seçili dildeki kelimeleri ipucu ve harf tahminleriyle bul.",
+        tttTurnX: "Sıra sende (X)",
+        tttTurnO: "VYN AI düşünüyor (O)...",
+        tttWinX: "Tebrikler! Sen (X) kazandın!",
+        tttWinO: "VYN AI (O) kazandı!",
+        tttDraw: "Berabere! Güzel oyundu.",
+        tttScoreFmt: (w, d, l) => `Sen (X): ${w} · Berabere: ${d} · VYN AI (O): ${l}`,
+        wordCluePrefix: "İpucu: ",
+        wordLivesPrefix: "Kalan Hak: ",
+        wordWin: "Harika! Kelimeyi buldun!",
+        wordLoseFmt: (ans) => `Hakların bitti! Kelime: ${ans}`,
         sendTitle: "Gönder",
         stopTitle: "Durdur",
         stoppedMsg: "Yanıt durduruldu.",
@@ -1185,14 +1515,12 @@
           logical: "Mantıklı, gerekçeli ve analitik bir şekilde açıkla.",
           planned: "Adım adım, düzenli ve uygulanabilir bir plan sun."
         },
-        chessTitle: "VYN AI Satranç",
+        chessTitle: "Satranç · VYN AI",
         chessSub: "Sen Beyaz · VYN AI Siyah",
         chessHint: "İpucu",
         chessUndo: "Geri Al",
         legendYou: "Senin Taşların (Beyaz)",
         legendAi: "VYN AI Taşları (Siyah)",
-        chessRestart: "Yeni Oyun",
-        chessClose: "Kapat",
         chessTurnWhite: "Sıra sende (Beyaz)",
         chessTurnBlack: "VYN AI düşünüyor (Siyah)...",
         chessCheckWhite: "Şah! Sıra sende (Beyaz)",
@@ -1236,6 +1564,27 @@
         downloadChat: "Save",
         newChat: "New Chat",
         playGame: "Play Game",
+        gameHubTitle: "VYN AI Game Hub",
+        gameHubSub: "3 games · Follows selected language rule",
+        gameBackHub: "Game Select",
+        gameRestart: "New Game",
+        gameClose: "Close",
+        hubChessTitle: "Chess",
+        hubChessDesc: "You White · VYN AI Black. Full chess with Hint and Undo.",
+        hubTttTitle: "Tic-Tac-Toe",
+        hubTttDesc: "You X · VYN AI O. Fast strategy with score tracker.",
+        hubWordTitle: "Word Game",
+        hubWordDesc: "Guess words in your selected language using clues and letters.",
+        tttTurnX: "Your turn (X)",
+        tttTurnO: "VYN AI is thinking (O)...",
+        tttWinX: "Congrats! You (X) won!",
+        tttWinO: "VYN AI (O) won!",
+        tttDraw: "Draw! Well played.",
+        tttScoreFmt: (w, d, l) => `You (X): ${w} · Draw: ${d} · VYN AI (O): ${l}`,
+        wordCluePrefix: "Clue: ",
+        wordLivesPrefix: "Lives Left: ",
+        wordWin: "Awesome! You found the word!",
+        wordLoseFmt: (ans) => `Out of lives! Word: ${ans}`,
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
@@ -1247,14 +1596,12 @@
           logical: "Explain logically with clear reasoning.",
           planned: "Provide a structured, step-by-step action plan."
         },
-        chessTitle: "VYN AI Chess",
+        chessTitle: "Chess · VYN AI",
         chessSub: "You White · VYN AI Black",
         chessHint: "Hint",
         chessUndo: "Undo",
         legendYou: "Your Pieces (White)",
         legendAi: "VYN AI Pieces (Black)",
-        chessRestart: "New Game",
-        chessClose: "Close",
         chessTurnWhite: "Your turn (White)",
         chessTurnBlack: "VYN AI is thinking (Black)...",
         chessCheckWhite: "Check! Your turn (White)",
@@ -1298,6 +1645,27 @@
         downloadChat: "Enregistrer",
         newChat: "Nouveau Chat",
         playGame: "Jouer",
+        gameHubTitle: "Centre de Jeux VYN AI",
+        gameHubSub: "3 jeux · Conforme à la langue choisie",
+        gameBackHub: "Choix du Jeu",
+        gameRestart: "Nouvelle Partie",
+        gameClose: "Fermer",
+        hubChessTitle: "Échecs",
+        hubChessDesc: "Toi Blancs · VYN AI Noirs. Échecs avec Indice et Annuler.",
+        hubTttTitle: "Morpion (X-O-X)",
+        hubTttDesc: "Toi X · VYN AI O. Stratégie rapide et score.",
+        hubWordTitle: "Jeu de Mots",
+        hubWordDesc: "Devine les mots dans la langue choisie avec indices et lettres.",
+        tttTurnX: "À ton tour (X)",
+        tttTurnO: "VYN AI réfléchit (O)...",
+        tttWinX: "Bravo ! Tu (X) as gagné !",
+        tttWinO: "VYN AI (O) a gagné !",
+        tttDraw: "Match nul ! Belle partie.",
+        tttScoreFmt: (w, d, l) => `Toi (X) : ${w} · Nul : ${d} · VYN AI (O) : ${l}`,
+        wordCluePrefix: "Indice : ",
+        wordLivesPrefix: "Vies restantes : ",
+        wordWin: "Super ! Tu as trouvé le mot !",
+        wordLoseFmt: (ans) => `Plus de vies ! Le mot était : ${ans}`,
         sendTitle: "Envoyer",
         stopTitle: "Arrêter",
         stoppedMsg: "Réponse arrêtée.",
@@ -1309,14 +1677,12 @@
           logical: "Explique de manière logique et structurée.",
           planned: "Propose un plan d'action clair étape par étape."
         },
-        chessTitle: "Échecs VYN AI",
+        chessTitle: "Échecs · VYN AI",
         chessSub: "Toi Blancs · VYN AI Noirs",
         chessHint: "Indice",
         chessUndo: "Annuler",
         legendYou: "Tes Pièces (Blancs)",
         legendAi: "Pièces VYN AI (Noirs)",
-        chessRestart: "Nouvelle Partie",
-        chessClose: "Fermer",
         chessTurnWhite: "À ton tour (Blancs)",
         chessTurnBlack: "VYN AI réfléchit (Noirs)...",
         chessCheckWhite: "Échec ! À ton tour (Blancs)",
@@ -1360,6 +1726,27 @@
         downloadChat: "Guardar",
         newChat: "Nuevo Chat",
         playGame: "Jugar",
+        gameHubTitle: "Centro de Juegos VYN AI",
+        gameHubSub: "3 juegos · Respeta el idioma seleccionado",
+        gameBackHub: "Elegir Juego",
+        gameRestart: "Nueva Partida",
+        gameClose: "Cerrar",
+        hubChessTitle: "Ajedrez",
+        hubChessDesc: "Tú Blancas · VYN AI Negras. Ajedrez con Pista y Deshacer.",
+        hubTttTitle: "Tres en Raya (X-O-X)",
+        hubTttDesc: "Tú X · VYN AI O. Estrategia rápida con marcador.",
+        hubWordTitle: "Juego de Palabras",
+        hubWordDesc: "Adivina palabras en el idioma elegido con pistas y letras.",
+        tttTurnX: "Tu turno (X)",
+        tttTurnO: "VYN AI está pensando (O)...",
+        tttWinX: "¡Felicidades! ¡Ganaste (X)!",
+        tttWinO: "¡VYN AI (O) ganó!",
+        tttDraw: "¡Empate! Buena partida.",
+        tttScoreFmt: (w, d, l) => `Tú (X): ${w} · Empate: ${d} · VYN AI (O): ${l}`,
+        wordCluePrefix: "Pista: ",
+        wordLivesPrefix: "Vidas restantes: ",
+        wordWin: "¡Genial! ¡Adivinaste la palabra!",
+        wordLoseFmt: (ans) => `¡Sin vidas! La palabra era: ${ans}`,
         sendTitle: "Enviar",
         stopTitle: "Detener",
         stoppedMsg: "Respuesta detenida.",
@@ -1371,14 +1758,12 @@
           logical: "Explica de forma lógica y razonada.",
           planned: "Presenta un plan paso a paso claro y práctico."
         },
-        chessTitle: "Ajedrez VYN AI",
+        chessTitle: "Ajedrez · VYN AI",
         chessSub: "Tú Blancas · VYN AI Negras",
         chessHint: "Pista",
         chessUndo: "Deshacer",
         legendYou: "Tus Piezas (Blancas)",
         legendAi: "Piezas VYN AI (Negras)",
-        chessRestart: "Nueva Partida",
-        chessClose: "Cerrar",
         chessTurnWhite: "Tu turno (Blancas)",
         chessTurnBlack: "VYN AI está pensando (Negras)...",
         chessCheckWhite: "¡Jaque! Tu turno (Blancas)",
@@ -1558,19 +1943,99 @@
       renderWelcomeBubble();
     }
 
-    function updateChessTexts() {
+    /* ================= OYUN MERKEZİ YÖNETİMİ ================= */
+    function syncGameModalChrome() {
+      const ui = langUI[currentLang] || langUI.tr;
+      const backBtn = document.getElementById('gameBackHubBtn');
+      const hintBtn = document.getElementById('chessHintBtn');
+      const undoBtn = document.getElementById('chessUndoBtn');
+      const restartBtn = document.getElementById('gameRestartBtn');
+
+      const hubView = document.getElementById('gameHubView');
+      const chessView = document.getElementById('chessView');
+      const tttView = document.getElementById('tttView');
+      const wordView = document.getElementById('wordView');
+
+      hubView.style.display = activeGameView === 'hub' ? 'grid' : 'none';
+      chessView.style.display = activeGameView === 'chess' ? 'grid' : 'none';
+      tttView.style.display = activeGameView === 'ttt' ? 'flex' : 'none';
+      wordView.style.display = activeGameView === 'word' ? 'flex' : 'none';
+
+      backBtn.style.display = activeGameView === 'hub' ? 'none' : 'inline-flex';
+      restartBtn.style.display = activeGameView === 'hub' ? 'none' : 'inline-flex';
+      hintBtn.style.display = activeGameView === 'chess' ? 'inline-flex' : 'none';
+      undoBtn.style.display = activeGameView === 'chess' ? 'inline-flex' : 'none';
+
+      if (activeGameView === 'hub') {
+        document.getElementById('gameModalTitle').textContent = ui.gameHubTitle;
+        document.getElementById('gameModalSub').textContent = ui.gameHubSub;
+      } else if (activeGameView === 'chess') {
+        document.getElementById('gameModalTitle').textContent = ui.chessTitle;
+        document.getElementById('gameModalSub').textContent = ui.chessSub;
+      } else if (activeGameView === 'ttt') {
+        document.getElementById('gameModalTitle').textContent = ui.hubTttTitle;
+        document.getElementById('gameModalSub').textContent = ui.gameHubSub;
+      } else if (activeGameView === 'word') {
+        document.getElementById('gameModalTitle').textContent = ui.hubWordTitle;
+        document.getElementById('gameModalSub').textContent = ui.gameHubSub;
+      }
+    }
+
+    function openGameHub() {
+      activeGameView = 'hub';
+      syncGameModalChrome();
+    }
+
+    function selectGameMode(mode) {
+      activeGameView = mode;
+      syncGameModalChrome();
+      if (mode === 'chess' && chessBoard.length === 0) {
+        initChessGame();
+      } else if (mode === 'ttt' && tttBoard.length === 0) {
+        initTttGame();
+      } else if (mode === 'word' && !wordState.target) {
+        initWordGame();
+      }
+    }
+
+    function restartActiveGame() {
+      if (activeGameView === 'chess') initChessGame();
+      else if (activeGameView === 'ttt') initTttGame();
+      else if (activeGameView === 'word') initWordGame();
+    }
+
+    function toggleGameModal(open) {
+      const overlay = document.getElementById('gameOverlay');
+      overlay.classList.toggle('open', open);
+      playGameBtn.classList.toggle('active-mode', open);
+      if (open) {
+        syncGameModalChrome();
+      }
+    }
+
+    function updateAllGameTexts() {
       const ui = langUI[currentLang] || langUI.tr;
       playGameLabel.textContent = ui.playGame;
-      document.getElementById('chessModalTitle').textContent = ui.chessTitle;
-      document.getElementById('chessModalSub').textContent = ui.chessSub;
+      document.getElementById('gameBackHubBtn').textContent = ui.gameBackHub;
+      document.getElementById('gameRestartBtn').textContent = ui.gameRestart;
+      document.getElementById('gameCloseBtn').textContent = ui.gameClose;
+      document.getElementById('hubChessTitle').textContent = ui.hubChessTitle;
+      document.getElementById('hubChessDesc').textContent = ui.hubChessDesc;
+      document.getElementById('hubTttTitle').textContent = ui.hubTttTitle;
+      document.getElementById('hubTttDesc').textContent = ui.hubTttDesc;
+      document.getElementById('hubWordTitle').textContent = ui.hubWordTitle;
+      document.getElementById('hubWordDesc').textContent = ui.hubWordDesc;
+
       document.getElementById('chessHintLabel').textContent = ui.chessHint;
       document.getElementById('chessUndoBtn').textContent = ui.chessUndo;
       document.getElementById('legendYou').textContent = ui.legendYou;
       document.getElementById('legendAi').textContent = ui.legendAi;
-      document.getElementById('chessRestartBtn').textContent = ui.chessRestart;
-      document.getElementById('chessCloseBtn').textContent = ui.chessClose;
       document.getElementById('chessNote').textContent = ui.chessNote;
+
+      syncGameModalChrome();
       updateChessStatusText();
+      updateTttUI();
+      initWordGame();
     }
 
     function setLang(lang) {
@@ -1598,7 +2063,7 @@
       updateThinkingButtonsUI();
       refreshCopyButtons();
       syncSendButtonState();
-      updateChessTexts();
+      updateAllGameTexts();
     }
 
     function autoResize(el) {
@@ -1780,7 +2245,7 @@
       }
     }
 
-    /* ================= SATRANÇ MOTORU (VYN AI SİYAH, KULLANICI BEYAZ) ================= */
+    /* ================= 1. SATRANÇ MOTORU ================= */
     const PIECE_GLYPHS = {
       wK: '♔', wQ: '♕', wR: '♖', wB: '♗', wN: '♘', wP: '♙',
       bK: '♚', bQ: '♛', bR: '♜', bB: '♝', bN: '♞', bP: '♟'
@@ -1836,15 +2301,6 @@
       restoreChessSnapshot(targetSnap);
     }
 
-    function toggleChessModal(open) {
-      const overlay = document.getElementById('chessOverlay');
-      overlay.classList.toggle('open', open);
-      playGameBtn.classList.toggle('active-mode', open);
-      if (open && chessBoard.length === 0) {
-        initChessGame();
-      }
-    }
-
     function initChessGame() {
       const backRank = ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'];
       chessBoard = Array.from({ length: 8 }, () => Array(8).fill(null));
@@ -1870,21 +2326,10 @@
       renderChessBoard();
     }
 
-    function inBounds(r, c) {
-      return r >= 0 && r < 8 && c >= 0 && c < 8;
-    }
-
-    function pieceColor(p) {
-      return p ? p[0] : null;
-    }
-
-    function pieceType(p) {
-      return p ? p[1] : null;
-    }
-
-    function coordToAlg(r, c) {
-      return FILES[c] + (8 - r);
-    }
+    function inBounds(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
+    function pieceColor(p) { return p ? p[0] : null; }
+    function pieceType(p) { return p ? p[1] : null; }
+    function coordToAlg(r, c) { return FILES[c] + (8 - r); }
 
     function algToCoord(alg) {
       if (!alg || typeof alg !== 'string') return null;
@@ -1912,13 +2357,11 @@
         const pc = c + dc;
         if (inBounds(pr, pc) && board[pr][pc] === byColor + 'P') return true;
       }
-
       const knightJumps = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
       for (const [dr, dc] of knightJumps) {
         const nr = r + dr, nc = c + dc;
         if (inBounds(nr, nc) && board[nr][nc] === byColor + 'N') return true;
       }
-
       for (let dr = -1; dr <= 1; dr++) {
         for (let dc = -1; dc <= 1; dc++) {
           if (dr === 0 && dc === 0) continue;
@@ -1926,7 +2369,6 @@
           if (inBounds(kr, kc) && board[kr][kc] === byColor + 'K') return true;
         }
       }
-
       const ortho = [[-1,0],[1,0],[0,-1],[0,1]];
       for (const [dr, dc] of ortho) {
         let nr = r + dr, nc = c + dc;
@@ -1939,7 +2381,6 @@
           nr += dr; nc += dc;
         }
       }
-
       const diag = [[-1,-1],[-1,1],[1,-1],[1,1]];
       for (const [dr, dc] of diag) {
         let nr = r + dr, nc = c + dc;
@@ -1952,7 +2393,6 @@
           nr += dr; nc += dc;
         }
       }
-
       return false;
     }
 
@@ -1963,9 +2403,7 @@
       return isSquareAttacked(board, kingPos.r, kingPos.c, enemy);
     }
 
-    function cloneBoard(board) {
-      return board.map(row => row.slice());
-    }
+    function cloneBoard(board) { return board.map(row => row.slice()); }
 
     function applyMoveOnBoard(board, rights, move) {
       const next = cloneBoard(board);
@@ -1987,11 +2425,9 @@
           next[move.fr][0] = null;
         }
       }
-
       if (type === 'P' && (move.tr === 0 || move.tr === 7)) {
         next[move.tr][move.tc] = color + 'Q';
       }
-
       if (type === 'K') {
         nextRights[color + 'K'] = false;
         nextRights[color + 'Q'] = false;
@@ -2155,6 +2591,7 @@
 
     function renderChessBoard() {
       const boardEl = document.getElementById('chessBoard');
+      if (!boardEl) return;
       boardEl.innerHTML = '';
 
       for (let r = 0; r < 8; r++) {
@@ -2388,7 +2825,217 @@
       renderChessBoard();
     }
 
-    updateChessTexts();
+    /* ================= 2. X-O-X MOTORU ================= */
+    const TTT_WINS = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+    let tttBoard = [];
+    let tttTurn = 'X';
+    let tttOver = null; // null | 'X' | 'O' | 'draw'
+    let tttWinLine = [];
+    let tttScore = { w: 0, d: 0, l: 0 };
+
+    function checkTttWinner(board) {
+      for (const line of TTT_WINS) {
+        const [a, b, c] = line;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          return { winner: board[a], line };
+        }
+      }
+      if (board.every(cell => cell !== null)) {
+        return { winner: 'draw', line: [] };
+      }
+      return null;
+    }
+
+    function initTttGame() {
+      tttBoard = Array(9).fill(null);
+      tttTurn = 'X';
+      tttOver = null;
+      tttWinLine = [];
+      updateTttUI();
+    }
+
+    function pickTttAiMove() {
+      for (let i = 0; i < 9; i++) {
+        if (!tttBoard[i]) {
+          const copy = tttBoard.slice();
+          copy[i] = 'O';
+          if (checkTttWinner(copy)?.winner === 'O') return i;
+        }
+      }
+      for (let i = 0; i < 9; i++) {
+        if (!tttBoard[i]) {
+          const copy = tttBoard.slice();
+          copy[i] = 'X';
+          if (checkTttWinner(copy)?.winner === 'X') return i;
+        }
+      }
+      if (!tttBoard[4]) return 4;
+      const corners = [0, 2, 6, 8].filter(i => !tttBoard[i]);
+      if (corners.length) return corners[Math.floor(Math.random() * corners.length)];
+      const empty = tttBoard.map((v, i) => (v ? null : i)).filter(v => v !== null);
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    function handleTttClick(idx) {
+      if (tttOver || tttTurn !== 'X' || tttBoard[idx]) return;
+      tttBoard[idx] = 'X';
+      const resAfterX = checkTttWinner(tttBoard);
+      if (resAfterX) {
+        tttOver = resAfterX.winner;
+        tttWinLine = resAfterX.line;
+        if (tttOver === 'X') tttScore.w++;
+        else if (tttOver === 'draw') tttScore.d++;
+        updateTttUI();
+        return;
+      }
+
+      tttTurn = 'O';
+      updateTttUI();
+      setTimeout(() => {
+        if (tttOver) return;
+        const aiIdx = pickTttAiMove();
+        if (aiIdx !== undefined) {
+          tttBoard[aiIdx] = 'O';
+        }
+        const resAfterO = checkTttWinner(tttBoard);
+        if (resAfterO) {
+          tttOver = resAfterO.winner;
+          tttWinLine = resAfterO.line;
+          if (tttOver === 'O') tttScore.l++;
+          else if (tttOver === 'draw') tttScore.d++;
+        } else {
+          tttTurn = 'X';
+        }
+        updateTttUI();
+      }, 180);
+    }
+
+    function updateTttUI() {
+      const ui = langUI[currentLang] || langUI.tr;
+      const statusEl = document.getElementById('tttStatus');
+      const boardEl = document.getElementById('tttBoard');
+      const scoreEl = document.getElementById('tttScore');
+      if (!statusEl || !boardEl || !scoreEl) return;
+
+      if (tttOver === 'X') statusEl.textContent = ui.tttWinX;
+      else if (tttOver === 'O') statusEl.textContent = ui.tttWinO;
+      else if (tttOver === 'draw') statusEl.textContent = ui.tttDraw;
+      else statusEl.textContent = tttTurn === 'X' ? ui.tttTurnX : ui.tttTurnO;
+
+      scoreEl.textContent = ui.tttScoreFmt(tttScore.w, tttScore.d, tttScore.l);
+
+      boardEl.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ttt-cell';
+        const val = tttBoard[i];
+        if (val === 'X') {
+          btn.textContent = 'X';
+          btn.classList.add('x-mark');
+        } else if (val === 'O') {
+          btn.textContent = 'O';
+          btn.classList.add('o-mark');
+        }
+        if (tttWinLine.includes(i)) {
+          btn.classList.add('win-cell');
+        }
+        btn.disabled = Boolean(tttOver || val || tttTurn !== 'X');
+        btn.onclick = () => handleTttClick(i);
+        boardEl.appendChild(btn);
+      }
+    }
+
+    /* ================= 3. KELİME OYUNU MOTORU ================= */
+    let wordState = {
+      target: '',
+      clue: '',
+      guessed: new Set(),
+      lives: 6,
+      over: false
+    };
+
+    function initWordGame() {
+      const bank = WORD_BANKS[currentLang] || WORD_BANKS.tr;
+      const picked = bank[Math.floor(Math.random() * bank.length)];
+      wordState = {
+        target: picked.word,
+        clue: picked.clue,
+        guessed: new Set(),
+        lives: 6,
+        over: false
+      };
+      renderWordGame();
+    }
+
+    function handleWordLetter(letter) {
+      if (wordState.over || wordState.guessed.has(letter)) return;
+      wordState.guessed.add(letter);
+
+      if (!wordState.target.includes(letter)) {
+        wordState.lives = Math.max(0, wordState.lives - 1);
+      }
+
+      const allFound = [...wordState.target].every(ch => wordState.guessed.has(ch));
+      if (allFound) {
+        wordState.over = true;
+      } else if (wordState.lives <= 0) {
+        wordState.over = true;
+      }
+
+      renderWordGame();
+    }
+
+    function renderWordGame() {
+      const ui = langUI[currentLang] || langUI.tr;
+      const clueEl = document.getElementById('wordClue');
+      const livesEl = document.getElementById('wordLives');
+      const slotsEl = document.getElementById('wordSlots');
+      const statusEl = document.getElementById('wordStatus');
+      const kbEl = document.getElementById('wordKeyboard');
+      if (!clueEl || !livesEl || !slotsEl || !statusEl || !kbEl) return;
+
+      clueEl.textContent = ui.wordCluePrefix + wordState.clue;
+      livesEl.textContent = ui.wordLivesPrefix + wordState.lives;
+
+      const allFound = [...wordState.target].every(ch => wordState.guessed.has(ch));
+      if (wordState.over) {
+        statusEl.textContent = allFound ? ui.wordWin : ui.wordLoseFmt(wordState.target);
+      } else {
+        statusEl.textContent = '';
+      }
+
+      slotsEl.innerHTML = '';
+      for (const ch of wordState.target) {
+        const slot = document.createElement('div');
+        const showChar = wordState.guessed.has(ch) || (wordState.over && !allFound);
+        slot.className = 'word-slot' + (showChar ? ' revealed' : '');
+        slot.textContent = showChar ? ch : '·';
+        slotsEl.appendChild(slot);
+      }
+
+      kbEl.innerHTML = '';
+      const letters = KEYBOARD_LETTERS[currentLang] || KEYBOARD_LETTERS.tr;
+      for (const ltr of letters) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'letter-btn';
+        btn.textContent = ltr;
+        const already = wordState.guessed.has(ltr);
+        if (already) {
+          btn.classList.add(wordState.target.includes(ltr) ? 'hit' : 'miss');
+        }
+        btn.disabled = wordState.over || already;
+        btn.onclick = () => handleWordLetter(ltr);
+        kbEl.appendChild(btn);
+      }
+    }
+
+    updateAllGameTexts();
   </script>
 </body>
 </html>
