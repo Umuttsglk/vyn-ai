@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VYN AI</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.8'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap="round" stroke-linejoin="round' opacity='0.8'/%3E%3C/svg%3E" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body {
@@ -103,7 +103,17 @@
       width: 100%;
       margin: 0 auto;
     }
-    .msg { padding: 12px 16px; border-radius: 16px; max-width: 80%; line-height: 1.5; white-space: pre-wrap; }
+    .msg {
+      padding: 12px 16px;
+      border-radius: 16px;
+      max-width: 80%;
+      line-height: 1.5;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .msg-text {
+      white-space: pre-wrap;
+    }
     .user {
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       align-self: flex-end;
@@ -116,6 +126,27 @@
       border: 1px solid rgba(148, 163, 184, 0.18);
       align-self: flex-start;
       border-bottom-left-radius: 4px;
+    }
+    .copy-btn {
+      margin-top: 8px;
+      padding: 4px 10px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .copy-btn:hover {
+      color: #ffffff;
+      border-color: rgba(56, 189, 248, 0.55);
+      background: rgba(56, 189, 248, 0.16);
+    }
+    .copy-btn.copied {
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.65);
     }
 
     /* Modern Gemini Tarzı Alt Yazı Barı */
@@ -215,7 +246,10 @@
   </header>
 
   <div id="chat">
-    <div id="welcomeMsg" class="msg ai">Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.</div>
+    <div id="welcomeMsg" class="msg ai">
+      <div class="msg-text">Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.</div>
+      <button type="button" class="copy-btn" onclick="copyBubbleText(this)">Kopyala</button>
+    </div>
   </div>
 
   <div id="bar-wrap">
@@ -233,7 +267,7 @@
     const chat = document.getElementById('chat');
     const inp = document.getElementById('inp');
     const headerSub = document.getElementById('headerSub');
-    const welcomeMsg = document.getElementById('welcomeMsg');
+    const welcomeText = document.querySelector('#welcomeMsg .msg-text');
     const langButtons = document.querySelectorAll('.lang-btn');
     const chatHistory = [];
     let currentLang = 'tr';
@@ -245,7 +279,9 @@
         placeholder: "VYN AI'a bir şey sor...",
         thinking: "Düşünüyorum...",
         error: "Cevap alınamadı.",
-        netErr: "Bağlantı hatası oldu."
+        netErr: "Bağlantı hatası oldu.",
+        copy: "Kopyala",
+        copied: "Kopyalandı!"
       },
       en: {
         subtitle: "Chat, Actions & Knowledge Assistant",
@@ -253,7 +289,9 @@
         placeholder: "Ask VYN AI anything...",
         thinking: "Thinking...",
         error: "Could not get a response.",
-        netErr: "Network error occurred."
+        netErr: "Network error occurred.",
+        copy: "Copy",
+        copied: "Copied!"
       },
       fr: {
         subtitle: "Assistant de Chat, d'Actions & d'Informations",
@@ -261,7 +299,9 @@
         placeholder: "Demande n'importe quoi à VYN AI...",
         thinking: "Réflexion en cours...",
         error: "Impossible d'obtenir une réponse.",
-        netErr: "Erreur de connexion."
+        netErr: "Erreur de connexion.",
+        copy: "Copier",
+        copied: "Copié !"
       },
       es: {
         subtitle: "Asistente de Chat, Acciones e Información",
@@ -269,9 +309,20 @@
         placeholder: "Pregúntale lo que sea a VYN AI...",
         thinking: "Pensando...",
         error: "No se pudo obtener respuesta.",
-        netErr: "Ocurrió un error de conexión."
+        netErr: "Ocurrió un error de conexión.",
+        copy: "Copiar",
+        copied: "¡Copiado!"
       }
     };
+
+    function refreshCopyButtons() {
+      const ui = langUI[currentLang] || langUI.tr;
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        if (!btn.classList.contains('copied')) {
+          btn.textContent = ui.copy;
+        }
+      });
+    }
 
     function setLang(lang) {
       currentLang = lang;
@@ -282,8 +333,9 @@
       });
 
       headerSub.textContent = ui.subtitle;
-      welcomeMsg.textContent = ui.welcome;
+      welcomeText.textContent = ui.welcome;
       inp.placeholder = ui.placeholder;
+      refreshCopyButtons();
     }
 
     function autoResize(el) {
@@ -298,13 +350,59 @@
       }
     }
 
-    function addBubble(text, cls) {
+    async function copyBubbleText(btn) {
+      const ui = langUI[currentLang] || langUI.tr;
+      const bubble = btn.closest('.msg');
+      const textEl = bubble ? bubble.querySelector('.msg-text') : null;
+      const text = textEl ? textEl.textContent : '';
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = ui.copied;
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.textContent = (langUI[currentLang] || langUI.tr).copy;
+        }, 1500);
+      } catch {
+        const area = document.createElement('textarea');
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        document.body.removeChild(area);
+        btn.textContent = ui.copied;
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.textContent = (langUI[currentLang] || langUI.tr).copy;
+        }, 1500);
+      }
+    }
+
+    function addBubble(text, cls, withCopy = false) {
+      const ui = langUI[currentLang] || langUI.tr;
       const d = document.createElement('div');
       d.className = 'msg ' + cls;
-      d.textContent = text;
+
+      const textDiv = document.createElement('div');
+      textDiv.className = 'msg-text';
+      textDiv.textContent = text;
+      d.appendChild(textDiv);
+
+      if (withCopy) {
+        const copyBtn = document.createElement('button');
+        copyBtn.type = 'button';
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = ui.copy;
+        copyBtn.onclick = function () { copyBubbleText(this); };
+        d.appendChild(copyBtn);
+      }
+
       chat.appendChild(d);
       chat.scrollTop = chat.scrollHeight;
-      return d;
+      return textDiv;
     }
 
     async function sendMsg() {
@@ -313,12 +411,12 @@
 
       const ui = langUI[currentLang] || langUI.tr;
 
-      addBubble(q, 'user');
+      addBubble(q, 'user', false);
       chatHistory.push({ role: 'user', text: q });
       inp.value = '';
       inp.style.height = 'auto';
 
-      const wait = addBubble(ui.thinking, 'ai');
+      const waitText = addBubble(ui.thinking, 'ai', true);
 
       try {
         const r = await fetch('/api/chat', {
@@ -333,16 +431,17 @@
         const data = await r.json();
 
         if (r.ok && data.reply) {
-          wait.textContent = data.reply;
+          waitText.textContent = data.reply;
           chatHistory.push({ role: 'assistant', text: data.reply });
         } else {
-          wait.textContent = data.error || ui.error;
+          waitText.textContent = data.error || ui.error;
           chatHistory.pop();
         }
       } catch {
-        wait.textContent = ui.netErr;
+        waitText.textContent = ui.netErr;
         chatHistory.pop();
       }
+      chat.scrollTop = chat.scrollHeight;
     }
   </script>
 </body>
