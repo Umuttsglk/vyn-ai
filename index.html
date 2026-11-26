@@ -211,11 +211,11 @@
       </div>
     </div>
 
-    <div class="header-sub">Sohbet, İşlem & Bilgi Asistanı</div>
+    <div id="headerSub" class="header-sub">Sohbet, İşlem & Bilgi Asistanı</div>
   </header>
 
   <div id="chat">
-    <div class="msg ai">Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.</div>
+    <div id="welcomeMsg" class="msg ai">Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.</div>
   </div>
 
   <div id="bar-wrap">
@@ -232,30 +232,40 @@
   <script>
     const chat = document.getElementById('chat');
     const inp = document.getElementById('inp');
+    const headerSub = document.getElementById('headerSub');
+    const welcomeMsg = document.getElementById('welcomeMsg');
     const langButtons = document.querySelectorAll('.lang-btn');
     const chatHistory = [];
     let currentLang = 'tr';
 
     const langUI = {
       tr: {
+        subtitle: "Sohbet, İşlem & Bilgi Asistanı",
+        welcome: "Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.",
         placeholder: "VYN AI'a bir şey sor...",
         thinking: "Düşünüyorum...",
         error: "Cevap alınamadı.",
         netErr: "Bağlantı hatası oldu."
       },
       en: {
+        subtitle: "Chat, Actions & Knowledge Assistant",
+        welcome: "Hi! I'm VYN AI. You can chat with me, get things done, or ask about anything you're curious about.",
         placeholder: "Ask VYN AI anything...",
         thinking: "Thinking...",
         error: "Could not get a response.",
         netErr: "Network error occurred."
       },
       fr: {
+        subtitle: "Assistant de Chat, d'Actions & d'Informations",
+        welcome: "Salut ! Je suis VYN AI. Tu peux discuter avec moi, effectuer des tâches ou me poser toutes tes questions.",
         placeholder: "Demande n'importe quoi à VYN AI...",
         thinking: "Réflexion en cours...",
         error: "Impossible d'obtenir une réponse.",
         netErr: "Erreur de connexion."
       },
       es: {
+        subtitle: "Asistente de Chat, Acciones e Información",
+        welcome: "¡Hola! Soy VYN AI. Puedes chatear conmigo, realizar acciones o preguntarme lo que quieras.",
         placeholder: "Pregúntale lo que sea a VYN AI...",
         thinking: "Pensando...",
         error: "No se pudo obtener respuesta.",
@@ -265,10 +275,15 @@
 
     function setLang(lang) {
       currentLang = lang;
+      const ui = langUI[lang] || langUI.tr;
+
       langButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
       });
-      inp.placeholder = (langUI[lang] && langUI[lang].placeholder) || "VYN AI'a bir şey sor...";
+
+      headerSub.textContent = ui.subtitle;
+      welcomeMsg.textContent = ui.welcome;
+      inp.placeholder = ui.placeholder;
     }
 
     function autoResize(el) {
