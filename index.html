@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VYN AI</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.8'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap="round" stroke-linejoin="round' opacity='0.8'/%3E%3C/svg%3E" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body {
@@ -22,21 +22,75 @@
       background: rgba(15, 23, 42, 0.78);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(148, 163, 184, 0.16);
-      padding: 16px;
+      padding: 12px 18px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       color: #38bdf8;
+      margin-right: 4px;
     }
     .brand-logo {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       flex-shrink: 0;
       filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.35));
     }
+    .lang-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+    .lang-label {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+      padding-left: 4px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .lang-btn:hover {
+      color: #ffffff;
+      background: rgba(148, 163, 184, 0.14);
+    }
+    .lang-btn.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+    }
+    .header-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
     #chat {
       flex: 1;
       overflow-y: auto;
@@ -136,25 +190,41 @@
 </head>
 <body>
   <header>
-    <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
-      <defs>
-        <linearGradient id="vynGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#38bdf8"/>
-          <stop offset="100%" stop-color="#a855f7"/>
-        </linearGradient>
-      </defs>
-      <path d="M10 20 L23 48 L36 22 L47 40 L55 18" fill="none" stroke="url(#vynGrad)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M17 18 L25 37 L34 20" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
-    </svg>
-    <span>VYN AI — Sohbet, İşlem & Bilgi Asistanı</span>
+    <div class="header-left">
+      <div class="brand-wrap">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="vynGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#a855f7"/>
+            </linearGradient>
+          </defs>
+          <path d="M10 20 L23 48 L36 22 L47 40 L55 18" fill="none" stroke="url(#vynGrad)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17 18 L25 37 L34 20" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+        </svg>
+        <span>VYN AI</span>
+      </div>
+
+      <div class="lang-box" role="group" aria-label="Language">
+        <span class="lang-label">Language:</span>
+        <button type="button" class="lang-btn active" data-lang="tr" onclick="setLang('tr')">Türkçe</button>
+        <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+        <button type="button" class="lang-btn" data-lang="fr" onclick="setLang('fr')">Français</button>
+        <button type="button" class="lang-btn" data-lang="es" onclick="setLang('es')">Español</button>
+      </div>
+    </div>
+
+    <div class="header-sub">Sohbet, İşlem & Bilgi Asistanı</div>
   </header>
+
   <div id="chat">
     <div class="msg ai">Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.</div>
   </div>
+
   <div id="bar-wrap">
     <div id="bar">
       <textarea id="inp" rows="1" placeholder="VYN AI'a bir şey sor..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
-      <button id="sendBtn" onclick="sendMsg()" title="Gönder" aria-label="Gönder">
+      <button id="sendBtn" type="button" onclick="sendMsg()" title="Gönder" aria-label="Gönder">
         <svg viewBox="0 0 24 24">
           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
         </svg>
@@ -165,7 +235,44 @@
   <script>
     const chat = document.getElementById('chat');
     const inp = document.getElementById('inp');
+    const langButtons = document.querySelectorAll('.lang-btn');
     const chatHistory = [];
+    let currentLang = 'tr';
+
+    const langUI = {
+      tr: {
+        placeholder: "VYN AI'a bir şey sor...",
+        thinking: "Düşünüyorum...",
+        error: "Cevap alınamadı.",
+        netErr: "Bağlantı hatası oldu."
+      },
+      en: {
+        placeholder: "Ask VYN AI anything...",
+        thinking: "Thinking...",
+        error: "Could not get a response.",
+        netErr: "Network error occurred."
+      },
+      fr: {
+        placeholder: "Demande n'importe quoi à VYN AI...",
+        thinking: "Réflexion en cours...",
+        error: "Impossible d'obtenir une réponse.",
+        netErr: "Erreur de connexion."
+      },
+      es: {
+        placeholder: "Pregúntale lo que sea a VYN AI...",
+        thinking: "Pensando...",
+        error: "No se pudo obtener respuesta.",
+        netErr: "Ocurrió un error de conexión."
+      }
+    };
+
+    function setLang(lang) {
+      currentLang = lang;
+      langButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      inp.placeholder = (langUI[lang] && langUI[lang].placeholder) || "VYN AI'a bir şey sor...";
+    }
 
     function autoResize(el) {
       el.style.height = 'auto';
@@ -192,12 +299,14 @@
       const q = inp.value.trim();
       if (!q) return;
 
+      const ui = langUI[currentLang] || langUI.tr;
+
       addBubble(q, 'user');
       chatHistory.push({ role: 'user', text: q });
       inp.value = '';
       inp.style.height = 'auto';
 
-      const wait = addBubble('Düşünüyorum...', 'ai');
+      const wait = addBubble(ui.thinking, 'ai');
 
       try {
         const r = await fetch('/api/chat', {
@@ -205,7 +314,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: q,
-            history: chatHistory
+            history: chatHistory,
+            lang: currentLang
           })
         });
         const data = await r.json();
@@ -214,11 +324,11 @@
           wait.textContent = data.reply;
           chatHistory.push({ role: 'assistant', text: data.reply });
         } else {
-          wait.textContent = data.error || 'Cevap alınamadı.';
+          wait.textContent = data.error || ui.error;
           chatHistory.pop();
         }
       } catch {
-        wait.textContent = 'Bağlantı hatası oldu.';
+        wait.textContent = ui.netErr;
         chatHistory.pop();
       }
     }
