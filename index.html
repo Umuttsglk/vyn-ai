@@ -282,6 +282,16 @@
       margin: 0 auto;
       transition: max-width 0.2s ease, padding 0.2s ease;
     }
+    @keyframes msgEnter {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
     .msg {
       padding: 12px 16px;
       border-radius: 16px;
@@ -289,6 +299,7 @@
       line-height: 1.5;
       user-select: text;
       -webkit-user-select: text;
+      animation: msgEnter 0.2s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .msg-text {
       white-space: pre-wrap;
@@ -307,7 +318,6 @@
       border-bottom-left-radius: 4px;
     }
 
-    /* Gelişmiş Yazıyor Animasyonu */
     @keyframes typingWave {
       0%, 60%, 100% {
         transform: translateY(0) scale(0.88);
@@ -769,8 +779,12 @@
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
-      transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
+    }
+    #sendBtn.is-generating {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.42);
     }
     #sendBtn:hover {
       transform: scale(1.06);
@@ -946,6 +960,7 @@
         </svg>
         <span id="playGameLabel">Oyun Oyna</span>
       </button>
+      <button id="downloadChatBtn" type="button" class="action-pill-btn" onclick="downloadChatTxt()">İndir</button>
       <button id="newChatBtn" type="button" class="action-pill-btn" onclick="resetChat()">Yeni Sohbet</button>
       <div id="headerSub" class="header-sub">Sohbet, İşlem & Bilgi Asistanı</div>
     </div>
@@ -980,6 +995,7 @@
             </svg>
             <span id="chessHintLabel">İpucu</span>
           </button>
+          <button id="chessUndoBtn" type="button" class="chess-btn" onclick="undoChessMove()">Geri Al</button>
           <button id="chessRestartBtn" type="button" class="chess-btn" onclick="initChessGame()">Yeni Oyun</button>
           <button id="chessCloseBtn" type="button" class="chess-btn" onclick="toggleChessModal(false)">Kapat</button>
         </div>
@@ -1047,8 +1063,8 @@
 
     <div id="bar">
       <textarea id="inp" rows="1" placeholder="VYN AI'a bir şey sor..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
-      <button id="sendBtn" type="button" onclick="sendMsg()" title="Gönder" aria-label="Gönder">
-        <svg viewBox="0 0 24 24">
+      <button id="sendBtn" type="button" onclick="onPrimaryAction()" title="Gönder" aria-label="Gönder">
+        <svg id="sendBtnIcon" viewBox="0 0 24 24">
           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
         </svg>
       </button>
@@ -1060,6 +1076,7 @@
     const inp = document.getElementById('inp');
     const headerSub = document.getElementById('headerSub');
     const themesLabel = document.getElementById('themesLabel');
+    const downloadChatBtn = document.getElementById('downloadChatBtn');
     const newChatBtn = document.getElementById('newChatBtn');
     const playGameLabel = document.getElementById('playGameLabel');
     const playGameBtn = document.getElementById('playGameBtn');
@@ -1067,12 +1084,16 @@
     const mobileModeBtn = document.getElementById('mobileModeBtn');
     const pcModeLabel = document.getElementById('pcModeLabel');
     const mobileModeLabel = document.getElementById('mobileModeLabel');
+    const sendBtn = document.getElementById('sendBtn');
+    const sendBtnIcon = document.getElementById('sendBtnIcon');
     const langButtons = document.querySelectorAll('.lang-btn');
     const themeSwatches = document.querySelectorAll('.theme-swatch');
     const chatHistory = [];
     let currentLang = 'tr';
     let currentDevice = 'pc';
     let currentTheme = 'cosmic';
+    let activeAbortController = null;
+    let isGeneratingReply = false;
 
     const langUI = {
       tr: {
@@ -1080,11 +1101,16 @@
         themes: "Temalar:",
         pcMode: "PC Mod",
         mobileMode: "Mobil Mod",
+        downloadChat: "İndir",
         newChat: "Yeni Sohbet",
         playGame: "Oyun Oyna",
+        sendTitle: "Gönder",
+        stopTitle: "Durdur",
+        stoppedMsg: "Yanıt durduruldu.",
         chessTitle: "VYN AI Satranç",
         chessSub: "Sen Beyaz · VYN AI Siyah",
         chessHint: "İpucu",
+        chessUndo: "Geri Al",
         legendYou: "Senin Taşların (Beyaz)",
         legendAi: "VYN AI Taşları (Siyah)",
         chessRestart: "Yeni Oyun",
@@ -1129,11 +1155,16 @@
         themes: "Themes:",
         pcMode: "PC Mode",
         mobileMode: "Mobile Mode",
+        downloadChat: "Save",
         newChat: "New Chat",
         playGame: "Play Game",
+        sendTitle: "Send",
+        stopTitle: "Stop",
+        stoppedMsg: "Response stopped.",
         chessTitle: "VYN AI Chess",
         chessSub: "You White · VYN AI Black",
         chessHint: "Hint",
+        chessUndo: "Undo",
         legendYou: "Your Pieces (White)",
         legendAi: "VYN AI Pieces (Black)",
         chessRestart: "New Game",
@@ -1178,11 +1209,16 @@
         themes: "Thèmes :",
         pcMode: "Mode PC",
         mobileMode: "Mode Mobile",
+        downloadChat: "Enregistrer",
         newChat: "Nouveau Chat",
         playGame: "Jouer",
+        sendTitle: "Envoyer",
+        stopTitle: "Arrêter",
+        stoppedMsg: "Réponse arrêtée.",
         chessTitle: "Échecs VYN AI",
         chessSub: "Toi Blancs · VYN AI Noirs",
         chessHint: "Indice",
+        chessUndo: "Annuler",
         legendYou: "Tes Pièces (Blancs)",
         legendAi: "Pièces VYN AI (Noirs)",
         chessRestart: "Nouvelle Partie",
@@ -1227,11 +1263,16 @@
         themes: "Temas:",
         pcMode: "Modo PC",
         mobileMode: "Modo Móvil",
+        downloadChat: "Guardar",
         newChat: "Nuevo Chat",
         playGame: "Jugar",
+        sendTitle: "Enviar",
+        stopTitle: "Detener",
+        stoppedMsg: "Respuesta detenida.",
         chessTitle: "Ajedrez VYN AI",
         chessSub: "Tú Blancas · VYN AI Negras",
         chessHint: "Pista",
+        chessUndo: "Deshacer",
         legendYou: "Tus Piezas (Blancas)",
         legendAi: "Piezas VYN AI (Negras)",
         chessRestart: "Nueva Partida",
@@ -1272,6 +1313,21 @@
         ]
       }
     };
+
+    function syncSendButtonState() {
+      const ui = langUI[currentLang] || langUI.tr;
+      if (isGeneratingReply) {
+        sendBtn.classList.add('is-generating');
+        sendBtn.title = ui.stopTitle;
+        sendBtn.setAttribute('aria-label', ui.stopTitle);
+        sendBtnIcon.innerHTML = '<rect x="6" y="6" width="12" height="12" rx="2.2"/>';
+      } else {
+        sendBtn.classList.remove('is-generating');
+        sendBtn.title = ui.sendTitle;
+        sendBtn.setAttribute('aria-label', ui.sendTitle);
+        sendBtnIcon.innerHTML = '<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>';
+      }
+    }
 
     function setTheme(themeName) {
       const allowed = ['cosmic', 'cyber', 'nova', 'emerald'];
@@ -1340,7 +1396,36 @@
       chat.appendChild(d);
     }
 
+    function downloadChatTxt() {
+      const ui = langUI[currentLang] || langUI.tr;
+      const lines = ['VYN AI - Sohbet Kaydı', '========================', ''];
+      const welcomeEl = document.querySelector('#welcomeMsg .msg-text');
+      if (welcomeEl && welcomeEl.textContent) {
+        lines.push(`VYN AI: ${welcomeEl.textContent}`, '');
+      }
+      for (const item of chatHistory) {
+        const who = item.role === 'user' ? 'Sen' : 'VYN AI';
+        lines.push(`${who}: ${item.text}`, '');
+      }
+      const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `vyn-ai-sohbet-${new Date().toISOString().slice(0, 10)}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      void ui;
+    }
+
     function resetChat() {
+      if (activeAbortController) {
+        activeAbortController.abort();
+        activeAbortController = null;
+      }
+      isGeneratingReply = false;
+      syncSendButtonState();
       chatHistory.length = 0;
       inp.value = '';
       inp.style.height = 'auto';
@@ -1353,6 +1438,7 @@
       document.getElementById('chessModalTitle').textContent = ui.chessTitle;
       document.getElementById('chessModalSub').textContent = ui.chessSub;
       document.getElementById('chessHintLabel').textContent = ui.chessHint;
+      document.getElementById('chessUndoBtn').textContent = ui.chessUndo;
       document.getElementById('legendYou').textContent = ui.legendYou;
       document.getElementById('legendAi').textContent = ui.legendAi;
       document.getElementById('chessRestartBtn').textContent = ui.chessRestart;
@@ -1373,6 +1459,7 @@
       themesLabel.textContent = ui.themes;
       pcModeLabel.textContent = ui.pcMode;
       mobileModeLabel.textContent = ui.mobileMode;
+      downloadChatBtn.textContent = ui.downloadChat;
       newChatBtn.textContent = ui.newChat;
       inp.placeholder = ui.placeholder;
 
@@ -1382,6 +1469,7 @@
       }
       updateStarterCardsUI();
       refreshCopyButtons();
+      syncSendButtonState();
       updateChessTexts();
     }
 
@@ -1393,8 +1481,16 @@
     function handleKey(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        sendMsg();
+        onPrimaryAction();
       }
+    }
+
+    function onPrimaryAction() {
+      if (isGeneratingReply && activeAbortController) {
+        activeAbortController.abort();
+        return;
+      }
+      sendMsg();
     }
 
     async function copyBubbleText(btn) {
@@ -1495,7 +1591,7 @@
 
     async function sendMsg() {
       const q = inp.value.trim();
-      if (!q) return;
+      if (!q || isGeneratingReply) return;
 
       const ui = langUI[currentLang] || langUI.tr;
 
@@ -1505,11 +1601,15 @@
       inp.style.height = 'auto';
 
       const waitText = addTypingBubble(ui.thinking);
+      activeAbortController = new AbortController();
+      isGeneratingReply = true;
+      syncSendButtonState();
 
       try {
         const r = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: activeAbortController.signal,
           body: JSON.stringify({
             message: q,
             history: chatHistory,
@@ -1525,11 +1625,20 @@
           waitText.textContent = data.error || ui.error;
           chatHistory.pop();
         }
-      } catch {
-        waitText.textContent = ui.netErr;
-        chatHistory.pop();
+      } catch (err) {
+        if (err && err.name === 'AbortError') {
+          waitText.textContent = ui.stoppedMsg;
+          chatHistory.pop();
+        } else {
+          waitText.textContent = ui.netErr;
+          chatHistory.pop();
+        }
+      } finally {
+        activeAbortController = null;
+        isGeneratingReply = false;
+        syncSendButtonState();
+        chat.scrollTop = chat.scrollHeight;
       }
-      chat.scrollTop = chat.scrollHeight;
     }
 
     /* ================= SATRANÇ MOTORU (VYN AI SİYAH, KULLANICI BEYAZ) ================= */
@@ -1547,9 +1656,46 @@
     let chessLastMove = null;
     let chessHintMove = null;
     let chessMoveLog = [];
+    let chessUndoStack = [];
     let chessGameOver = null;
     let chessAiBusy = false;
     let castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
+
+    function captureChessSnapshot() {
+      return {
+        board: cloneBoard(chessBoard),
+        turn: chessTurn,
+        lastMove: chessLastMove ? { ...chessLastMove } : null,
+        moveLog: chessMoveLog.slice(),
+        gameOver: chessGameOver,
+        rights: { ...castlingRights }
+      };
+    }
+
+    function restoreChessSnapshot(snap) {
+      chessBoard = cloneBoard(snap.board);
+      chessTurn = snap.turn;
+      chessLastMove = snap.lastMove ? { ...snap.lastMove } : null;
+      chessMoveLog = snap.moveLog.slice();
+      chessGameOver = snap.gameOver;
+      castlingRights = { ...snap.rights };
+      chessSelected = null;
+      chessLegalMoves = [];
+      chessHintMove = null;
+      document.getElementById('chessHintBox').textContent = '';
+      document.getElementById('chessMoves').textContent = chessMoveLog.join('\n');
+      updateChessStatusText();
+      renderChessBoard();
+    }
+
+    function undoChessMove() {
+      if (chessAiBusy || chessUndoStack.length === 0) return;
+      let targetSnap = chessUndoStack.pop();
+      if (chessTurn === 'w' && targetSnap.turn === 'b' && chessUndoStack.length > 0) {
+        targetSnap = chessUndoStack.pop();
+      }
+      restoreChessSnapshot(targetSnap);
+    }
 
     function toggleChessModal(open) {
       const overlay = document.getElementById('chessOverlay');
@@ -1575,6 +1721,7 @@
       chessLastMove = null;
       chessHintMove = null;
       chessMoveLog = [];
+      chessUndoStack = [];
       chessGameOver = null;
       chessAiBusy = false;
       castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
@@ -1836,8 +1983,12 @@
       const ui = langUI[currentLang] || langUI.tr;
       const el = document.getElementById('chessStatus');
       const hintBtn = document.getElementById('chessHintBtn');
+      const undoBtn = document.getElementById('chessUndoBtn');
       if (hintBtn) {
         hintBtn.disabled = Boolean(chessGameOver || chessAiBusy || chessTurn !== 'w');
+      }
+      if (undoBtn) {
+        undoBtn.disabled = Boolean(chessAiBusy || chessUndoStack.length === 0);
       }
       if (!el) return;
       if (chessGameOver === 'mate_w') {
@@ -1987,6 +2138,7 @@
       const moveMatch = chessLegalMoves.find(m => m.tr === r && m.tc === c);
 
       if (moveMatch) {
+        chessUndoStack.push(captureChessSnapshot());
         const sim = applyMoveOnBoard(chessBoard, castlingRights, moveMatch);
         chessBoard = sim.board;
         castlingRights = sim.rights;
