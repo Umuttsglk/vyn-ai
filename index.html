@@ -1177,7 +1177,8 @@
         sendTitle: "Gönder",
         stopTitle: "Durdur",
         stoppedMsg: "Yanıt durduruldu.",
-        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message in any language, but write your ENTIRE response strictly in Turkish (Türkçe). Never switch to another language even if the user writes in another language.",
+        langName: "Turkish",
+        langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if it is written in another language, but write 100% of your reply strictly in Turkish (Türkçe). Do NOT use any other language.",
         thinkLabels: { fast: "Hızlı", logical: "Mantıklı", planned: "Planlı" },
         thinkInstructions: {
           fast: "Kısa, net ve doğrudan sonuca odaklanan bir yanıt ver.",
@@ -1238,7 +1239,8 @@
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
-        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message even if written in Turkish or another language, but write your ENTIRE response strictly in English. Never reply in Turkish or any other language.",
+        langName: "English",
+        langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish or any other language, but write 100% of your reply strictly in English. Never reply in Turkish or any other language.",
         thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
         thinkInstructions: {
           fast: "Give a short, clear, and direct answer.",
@@ -1299,7 +1301,8 @@
         sendTitle: "Envoyer",
         stopTitle: "Arrêter",
         stoppedMsg: "Réponse arrêtée.",
-        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message in any language, but write your ENTIRE response strictly in French (Français). Never reply in Turkish, English, or another language.",
+        langName: "French",
+        langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish, English, or another language, but write 100% of your reply strictly in French (Français). Never reply in Turkish, English, or any other language.",
         thinkLabels: { fast: "Rapide", logical: "Logique", planned: "Planifié" },
         thinkInstructions: {
           fast: "Donne une réponse courte, claire et directe.",
@@ -1360,7 +1363,8 @@
         sendTitle: "Enviar",
         stopTitle: "Detener",
         stoppedMsg: "Respuesta detenida.",
-        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message in any language, but write your ENTIRE response strictly in Spanish (Español). Never reply in Turkish, English, or another language.",
+        langName: "Spanish",
+        langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish, English, French, or another language, but write 100% of your reply strictly in Spanish (Español). Never reply in Turkish, English, or any other language.",
         thinkLabels: { fast: "Rápido", logical: "Lógico", planned: "Planificado" },
         thinkInstructions: {
           fast: "Da una respuesta corta, clara y directa.",
@@ -1411,6 +1415,15 @@
         ]
       }
     };
+
+    function buildLockedHistory(lang) {
+      const ui = langUI[lang] || langUI.tr;
+      const lockPrefix = `[Reply ONLY in ${ui.langName}] `;
+      return chatHistory.map(item => ({
+        role: item.role,
+        text: item.role === 'user' ? `${lockPrefix}${item.text}` : item.text
+      }));
+    }
 
     function updateThinkingButtonsUI() {
       const ui = langUI[currentLang] || langUI.tr;
@@ -1562,6 +1575,7 @@
 
     function setLang(lang) {
       currentLang = lang;
+      document.documentElement.lang = lang;
       const ui = langUI[lang] || langUI.tr;
 
       langButtons.forEach(btn => {
@@ -1711,7 +1725,10 @@
       const modeInstruction =
         (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
       const langRule = ui.langLockRule || '';
-      const outboundMessage = [q, langRule, modeInstruction].filter(Boolean).join('\n\n');
+      const lockedHistory = buildLockedHistory(currentLang);
+      const outboundMessage = [langRule, `User message: ${q}`, modeInstruction]
+        .filter(Boolean)
+        .join('\n\n');
 
       addBubble(q, 'user', false);
       chatHistory.push({ role: 'user', text: q });
@@ -1730,9 +1747,11 @@
           signal: activeAbortController.signal,
           body: JSON.stringify({
             message: outboundMessage,
-            history: chatHistory,
+            rawMessage: q,
+            history: lockedHistory,
             lang: currentLang,
             forceLang: currentLang,
+            targetLanguage: ui.langName,
             thinkingMode: currentThinkingMode
           })
         });
