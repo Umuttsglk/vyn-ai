@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VYN AI</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap="round" stroke-linejoin="round' opacity='0.8'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.8'/%3E%3C/svg%3E" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body {
@@ -33,6 +33,12 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       flex-wrap: wrap;
     }
     .brand-wrap {
@@ -90,6 +96,22 @@
       font-size: 0.85rem;
       color: #94a3b8;
       font-weight: 500;
+    }
+    .new-chat-btn {
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(30, 41, 59, 0.75);
+      color: #e2e8f0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .new-chat-btn:hover {
+      color: #ffffff;
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.65);
     }
 
     #chat {
@@ -242,7 +264,10 @@
       </div>
     </div>
 
-    <div id="headerSub" class="header-sub">Sohbet, İşlem & Bilgi Asistanı</div>
+    <div class="header-right">
+      <button id="newChatBtn" type="button" class="new-chat-btn" onclick="resetChat()">Yeni Sohbet</button>
+      <div id="headerSub" class="header-sub">Sohbet, İşlem & Bilgi Asistanı</div>
+    </div>
   </header>
 
   <div id="chat">
@@ -267,7 +292,7 @@
     const chat = document.getElementById('chat');
     const inp = document.getElementById('inp');
     const headerSub = document.getElementById('headerSub');
-    const welcomeText = document.querySelector('#welcomeMsg .msg-text');
+    const newChatBtn = document.getElementById('newChatBtn');
     const langButtons = document.querySelectorAll('.lang-btn');
     const chatHistory = [];
     let currentLang = 'tr';
@@ -275,6 +300,7 @@
     const langUI = {
       tr: {
         subtitle: "Sohbet, İşlem & Bilgi Asistanı",
+        newChat: "Yeni Sohbet",
         welcome: "Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.",
         placeholder: "VYN AI'a bir şey sor...",
         thinking: "Düşünüyorum...",
@@ -285,6 +311,7 @@
       },
       en: {
         subtitle: "Chat, Actions & Knowledge Assistant",
+        newChat: "New Chat",
         welcome: "Hi! I'm VYN AI. You can chat with me, get things done, or ask about anything you're curious about.",
         placeholder: "Ask VYN AI anything...",
         thinking: "Thinking...",
@@ -295,6 +322,7 @@
       },
       fr: {
         subtitle: "Assistant de Chat, d'Actions & d'Informations",
+        newChat: "Nouveau Chat",
         welcome: "Salut ! Je suis VYN AI. Tu peux discuter avec moi, effectuer des tâches ou me poser toutes tes questions.",
         placeholder: "Demande n'importe quoi à VYN AI...",
         thinking: "Réflexion en cours...",
@@ -305,6 +333,7 @@
       },
       es: {
         subtitle: "Asistente de Chat, Acciones e Información",
+        newChat: "Nuevo Chat",
         welcome: "¡Hola! Soy VYN AI. Puedes chatear conmigo, realizar acciones o preguntarme lo que quieras.",
         placeholder: "Pregúntale lo que sea a VYN AI...",
         thinking: "Pensando...",
@@ -324,6 +353,35 @@
       });
     }
 
+    function renderWelcomeBubble() {
+      const ui = langUI[currentLang] || langUI.tr;
+      chat.innerHTML = '';
+      const d = document.createElement('div');
+      d.id = 'welcomeMsg';
+      d.className = 'msg ai';
+
+      const textDiv = document.createElement('div');
+      textDiv.className = 'msg-text';
+      textDiv.textContent = ui.welcome;
+      d.appendChild(textDiv);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'copy-btn';
+      copyBtn.textContent = ui.copy;
+      copyBtn.onclick = function () { copyBubbleText(this); };
+      d.appendChild(copyBtn);
+
+      chat.appendChild(d);
+    }
+
+    function resetChat() {
+      chatHistory.length = 0;
+      inp.value = '';
+      inp.style.height = 'auto';
+      renderWelcomeBubble();
+    }
+
     function setLang(lang) {
       currentLang = lang;
       const ui = langUI[lang] || langUI.tr;
@@ -333,8 +391,13 @@
       });
 
       headerSub.textContent = ui.subtitle;
-      welcomeText.textContent = ui.welcome;
+      newChatBtn.textContent = ui.newChat;
       inp.placeholder = ui.placeholder;
+
+      const welcomeText = document.querySelector('#welcomeMsg .msg-text');
+      if (welcomeText) {
+        welcomeText.textContent = ui.welcome;
+      }
       refreshCopyButtons();
     }
 
