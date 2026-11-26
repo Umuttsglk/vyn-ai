@@ -225,13 +225,13 @@
       border-color: rgba(56, 189, 248, 0.65);
     }
 
-    /* Satranç Oyun Modal / Panel */
+    /* Satranç Oyun Modal / Panel (Büyütülmüş Geniş Görünüm) */
     #chessOverlay {
       display: none;
       position: fixed;
       inset: 0;
       z-index: 40;
-      background: rgba(5, 8, 17, 0.78);
+      background: rgba(5, 8, 17, 0.82);
       backdrop-filter: blur(8px);
       align-items: center;
       justify-content: center;
@@ -242,34 +242,34 @@
     }
     #chessModal {
       width: 100%;
-      max-width: 740px;
-      max-height: 92vh;
+      max-width: 900px;
+      max-height: 94vh;
       overflow-y: auto;
-      background: rgba(15, 23, 42, 0.94);
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      border-radius: 22px;
-      padding: 18px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 26px 68px rgba(0, 0, 0, 0.72);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
     .chess-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
     }
     .chess-title-wrap {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
     .chess-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
       background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(168, 85, 247, 0.28));
       border: 1px solid rgba(148, 163, 184, 0.28);
       display: flex;
@@ -278,12 +278,12 @@
       flex-shrink: 0;
     }
     .chess-title {
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #f8fafc;
     }
     .chess-sub {
-      font-size: 0.76rem;
+      font-size: 0.8rem;
       color: #94a3b8;
     }
     .chess-controls {
@@ -294,97 +294,194 @@
     }
     .chess-btn {
       border: 1px solid rgba(148, 163, 184, 0.25);
-      background: rgba(30, 41, 59, 0.85);
+      background: rgba(30, 41, 59, 0.88);
       color: #e2e8f0;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      padding: 6px 11px;
+      padding: 7px 13px;
       border-radius: 999px;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.16s ease;
     }
-    .chess-btn:hover {
-      border-color: rgba(56, 189, 248, 0.6);
+    .chess-btn:hover:not(:disabled) {
+      border-color: rgba(56, 189, 248, 0.65);
       color: #ffffff;
-      background: rgba(56, 189, 248, 0.16);
+      background: rgba(56, 189, 248, 0.18);
+    }
+    .chess-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .chess-btn.hint-btn {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: rgba(250, 204, 21, 0.12);
+      color: #fde047;
+    }
+    .chess-btn.hint-btn:hover:not(:disabled) {
+      border-color: rgba(250, 204, 21, 0.85);
+      background: rgba(250, 204, 21, 0.22);
+      color: #fef08a;
+    }
+    .bulb-icon {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
     }
     .chess-body {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 210px;
-      gap: 16px;
+      grid-template-columns: minmax(0, 1fr) 255px;
+      gap: 20px;
       align-items: start;
     }
     .chess-board {
       width: 100%;
       aspect-ratio: 1 / 1;
-      max-width: 440px;
+      max-width: 540px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(8, 1fr);
       grid-template-rows: repeat(8, 1fr);
-      border-radius: 14px;
+      border-radius: 16px;
       overflow: hidden;
-      border: 2px solid rgba(148, 163, 184, 0.28);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+    }
+    @keyframes piecePop {
+      0% { transform: scale(0.72); }
+      65% { transform: scale(1.12); }
+      100% { transform: scale(1); }
     }
     .sq {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(1.45rem, 4.2vw, 2.35rem);
       cursor: pointer;
       user-select: none;
       position: relative;
-      transition: background 0.12s ease, transform 0.1s ease;
+      padding: 0;
+      border: none;
+      transition: background 0.14s ease, box-shadow 0.14s ease;
     }
     .sq.light {
-      background: #cbd5e1;
-      color: #0f172a;
+      background: #e2e8f0;
     }
     .sq.dark {
-      background: #334155;
+      background: #1e293b;
+    }
+    .piece-glyph {
+      display: inline-block;
+      font-size: clamp(1.75rem, 4.9vw, 2.85rem);
+      line-height: 1;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .piece-glyph.anim-move {
+      animation: piecePop 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    /* Senin taşların (Beyaz): parlak buz mavisi-beyaz tonu */
+    .piece-glyph.w-piece {
       color: #f8fafc;
+      -webkit-text-stroke: 1.3px #0284c7;
+      text-shadow: 0 2px 7px rgba(2, 132, 199, 0.58), 0 0 1px #0f172a;
+    }
+    /* VYN AI taşları (Siyah): belirgin mor-koyu lavanta tonu */
+    .piece-glyph.b-piece {
+      color: #a855f7;
+      -webkit-text-stroke: 1.2px #2e1065;
+      text-shadow: 0 2px 8px rgba(88, 28, 135, 0.68), 0 0 1px #090d16;
+    }
+    .sq:hover .piece-glyph {
+      transform: scale(1.07);
     }
     .sq.selected {
-      outline: 3px solid #38bdf8;
-      outline-offset: -3px;
-      background: rgba(56, 189, 248, 0.45) !important;
+      box-shadow: inset 0 0 0 3px #38bdf8;
+      background: rgba(56, 189, 248, 0.38) !important;
     }
     .sq.last-move {
-      background: rgba(168, 85, 247, 0.34) !important;
+      background: rgba(56, 189, 248, 0.24) !important;
+    }
+    .sq.hint-from {
+      box-shadow: inset 0 0 0 3px #facc15;
+      background: rgba(250, 204, 21, 0.34) !important;
+    }
+    .sq.hint-to {
+      box-shadow: inset 0 0 0 3px #facc15;
+      background: rgba(250, 204, 21, 0.25) !important;
     }
     .sq.legal::after {
       content: "";
       width: 28%;
       height: 28%;
       border-radius: 50%;
-      background: rgba(56, 189, 248, 0.78);
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+      background: rgba(56, 189, 248, 0.85);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);
+      pointer-events: none;
     }
-    .sq.legal.has-piece::after {
-      width: 82%;
-      height: 82%;
-      background: transparent;
-      border: 3px solid rgba(168, 85, 247, 0.9);
-      box-shadow: none;
+    .sq.legal.capture-target {
+      background: rgba(244, 63, 94, 0.28) !important;
+      box-shadow: inset 0 0 0 2.5px rgba(251, 113, 133, 0.9);
+    }
+    .sq.legal.capture-target::after {
+      display: none;
     }
     .chess-side {
-      background: rgba(30, 41, 59, 0.65);
+      background: rgba(30, 41, 59, 0.68);
       border: 1px solid rgba(148, 163, 184, 0.18);
       border-radius: 16px;
-      padding: 12px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 11px;
+    }
+    .chess-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      background: rgba(9, 16, 33, 0.55);
+      padding: 9px 11px;
+      border-radius: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot-you {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f8fafc;
+      border: 2px solid #0284c7;
+      flex-shrink: 0;
+    }
+    .dot-ai {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #a855f7;
+      border: 2px solid #2e1065;
+      flex-shrink: 0;
     }
     .chess-status {
-      font-size: 0.84rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: #38bdf8;
       line-height: 1.4;
     }
+    .chess-hint-box {
+      min-height: 22px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fde047;
+      line-height: 1.35;
+    }
     .chess-note {
-      font-size: 0.74rem;
+      font-size: 0.76rem;
       color: #94a3b8;
       line-height: 1.4;
     }
@@ -392,10 +489,10 @@
       background: rgba(9, 16, 33, 0.75);
       border: 1px solid rgba(148, 163, 184, 0.14);
       border-radius: 12px;
-      padding: 8px 10px;
-      height: 170px;
+      padding: 9px 11px;
+      height: 210px;
       overflow-y: auto;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       color: #cbd5e1;
       line-height: 1.5;
       white-space: pre-wrap;
@@ -534,18 +631,23 @@
       fill: currentColor;
     }
 
+    @media (max-width: 760px) {
+      .chess-body {
+        grid-template-columns: 1fr;
+      }
+      .chess-board {
+        max-width: 440px;
+      }
+      .chess-moves-box {
+        height: 120px;
+      }
+    }
     @media (max-width: 680px) {
       #starter-cards {
         grid-template-columns: 1fr;
       }
       .msg {
         max-width: 90%;
-      }
-      .chess-body {
-        grid-template-columns: 1fr;
-      }
-      .chess-moves-box {
-        height: 110px;
       }
     }
   </style>
@@ -596,7 +698,7 @@
       <div class="chess-top">
         <div class="chess-title-wrap">
           <div class="chess-badge" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M6 19h12M8 16h8l-1-4.5 2.5-2.5L16 5l-2.5 1L12 3.5 10.5 6 8 5l-1.5 4L9 11.5 8 16Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
               <circle cx="12" cy="10" r="1.3" fill="#a855f7"/>
             </svg>
@@ -607,6 +709,12 @@
           </div>
         </div>
         <div class="chess-controls">
+          <button id="chessHintBtn" type="button" class="chess-btn hint-btn" onclick="showChessHint()">
+            <svg class="bulb-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.9.7 1.5 1.7 1.6 2.7h4c.1-1 .7-2 1.6-2.7A6 6 0 0 0 12 3Z" stroke="#facc15" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="chessHintLabel">İpucu</span>
+          </button>
           <button id="chessRestartBtn" type="button" class="chess-btn" onclick="initChessGame()">Yeni Oyun</button>
           <button id="chessCloseBtn" type="button" class="chess-btn" onclick="toggleChessModal(false)">Kapat</button>
         </div>
@@ -616,7 +724,12 @@
         <div id="chessBoard" class="chess-board" aria-label="Chess Board"></div>
         <div class="chess-side">
           <div id="chessStatus" class="chess-status">Sıra sende (Beyaz)</div>
-          <div id="chessNote" class="chess-note">Bir taşı seçip hedef kareye tıkla. VYN AI hamleni görünce sırasını oynayacak.</div>
+          <div id="chessHintBox" class="chess-hint-box"></div>
+          <div class="chess-legend">
+            <div class="legend-row"><span class="dot-you"></span><span id="legendYou">Senin Taşların (Beyaz)</span></div>
+            <div class="legend-row"><span class="dot-ai"></span><span id="legendAi">VYN AI Taşları (Siyah)</span></div>
+          </div>
+          <div id="chessNote" class="chess-note">Kırmızı çerçeveli kareler taş yiyebileceğin hedeflerdir.</div>
           <div id="chessMoves" class="chess-moves-box"></div>
         </div>
       </div>
@@ -695,6 +808,9 @@
         playGame: "Oyun Oyna",
         chessTitle: "VYN AI Satranç",
         chessSub: "Sen Beyaz · VYN AI Siyah",
+        chessHint: "İpucu",
+        legendYou: "Senin Taşların (Beyaz)",
+        legendAi: "VYN AI Taşları (Siyah)",
         chessRestart: "Yeni Oyun",
         chessClose: "Kapat",
         chessTurnWhite: "Sıra sende (Beyaz)",
@@ -704,7 +820,9 @@
         chessMateWhite: "Mat! VYN AI kazandı.",
         chessMateBlack: "Mat! Tebrikler, kazandın!",
         chessStalemate: "Pat! Oyun berabere bitti.",
-        chessNote: "Bir taşı seçip hedef kareye tıkla. VYN AI hamleni görünce sırasını oynayacak.",
+        chessNote: "Kırmızı çerçeveli kareler taş yiyebileceğin hedeflerdir.",
+        hintPrefix: "Önerilen hamle: ",
+        hintWaitTurn: "İpucu sadece senin sırasında (Beyaz) alınabilir.",
         welcome: "Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.",
         placeholder: "VYN AI'a bir şey sor...",
         thinking: "Düşünüyorum...",
@@ -736,6 +854,9 @@
         playGame: "Play Game",
         chessTitle: "VYN AI Chess",
         chessSub: "You White · VYN AI Black",
+        chessHint: "Hint",
+        legendYou: "Your Pieces (White)",
+        legendAi: "VYN AI Pieces (Black)",
         chessRestart: "New Game",
         chessClose: "Close",
         chessTurnWhite: "Your turn (White)",
@@ -745,7 +866,9 @@
         chessMateWhite: "Checkmate! VYN AI wins.",
         chessMateBlack: "Checkmate! You win!",
         chessStalemate: "Stalemate! Draw game.",
-        chessNote: "Select a piece and click a target square. VYN AI will play its move after yours.",
+        chessNote: "Red-outlined squares are enemy pieces you can capture.",
+        hintPrefix: "Suggested move: ",
+        hintWaitTurn: "Hints are available only on your turn (White).",
         welcome: "Hi! I'm VYN AI. You can chat with me, get things done, or ask about anything you're curious about.",
         placeholder: "Ask VYN AI anything...",
         thinking: "Thinking...",
@@ -777,6 +900,9 @@
         playGame: "Jouer",
         chessTitle: "Échecs VYN AI",
         chessSub: "Toi Blancs · VYN AI Noirs",
+        chessHint: "Indice",
+        legendYou: "Tes Pièces (Blancs)",
+        legendAi: "Pièces VYN AI (Noirs)",
         chessRestart: "Nouvelle Partie",
         chessClose: "Fermer",
         chessTurnWhite: "À ton tour (Blancs)",
@@ -786,7 +912,9 @@
         chessMateWhite: "Échec et mat ! VYN AI gagne.",
         chessMateBlack: "Échec et mat ! Bien joué !",
         chessStalemate: "Pat ! Partie nulle.",
-        chessNote: "Choisis une pièce puis clique sur une case. VYN AI jouera après ton coup.",
+        chessNote: "Les cases bordées de rouge indiquent les pièces à capturer.",
+        hintPrefix: "Coup suggéré : ",
+        hintWaitTurn: "Les indices sont disponibles uniquement à ton tour (Blancs).",
         welcome: "Salut ! Je suis VYN AI. Tu peux discuter avec moi, effectuer des tâches ou me poser toutes tes questions.",
         placeholder: "Demande n'importe quoi à VYN AI...",
         thinking: "Réflexion en cours...",
@@ -818,6 +946,9 @@
         playGame: "Jugar",
         chessTitle: "Ajedrez VYN AI",
         chessSub: "Tú Blancas · VYN AI Negras",
+        chessHint: "Pista",
+        legendYou: "Tus Piezas (Blancas)",
+        legendAi: "Piezas VYN AI (Negras)",
         chessRestart: "Nueva Partida",
         chessClose: "Cerrar",
         chessTurnWhite: "Tu turno (Blancas)",
@@ -827,7 +958,9 @@
         chessMateWhite: "¡Jaque mate! Gana VYN AI.",
         chessMateBlack: "¡Jaque mate! ¡Ganaste!",
         chessStalemate: "¡Ahogado! Empate.",
-        chessNote: "Elige una pieza y haz clic en una casilla. VYN AI responderá tras tu jugada.",
+        chessNote: "Las casillas con borde rojo muestran piezas que puedes capturar.",
+        hintPrefix: "Jugada sugerida: ",
+        hintWaitTurn: "Las pistas solo están disponibles en tu turno (Blancas).",
         welcome: "¡Hola! Soy VYN AI. Puedes chatear conmigo, realizar acciones o preguntarme lo que quieras.",
         placeholder: "Pregúntale lo que sea a VYN AI...",
         thinking: "Pensando...",
@@ -917,6 +1050,9 @@
       playGameLabel.textContent = ui.playGame;
       document.getElementById('chessModalTitle').textContent = ui.chessTitle;
       document.getElementById('chessModalSub').textContent = ui.chessSub;
+      document.getElementById('chessHintLabel').textContent = ui.chessHint;
+      document.getElementById('legendYou').textContent = ui.legendYou;
+      document.getElementById('legendAi').textContent = ui.legendAi;
       document.getElementById('chessRestartBtn').textContent = ui.chessRestart;
       document.getElementById('chessCloseBtn').textContent = ui.chessClose;
       document.getElementById('chessNote').textContent = ui.chessNote;
@@ -1063,8 +1199,9 @@
     let chessSelected = null;
     let chessLegalMoves = [];
     let chessLastMove = null;
+    let chessHintMove = null;
     let chessMoveLog = [];
-    let chessGameOver = null; // 'mate_w' | 'mate_b' | 'stalemate' | null
+    let chessGameOver = null;
     let chessAiBusy = false;
     let castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
 
@@ -1090,11 +1227,13 @@
       chessSelected = null;
       chessLegalMoves = [];
       chessLastMove = null;
+      chessHintMove = null;
       chessMoveLog = [];
       chessGameOver = null;
       chessAiBusy = false;
       castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
       document.getElementById('chessMoves').textContent = '';
+      document.getElementById('chessHintBox').textContent = '';
       updateChessStatusText();
       renderChessBoard();
     }
@@ -1202,6 +1341,7 @@
       const piece = next[move.fr][move.fc];
       const color = pieceColor(piece);
       const type = pieceType(piece);
+      const capturedPiece = next[move.tr][move.tc] || null;
 
       next[move.fr][move.fc] = null;
       next[move.tr][move.tc] = piece;
@@ -1235,7 +1375,7 @@
       if (move.tr === 0 && move.tc === 0) nextRights.bQ = false;
       if (move.tr === 0 && move.tc === 7) nextRights.bK = false;
 
-      return { board: next, rights: nextRights };
+      return { board: next, rights: nextRights, captured: capturedPiece };
     }
 
     function generateLegalMoves(color, board = chessBoard, rights = castlingRights) {
@@ -1349,6 +1489,10 @@
     function updateChessStatusText() {
       const ui = langUI[currentLang] || langUI.tr;
       const el = document.getElementById('chessStatus');
+      const hintBtn = document.getElementById('chessHintBtn');
+      if (hintBtn) {
+        hintBtn.disabled = Boolean(chessGameOver || chessAiBusy || chessTurn !== 'w');
+      }
       if (!el) return;
       if (chessGameOver === 'mate_w') {
         el.textContent = ui.chessMateWhite;
@@ -1363,8 +1507,10 @@
       }
     }
 
-    function appendMoveToLog(who, move) {
-      const label = `${who}: ${coordToAlg(move.fr)}-${coordToAlg(move.tr)}`;
+    function appendMoveToLog(who, move, captured) {
+      const sep = captured ? 'x' : '-';
+      const capTag = captured ? ` (${PIECE_GLYPHS[captured] || captured})` : '';
+      const label = `${who}: ${coordToAlg(move.fr)}${sep}${coordToAlg(move.tr)}${capTag}`;
       chessMoveLog.push(label);
       const box = document.getElementById('chessMoves');
       box.textContent = chessMoveLog.join('\n');
@@ -1382,6 +1528,12 @@
           const isLight = (r + c) % 2 === 0;
           sq.className = 'sq ' + (isLight ? 'light' : 'dark');
 
+          if (chessHintMove && chessHintMove.fr === r && chessHintMove.fc === c) {
+            sq.classList.add('hint-from');
+          }
+          if (chessHintMove && chessHintMove.tr === r && chessHintMove.tc === c) {
+            sq.classList.add('hint-to');
+          }
           if (chessSelected && chessSelected.r === r && chessSelected.c === c) {
             sq.classList.add('selected');
           }
@@ -1392,14 +1544,20 @@
           }
 
           const isLegalTarget = chessLegalMoves.some(m => m.tr === r && m.tc === c);
+          const piece = chessBoard[r][c];
           if (isLegalTarget) {
             sq.classList.add('legal');
-            if (chessBoard[r][c]) sq.classList.add('has-piece');
+            if (piece && pieceColor(piece) !== 'w') {
+              sq.classList.add('capture-target');
+            }
           }
 
-          const piece = chessBoard[r][c];
           if (piece) {
-            sq.textContent = PIECE_GLYPHS[piece] || '';
+            const span = document.createElement('span');
+            const isJustArrived = chessLastMove && chessLastMove.tr === r && chessLastMove.tc === c;
+            span.className = 'piece-glyph ' + (pieceColor(piece) === 'w' ? 'w-piece' : 'b-piece') + (isJustArrived ? ' anim-move' : '');
+            span.textContent = PIECE_GLYPHS[piece] || '';
+            sq.appendChild(span);
           }
 
           sq.onclick = () => handleChessSquareClick(r, c);
@@ -1422,6 +1580,60 @@
       return false;
     }
 
+    function evaluateMoveForColor(color, move) {
+      const enemy = color === 'w' ? 'b' : 'w';
+      let score = Math.random() * 14;
+      const target = chessBoard[move.tr][move.tc];
+      if (target) {
+        score += (PIECE_VALUES[pieceType(target)] || 100) * 1.15;
+      }
+      if (move.tr >= 3 && move.tr <= 4 && move.tc >= 3 && move.tc <= 4) {
+        score += 22;
+      }
+      const sim = applyMoveOnBoard(chessBoard, castlingRights, move);
+      if (isInCheck(sim.board, enemy)) {
+        score += 35;
+      }
+      if (isSquareAttacked(sim.board, move.tr, move.tc, enemy)) {
+        const movingPiece = sim.board[move.tr][move.tc];
+        score -= (PIECE_VALUES[pieceType(movingPiece)] || 100) * 0.85;
+      }
+      return score;
+    }
+
+    function pickBestHeuristicMove(color, legalMoves) {
+      let best = legalMoves[0];
+      let bestScore = -999999;
+      for (const m of legalMoves) {
+        const s = evaluateMoveForColor(color, m);
+        if (s > bestScore) {
+          bestScore = s;
+          best = m;
+        }
+      }
+      return best;
+    }
+
+    function showChessHint() {
+      const ui = langUI[currentLang] || langUI.tr;
+      const hintBox = document.getElementById('chessHintBox');
+      if (chessGameOver || chessAiBusy || chessTurn !== 'w') {
+        if (hintBox) hintBox.textContent = ui.hintWaitTurn;
+        return;
+      }
+      const legalMoves = generateLegalMoves('w');
+      if (legalMoves.length === 0) return;
+
+      const best = pickBestHeuristicMove('w', legalMoves);
+      chessHintMove = best;
+      chessSelected = { r: best.fr, c: best.fc };
+      chessLegalMoves = legalMoves.filter(m => m.fr === best.fr && m.fc === best.fc);
+
+      const moveLabel = `${coordToAlg(best.fr)} → ${coordToAlg(best.tr)}`;
+      if (hintBox) hintBox.textContent = ui.hintPrefix + moveLabel;
+      renderChessBoard();
+    }
+
     function handleChessSquareClick(r, c) {
       if (chessGameOver || chessAiBusy || chessTurn !== 'w') return;
 
@@ -1433,15 +1645,17 @@
         chessBoard = sim.board;
         castlingRights = sim.rights;
         chessLastMove = moveMatch;
+        chessHintMove = null;
         chessSelected = null;
         chessLegalMoves = [];
         chessTurn = 'b';
-        appendMoveToLog('Sen', moveMatch);
+        document.getElementById('chessHintBox').textContent = '';
+        appendMoveToLog('Sen', moveMatch, sim.captured);
         updateChessStatusText();
         renderChessBoard();
 
         if (!checkAndHandleEndgame('b')) {
-          triggerVynAiChessMove(moveMatch);
+          setTimeout(() => triggerVynAiChessMove(moveMatch), 110);
         }
         return;
       }
@@ -1463,32 +1677,7 @@
     }
 
     function pickFallbackBlackMove(legalMoves) {
-      let best = legalMoves[0];
-      let bestScore = -999999;
-
-      for (const m of legalMoves) {
-        let score = Math.random() * 18;
-        const target = chessBoard[m.tr][m.tc];
-        if (target) {
-          score += (PIECE_VALUES[pieceType(target)] || 100) * 1.1;
-        }
-        if (m.tr >= 3 && m.tr <= 4 && m.tc >= 3 && m.tc <= 4) {
-          score += 22;
-        }
-        const sim = applyMoveOnBoard(chessBoard, castlingRights, m);
-        if (isInCheck(sim.board, 'w')) {
-          score += 35;
-        }
-        if (isSquareAttacked(sim.board, m.tr, m.tc, 'w')) {
-          const movingPiece = sim.board[m.tr][m.tc];
-          score -= (PIECE_VALUES[pieceType(movingPiece)] || 100) * 0.85;
-        }
-        if (score > bestScore) {
-          bestScore = score;
-          best = m;
-        }
-      }
-      return best;
+      return pickBestHeuristicMove('b', legalMoves);
     }
 
     function parseAiMoveFromReply(replyText, legalMoves) {
@@ -1554,7 +1743,7 @@
       chessLastMove = chosenMove;
       chessTurn = 'w';
       chessAiBusy = false;
-      appendMoveToLog('VYN AI', chosenMove);
+      appendMoveToLog('VYN AI', chosenMove, sim.captured);
       checkAndHandleEndgame('w');
       updateChessStatusText();
       renderChessBoard();
