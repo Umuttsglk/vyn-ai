@@ -672,7 +672,7 @@
     }
     #starter-cards {
       width: 100%;
-      max-width: 780px;
+      max-width: 820px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
@@ -732,9 +732,18 @@
       text-overflow: ellipsis;
     }
 
-    #bar {
+    .composer-row {
       width: 100%;
-      max-width: 780px;
+      max-width: 820px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: max-width 0.2s ease;
+    }
+
+    #bar {
+      flex: 1;
+      min-width: 0;
       background: rgba(30, 41, 59, 0.85);
       backdrop-filter: blur(14px);
       border: 1px solid rgba(148, 163, 184, 0.24);
@@ -744,7 +753,7 @@
       align-items: flex-end;
       gap: 10px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-      transition: border-color 0.2s, box-shadow 0.2s, max-width 0.2s ease, padding 0.2s ease;
+      transition: border-color 0.2s, box-shadow 0.2s, padding 0.2s ease;
     }
     #bar:focus-within {
       border-color: var(--accent-1);
@@ -799,6 +808,41 @@
       fill: currentColor;
     }
 
+    /* Gönder Butonunun Yanındaki 3 Düşünme Seviyesi Modu */
+    .think-modes {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 999px;
+      padding: 5px 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+    }
+    .think-btn {
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 7px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+    }
+    .think-btn:hover {
+      color: #ffffff;
+      background: rgba(148, 163, 184, 0.15);
+    }
+    .think-btn.active {
+      color: #ffffff;
+      background: var(--active-grad);
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.45);
+    }
+
     /* Ergonomik PC Mod */
     body.mode-pc #chat {
       max-width: 980px;
@@ -806,8 +850,8 @@
       gap: 14px;
     }
     body.mode-pc #starter-cards,
-    body.mode-pc #bar {
-      max-width: 940px;
+    body.mode-pc .composer-row {
+      max-width: 960px;
     }
     body.mode-pc #bar {
       padding: 10px 12px 10px 22px;
@@ -854,8 +898,16 @@
       padding: 8px 11px;
       border-radius: 14px;
     }
-    body.mode-mobile #bar {
+    body.mode-mobile .composer-row {
       max-width: 460px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 7px;
+    }
+    body.mode-mobile .think-modes {
+      justify-content: center;
+    }
+    body.mode-mobile #bar {
       padding: 7px 9px 7px 15px;
       border-radius: 22px;
     }
@@ -900,6 +952,14 @@
       }
       .msg {
         max-width: 90%;
+      }
+      .composer-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+      }
+      .think-modes {
+        justify-content: center;
       }
     }
   </style>
@@ -1061,13 +1121,21 @@
       </button>
     </div>
 
-    <div id="bar">
-      <textarea id="inp" rows="1" placeholder="VYN AI'a bir şey sor..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
-      <button id="sendBtn" type="button" onclick="onPrimaryAction()" title="Gönder" aria-label="Gönder">
-        <svg id="sendBtnIcon" viewBox="0 0 24 24">
-          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-        </svg>
-      </button>
+    <div class="composer-row">
+      <div id="bar">
+        <textarea id="inp" rows="1" placeholder="VYN AI'a bir şey sor..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+        <button id="sendBtn" type="button" onclick="onPrimaryAction()" title="Gönder" aria-label="Gönder">
+          <svg id="sendBtnIcon" viewBox="0 0 24 24">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="think-modes" role="group" aria-label="Thinking Mode">
+        <button type="button" class="think-btn" data-think="fast" onclick="setThinkingMode('fast')">Hızlı</button>
+        <button type="button" class="think-btn active" data-think="logical" onclick="setThinkingMode('logical')">Mantıklı</button>
+        <button type="button" class="think-btn" data-think="planned" onclick="setThinkingMode('planned')">Planlı</button>
+      </div>
     </div>
   </div>
 
@@ -1088,10 +1156,12 @@
     const sendBtnIcon = document.getElementById('sendBtnIcon');
     const langButtons = document.querySelectorAll('.lang-btn');
     const themeSwatches = document.querySelectorAll('.theme-swatch');
+    const thinkButtons = document.querySelectorAll('.think-btn');
     const chatHistory = [];
     let currentLang = 'tr';
     let currentDevice = 'pc';
     let currentTheme = 'cosmic';
+    let currentThinkingMode = 'logical';
     let activeAbortController = null;
     let isGeneratingReply = false;
 
@@ -1107,6 +1177,12 @@
         sendTitle: "Gönder",
         stopTitle: "Durdur",
         stoppedMsg: "Yanıt durduruldu.",
+        thinkLabels: { fast: "Hızlı", logical: "Mantıklı", planned: "Planlı" },
+        thinkInstructions: {
+          fast: "Kısa, net ve doğrudan sonuca odaklanan bir yanıt ver.",
+          logical: "Mantıklı, gerekçeli ve analitik bir şekilde açıkla.",
+          planned: "Adım adım, düzenli ve uygulanabilir bir plan sun."
+        },
         chessTitle: "VYN AI Satranç",
         chessSub: "Sen Beyaz · VYN AI Siyah",
         chessHint: "İpucu",
@@ -1161,6 +1237,12 @@
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
+        thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
+        thinkInstructions: {
+          fast: "Give a short, clear, and direct answer.",
+          logical: "Explain logically with clear reasoning.",
+          planned: "Provide a structured, step-by-step action plan."
+        },
         chessTitle: "VYN AI Chess",
         chessSub: "You White · VYN AI Black",
         chessHint: "Hint",
@@ -1215,6 +1297,12 @@
         sendTitle: "Envoyer",
         stopTitle: "Arrêter",
         stoppedMsg: "Réponse arrêtée.",
+        thinkLabels: { fast: "Rapide", logical: "Logique", planned: "Planifié" },
+        thinkInstructions: {
+          fast: "Donne une réponse courte, claire et directe.",
+          logical: "Explique de manière logique et structurée.",
+          planned: "Propose un plan d'action clair étape par étape."
+        },
         chessTitle: "Échecs VYN AI",
         chessSub: "Toi Blancs · VYN AI Noirs",
         chessHint: "Indice",
@@ -1269,6 +1357,12 @@
         sendTitle: "Enviar",
         stopTitle: "Detener",
         stoppedMsg: "Respuesta detenida.",
+        thinkLabels: { fast: "Rápido", logical: "Lógico", planned: "Planificado" },
+        thinkInstructions: {
+          fast: "Da una respuesta corta, clara y directa.",
+          logical: "Explica de forma lógica y razonada.",
+          planned: "Presenta un plan paso a paso claro y práctico."
+        },
         chessTitle: "Ajedrez VYN AI",
         chessSub: "Tú Blancas · VYN AI Negras",
         chessHint: "Pista",
@@ -1313,6 +1407,23 @@
         ]
       }
     };
+
+    function updateThinkingButtonsUI() {
+      const ui = langUI[currentLang] || langUI.tr;
+      thinkButtons.forEach(btn => {
+        const mode = btn.dataset.think;
+        btn.classList.toggle('active', mode === currentThinkingMode);
+        if (ui.thinkLabels && ui.thinkLabels[mode]) {
+          btn.textContent = ui.thinkLabels[mode];
+        }
+      });
+    }
+
+    function setThinkingMode(mode) {
+      const allowed = ['fast', 'logical', 'planned'];
+      currentThinkingMode = allowed.includes(mode) ? mode : 'logical';
+      updateThinkingButtonsUI();
+    }
 
     function syncSendButtonState() {
       const ui = langUI[currentLang] || langUI.tr;
@@ -1397,7 +1508,6 @@
     }
 
     function downloadChatTxt() {
-      const ui = langUI[currentLang] || langUI.tr;
       const lines = ['VYN AI - Sohbet Kaydı', '========================', ''];
       const welcomeEl = document.querySelector('#welcomeMsg .msg-text');
       if (welcomeEl && welcomeEl.textContent) {
@@ -1416,7 +1526,6 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      void ui;
     }
 
     function resetChat() {
@@ -1468,6 +1577,7 @@
         welcomeText.textContent = ui.welcome;
       }
       updateStarterCardsUI();
+      updateThinkingButtonsUI();
       refreshCopyButtons();
       syncSendButtonState();
       updateChessTexts();
@@ -1594,6 +1704,9 @@
       if (!q || isGeneratingReply) return;
 
       const ui = langUI[currentLang] || langUI.tr;
+      const modeInstruction =
+        (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
+      const outboundMessage = modeInstruction ? `${q}\n\n[${modeInstruction}]` : q;
 
       addBubble(q, 'user', false);
       chatHistory.push({ role: 'user', text: q });
@@ -1611,9 +1724,10 @@
           headers: { 'Content-Type': 'application/json' },
           signal: activeAbortController.signal,
           body: JSON.stringify({
-            message: q,
+            message: outboundMessage,
             history: chatHistory,
-            lang: currentLang
+            lang: currentLang,
+            thinkingMode: currentThinkingMode
           })
         });
         const data = await r.json();
@@ -2222,7 +2336,8 @@
           body: JSON.stringify({
             message: promptForAi,
             history: [],
-            lang: currentLang
+            lang: currentLang,
+            thinkingMode: currentThinkingMode
           })
         });
         if (r.ok) {
