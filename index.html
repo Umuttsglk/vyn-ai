@@ -1177,6 +1177,7 @@
         sendTitle: "Gönder",
         stopTitle: "Durdur",
         stoppedMsg: "Yanıt durduruldu.",
+        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message in any language, but write your ENTIRE response strictly in Turkish (Türkçe). Never switch to another language even if the user writes in another language.",
         thinkLabels: { fast: "Hızlı", logical: "Mantıklı", planned: "Planlı" },
         thinkInstructions: {
           fast: "Kısa, net ve doğrudan sonuca odaklanan bir yanıt ver.",
@@ -1237,6 +1238,7 @@
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
+        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message even if written in Turkish or another language, but write your ENTIRE response strictly in English. Never reply in Turkish or any other language.",
         thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
         thinkInstructions: {
           fast: "Give a short, clear, and direct answer.",
@@ -1297,6 +1299,7 @@
         sendTitle: "Envoyer",
         stopTitle: "Arrêter",
         stoppedMsg: "Réponse arrêtée.",
+        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message in any language, but write your ENTIRE response strictly in French (Français). Never reply in Turkish, English, or another language.",
         thinkLabels: { fast: "Rapide", logical: "Logique", planned: "Planifié" },
         thinkInstructions: {
           fast: "Donne une réponse courte, claire et directe.",
@@ -1357,6 +1360,7 @@
         sendTitle: "Enviar",
         stopTitle: "Detener",
         stoppedMsg: "Respuesta detenida.",
+        langLockRule: "STRICT LANGUAGE RULE: Understand the user's message in any language, but write your ENTIRE response strictly in Spanish (Español). Never reply in Turkish, English, or another language.",
         thinkLabels: { fast: "Rápido", logical: "Lógico", planned: "Planificado" },
         thinkInstructions: {
           fast: "Da una respuesta corta, clara y directa.",
@@ -1706,7 +1710,8 @@
       const ui = langUI[currentLang] || langUI.tr;
       const modeInstruction =
         (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
-      const outboundMessage = modeInstruction ? `${q}\n\n[${modeInstruction}]` : q;
+      const langRule = ui.langLockRule || '';
+      const outboundMessage = [q, langRule, modeInstruction].filter(Boolean).join('\n\n');
 
       addBubble(q, 'user', false);
       chatHistory.push({ role: 'user', text: q });
@@ -1727,6 +1732,7 @@
             message: outboundMessage,
             history: chatHistory,
             lang: currentLang,
+            forceLang: currentLang,
             thinkingMode: currentThinkingMode
           })
         });
@@ -2337,6 +2343,7 @@
             message: promptForAi,
             history: [],
             lang: currentLang,
+            forceLang: currentLang,
             thinkingMode: currentThinkingMode
           })
         });
