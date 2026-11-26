@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VYN AI</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill='none' stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap="round" stroke-linejoin="round' opacity='0.8'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23091021'/%3E%3Cpath d='M12 20 L24 46 L36 22 L46 38 L54 18' fill="none" stroke='url(%23g)' stroke-width='6.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M18 18 L26 36 L34 20' fill='none' stroke='%2338bdf8' stroke-width='3.5' stroke-linecap='round' stroke-linejoin="round' opacity='0.8'/%3E%3C/svg%3E" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body {
@@ -381,14 +381,14 @@
       <button type="button" class="starter-card" onclick="useStarter(2)">
         <span class="starter-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M8 8l-4 4 4 4" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M16 8l4 4-4 4" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M13.5 6l-3 12" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="6" cy="18" r="2.2" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="18" cy="6" r="2.2" stroke="#a855f7" stroke-width="2"/>
+            <path d="M8.2 18H12a4 4 0 0 0 4-4v-1.5a4 4 0 0 1 2-3.5" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </span>
         <span class="starter-meta">
-          <span id="cardTitle2" class="starter-title">Kod & Plan</span>
-          <span id="cardDesc2" class="starter-desc">Kısa bir plan veya kod taslağı oluştur.</span>
+          <span id="cardTitle2" class="starter-title">Strateji & Plan</span>
+          <span id="cardDesc2" class="starter-desc">Hedefin için net bir strateji ve yol haritası çıkar.</span>
         </span>
       </button>
     </div>
@@ -435,9 +435,9 @@
             prompt: "Bana yapay zekanın nasıl çalıştığını kısa, net ve sade örneklerle açıklar mısın?"
           },
           {
-            title: "Kod & Plan",
-            desc: "Kısa bir plan veya kod taslağı oluştur.",
-            prompt: "Küçük bir web projesi için adım adım başlangıç planı ve basit bir örnek yapı oluştur."
+            title: "Strateji & Plan",
+            desc: "Hedefin için net bir strateji ve yol haritası çıkar.",
+            prompt: "Bir hedefe ulaşmak için adım adım uygulanabilir bir strateji ve yol haritası oluştur."
           }
         ]
       },
@@ -463,9 +463,9 @@
             prompt: "Can you explain how artificial intelligence works in simple terms with clear examples?"
           },
           {
-            title: "Code & Plan",
-            desc: "Draft a quick plan or code starter.",
-            prompt: "Create a step-by-step starter plan and a clean basic structure for a small web project."
+            title: "Strategy & Plan",
+            desc: "Build a clear strategy and roadmap for a goal.",
+            prompt: "Create a step-by-step practical strategy and roadmap to achieve a goal."
           }
         ]
       },
@@ -491,9 +491,9 @@
             prompt: "Peux-tu m'expliquer simplement comment fonctionne l'intelligence artificielle avec des exemples ?"
           },
           {
-            title: "Code & Plan",
-            desc: "Prépare un plan rapide ou une base de code.",
-            prompt: "Propose un plan de démarrage étape par étape et une structure simple pour un petit projet web."
+            title: "Stratégie & Plan",
+            desc: "Établis une stratégie claire et une feuille de route.",
+            prompt: "Élabore une stratégie concrète étape par étape et une feuille de route pour atteindre un objectif."
           }
         ]
       },
@@ -519,9 +519,9 @@
             prompt: "¿Puedes explicarme de forma sencilla cómo funciona la inteligencia artificial con ejemplos?"
           },
           {
-            title: "Código y Plan",
-            desc: "Crea un plan rápido o una base de código.",
-            prompt: "Crea un plan inicial paso a paso y una estructura básica para un proyecto web pequeño."
+            title: "Estrategia y Plan",
+            desc: "Crea una estrategia clara y una hoja de ruta.",
+            prompt: "Crea una estrategia práctica paso a paso y una hoja de ruta para lograr un objetivo."
           }
         ]
       }
