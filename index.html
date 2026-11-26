@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#091021" />
   <title>VYN AI</title>
   <link id="faviconLink" rel="icon" type="image/png" href="" />
   <script>
@@ -40,8 +41,33 @@
         ctx.lineTo(36, 22);
         ctx.stroke();
 
+        const dataUrl = c.toDataURL('image/png');
+        window.__VYN_ICON_URL__ = dataUrl;
+
         const link = document.getElementById('faviconLink');
-        if (link) link.href = c.toDataURL('image/png');
+        if (link) link.href = dataUrl;
+
+        const manifestObj = {
+          name: 'VYN AI',
+          short_name: 'VYN AI',
+          start_url: './',
+          display: 'standalone',
+          background_color: '#091021',
+          theme_color: '#091021',
+          icons: [
+            {
+              src: dataUrl,
+              sizes: '64x64',
+              type: 'image/png'
+            }
+          ]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        const mLink = document.createElement('link');
+        mLink.rel = 'manifest';
+        mLink.href = manifestUrl;
+        document.head.appendChild(mLink);
       } catch {}
     })();
   </script>
@@ -257,6 +283,15 @@
       color: #ffffff;
       background: rgba(148, 163, 184, 0.18);
       border-color: var(--accent-1);
+    }
+    .action-pill-btn.download-vyn-btn {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(124, 58, 237, 0.2));
+      color: #f8fafc;
+    }
+    .action-pill-btn.download-vyn-btn:hover {
+      border-color: var(--accent-1);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.28);
     }
     .action-pill-btn.active-mode {
       color: #ffffff;
@@ -1224,6 +1259,7 @@
         <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
         <button type="button" class="lang-btn" data-lang="fr" onclick="setLang('fr')">Français</button>
         <button type="button" class="lang-btn" data-lang="es" onclick="setLang('es')">Español</button>
+        <button type="button" class="lang-btn" data-lang="all" onclick="setLang('all')">All</button>
       </div>
     </div>
 
@@ -1237,6 +1273,13 @@
           <button type="button" class="theme-swatch" data-theme="emerald" title="Zümrüt" aria-label="Zümrüt" onclick="setTheme('emerald')"></button>
         </div>
       </div>
+
+      <button id="downloadVynBtn" type="button" class="action-pill-btn download-vyn-btn" onclick="installVynApp()">
+        <svg class="game-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 4v11m0 0-4-4m4 4 4-4M5 19h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="downloadVynLabel">Download VYN</span>
+      </button>
 
       <button id="playGameBtn" type="button" class="action-pill-btn" onclick="toggleGameModal(true)">
         <svg class="game-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -1414,6 +1457,7 @@
     const newChatBtn = document.getElementById('newChatBtn');
     const playGameLabel = document.getElementById('playGameLabel');
     const playGameBtn = document.getElementById('playGameBtn');
+    const downloadVynLabel = document.getElementById('downloadVynLabel');
     const pcModeBtn = document.getElementById('pcModeBtn');
     const mobileModeBtn = document.getElementById('mobileModeBtn');
     const pcModeLabel = document.getElementById('pcModeLabel');
@@ -1431,6 +1475,32 @@
     let activeAbortController = null;
     let isGeneratingReply = false;
     let activeGameView = 'hub'; // 'hub' | 'chess' | 'ttt' | 'word'
+    let deferredInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      const ui = langUI[currentLang] || langUI.tr;
+      addBubble(ui.installDoneMsg, 'ai', false);
+    });
+
+    async function installVynApp() {
+      const ui = langUI[currentLang] || langUI.tr;
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        if (choice && choice.outcome === 'accepted') {
+          addBubble(ui.installDoneMsg, 'ai', false);
+        }
+        return;
+      }
+      addBubble(ui.installManualMsg, 'ai', false);
+    }
 
     const WORD_BANKS = {
       tr: [
@@ -1480,6 +1550,9 @@
         themes: "Temalar:",
         pcMode: "PC Mod",
         mobileMode: "Mobil Mod",
+        downloadVyn: "Download VYN",
+        installDoneMsg: "VYN AI bilgisayar uygulamasına eklendi! Başlat menüsünden açabilirsin.",
+        installManualMsg: "Tarayıcı adres çubuğundaki yükle simgesinden veya tarayıcı menüsünden 'VYN AI uygulamasını yükle' seçeneğini kullanarak bilgisayarına kurabilirsin.",
         downloadChat: "İndir",
         newChat: "Yeni Sohbet",
         playGame: "Oyun Oyna",
@@ -1561,6 +1634,9 @@
         themes: "Themes:",
         pcMode: "PC Mode",
         mobileMode: "Mobile Mode",
+        downloadVyn: "Download VYN",
+        installDoneMsg: "VYN AI has been added as a desktop app! You can launch it from your Start menu.",
+        installManualMsg: "Click the install icon in the browser address bar or choose 'Install VYN AI' from your browser menu to install it on your computer.",
         downloadChat: "Save",
         newChat: "New Chat",
         playGame: "Play Game",
@@ -1642,6 +1718,9 @@
         themes: "Thèmes :",
         pcMode: "Mode PC",
         mobileMode: "Mode Mobile",
+        downloadVyn: "Download VYN",
+        installDoneMsg: "VYN AI a été ajouté comme application bureau ! Tu peux le lancer depuis le menu Démarrer.",
+        installManualMsg: "Clique sur l'icône d'installation dans la barre d'adresse ou choisis 'Installer VYN AI' dans le menu du navigateur.",
         downloadChat: "Enregistrer",
         newChat: "Nouveau Chat",
         playGame: "Jouer",
@@ -1723,6 +1802,9 @@
         themes: "Temas:",
         pcMode: "Modo PC",
         mobileMode: "Modo Móvil",
+        downloadVyn: "Download VYN",
+        installDoneMsg: "¡VYN AI se añadió como aplicación de escritorio! Puedes abrirla desde el menú Inicio.",
+        installManualMsg: "Haz clic en el icono de instalar en la barra de direcciones o elige 'Instalar VYN AI' en el menú de tu navegador.",
         downloadChat: "Guardar",
         newChat: "Nuevo Chat",
         playGame: "Jugar",
@@ -1798,11 +1880,101 @@
             prompt: "Crea una estrategia práctica paso a paso y una hoja de ruta para lograr un objetivo."
           }
         ]
+      },
+      all: {
+        subtitle: "Sohbet, İşlem & Bilgi Asistanı (All Languages)",
+        themes: "Temalar:",
+        pcMode: "PC Mod",
+        mobileMode: "Mobil Mod",
+        downloadVyn: "Download VYN",
+        installDoneMsg: "VYN AI bilgisayar uygulamasına eklendi! Başlat menüsünden açabilirsin.",
+        installManualMsg: "Tarayıcı adres çubuğundaki yükle simgesinden veya tarayıcı menüsünden 'VYN AI uygulamasını yükle' seçeneğini kullanarak bilgisayarına kurabilirsin.",
+        downloadChat: "İndir",
+        newChat: "Yeni Sohbet",
+        playGame: "Oyun Oyna",
+        gameHubTitle: "VYN AI Oyun Merkezi",
+        gameHubSub: "3 oyun · Otomatik dil uyumlu",
+        gameBackHub: "Oyun Seçimi",
+        gameRestart: "Yeni Oyun",
+        gameClose: "Kapat",
+        hubChessTitle: "Satranç",
+        hubChessDesc: "Sen Beyaz · VYN AI Siyah. İpucu ve Geri Al destekli tam satranç.",
+        hubTttTitle: "X-O-X",
+        hubTttDesc: "Sen X · VYN AI O. Hızlı strateji ve skor takibi.",
+        hubWordTitle: "Kelime Oyunu",
+        hubWordDesc: "Kelimeleri ipucu ve harf tahminleriyle bul.",
+        tttTurnX: "Sıra sende (X)",
+        tttTurnO: "VYN AI düşünüyor (O)...",
+        tttWinX: "Tebrikler! Sen (X) kazandın!",
+        tttWinO: "VYN AI (O) kazandı!",
+        tttDraw: "Berabere! Güzel oyundu.",
+        tttScoreFmt: (w, d, l) => `Sen (X): ${w} · Berabere: ${d} · VYN AI (O): ${l}`,
+        wordCluePrefix: "İpucu: ",
+        wordLivesPrefix: "Kalan Hak: ",
+        wordWin: "Harika! Kelimeyi buldun!",
+        wordLoseFmt: (ans) => `Hakların bitti! Kelime: ${ans}`,
+        sendTitle: "Gönder",
+        stopTitle: "Durdur",
+        stoppedMsg: "Yanıt durduruldu.",
+        langName: "Auto-Detect (User Language)",
+        langLockRule: "AUTO-DETECT LANGUAGE MODE: Detect the exact language of the user's message and reply 100% in that same language. If the user switches languages between messages, seamlessly follow the language of the user's latest message.",
+        thinkLabels: { fast: "Hızlı", logical: "Mantıklı", planned: "Planlı" },
+        thinkInstructions: {
+          fast: "Give a short, clear, and direct answer in the user's message language.",
+          logical: "Explain logically with clear reasoning in the user's message language.",
+          planned: "Provide a structured, step-by-step action plan in the user's message language."
+        },
+        chessTitle: "Satranç · VYN AI",
+        chessSub: "Sen Beyaz · VYN AI Siyah",
+        chessHint: "İpucu",
+        chessUndo: "Geri Al",
+        legendYou: "Senin Taşların (Beyaz)",
+        legendAi: "VYN AI Taşları (Siyah)",
+        chessTurnWhite: "Sıra sende (Beyaz)",
+        chessTurnBlack: "VYN AI düşünüyor (Siyah)...",
+        chessCheckWhite: "Şah! Sıra sende (Beyaz)",
+        chessCheckBlack: "Şah! VYN AI düşünüyor...",
+        chessMateWhite: "Mat! VYN AI kazandı.",
+        chessMateBlack: "Mat! Tebrikler, kazandın!",
+        chessStalemate: "Pat! Oyun berabere bitti.",
+        chessNote: "Kırmızı çerçeveli kareler taş yiyebileceğin hedeflerdir.",
+        hintPrefix: "Önerilen hamle: ",
+        hintWaitTurn: "İpucu sadece senin sırasında (Beyaz) alınabilir.",
+        welcome: "Selam! Ben VYN AI. Hangi dilde yazarsan sana o dilde yanıt veririm.",
+        placeholder: "VYN AI'a istediğin dilde bir şey sor...",
+        thinking: "Düşünüyorum...",
+        error: "Cevap alınamadı.",
+        netErr: "Bağlantı hatası oldu.",
+        copy: "Kopyala",
+        copied: "Kopyalandı!",
+        cards: [
+          {
+            title: "Serbest Sohbet",
+            desc: "Günün nasıl geçiyor? Bana bir fikir anlat.",
+            prompt: "Selam VYN AI! Bugün aklımdaki bir fikri seninle paylaşmak ve üzerine konuşmak istiyorum."
+          },
+          {
+            title: "Hızlı Bilgi",
+            desc: "Karmaşık bir konuyu sade şekilde açıkla.",
+            prompt: "Bana yapay zekanın nasıl çalıştığını kısa, net ve sade örneklerle açıklar mısın?"
+          },
+          {
+            title: "Strateji & Plan",
+            desc: "Hedefin için net bir strateji ve yol haritası çıkar.",
+            prompt: "Bir hedefe ulaşmak için adım adım uygulanabilir bir strateji ve yol haritası oluştur."
+          }
+        ]
       }
     };
 
     function buildLockedHistory(lang) {
       const ui = langUI[lang] || langUI.tr;
+      if (lang === 'all') {
+        return chatHistory.map(item => ({
+          role: item.role,
+          text: item.text
+        }));
+      }
       const lockPrefix = `[Reply ONLY in ${ui.langName}] `;
       return chatHistory.map(item => ({
         role: item.role,
@@ -2016,6 +2188,7 @@
     function updateAllGameTexts() {
       const ui = langUI[currentLang] || langUI.tr;
       playGameLabel.textContent = ui.playGame;
+      if (downloadVynLabel) downloadVynLabel.textContent = ui.downloadVyn;
       document.getElementById('gameBackHubBtn').textContent = ui.gameBackHub;
       document.getElementById('gameRestartBtn').textContent = ui.gameRestart;
       document.getElementById('gameCloseBtn').textContent = ui.gameClose;
@@ -2040,7 +2213,7 @@
 
     function setLang(lang) {
       currentLang = lang;
-      document.documentElement.lang = lang;
+      document.documentElement.lang = lang === 'all' ? 'en' : lang;
       const ui = langUI[lang] || langUI.tr;
 
       langButtons.forEach(btn => {
@@ -2215,7 +2388,7 @@
             rawMessage: q,
             history: lockedHistory,
             lang: currentLang,
-            forceLang: currentLang,
+            forceLang: currentLang === 'all' ? 'auto' : currentLang,
             targetLanguage: ui.langName,
             thinkingMode: currentThinkingMode
           })
@@ -2799,7 +2972,7 @@
             message: promptForAi,
             history: [],
             lang: currentLang,
-            forceLang: currentLang,
+            forceLang: currentLang === 'all' ? 'auto' : currentLang,
             thinkingMode: currentThinkingMode
           })
         });
@@ -2833,7 +3006,7 @@
     ];
     let tttBoard = [];
     let tttTurn = 'X';
-    let tttOver = null; // null | 'X' | 'O' | 'draw'
+    let tttOver = null;
     let tttWinLine = [];
     let tttScore = { w: 0, d: 0, l: 0 };
 
@@ -2960,7 +3133,8 @@
     };
 
     function initWordGame() {
-      const bank = WORD_BANKS[currentLang] || WORD_BANKS.tr;
+      const bankKey = currentLang === 'all' ? 'en' : currentLang;
+      const bank = WORD_BANKS[bankKey] || WORD_BANKS.tr;
       const picked = bank[Math.floor(Math.random() * bank.length)];
       wordState = {
         target: picked.word,
@@ -3019,7 +3193,8 @@
       }
 
       kbEl.innerHTML = '';
-      const letters = KEYBOARD_LETTERS[currentLang] || KEYBOARD_LETTERS.tr;
+      const kbKey = currentLang === 'all' ? 'en' : currentLang;
+      const letters = KEYBOARD_LETTERS[kbKey] || KEYBOARD_LETTERS.tr;
       for (const ltr of letters) {
         const btn = document.createElement('button');
         btn.type = 'button';
