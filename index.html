@@ -268,7 +268,7 @@
       border-color: transparent;
       box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
     }
-    .game-pill-icon {
+    .voice-pill-icon {
       width: 15px;
       height: 15px;
       flex-shrink: 0;
@@ -397,562 +397,200 @@
       border-color: var(--accent-1);
     }
 
-    /* Oyun Merkezi Modal (Seçici + Satranç + X-O-X + Kelime Oyunu) */
-    #gameOverlay {
+    /* Sesli Sohbet Modu (Voice Chat with Vyn AI) */
+    #voiceOverlay {
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 40;
-      background: rgba(5, 8, 17, 0.82);
-      backdrop-filter: blur(8px);
+      z-index: 45;
+      background: rgba(5, 8, 17, 0.88);
+      backdrop-filter: blur(12px);
       align-items: center;
       justify-content: center;
-      padding: 16px;
-      contain: layout style;
+      padding: 18px;
     }
-    #gameOverlay.open {
+    #voiceOverlay.open {
       display: flex;
     }
-    #gameModal {
+    #voiceModal {
       width: 100%;
-      max-width: 900px;
-      max-height: 94vh;
-      overflow-y: auto;
-      background: rgba(15, 23, 42, 0.97);
-      border: 1px solid rgba(148, 163, 184, 0.26);
-      border-radius: 24px;
-      padding: 22px;
-      box-shadow: 0 26px 68px rgba(0, 0, 0, 0.72);
+      max-width: 580px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.75);
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      transform: translateZ(0);
-      will-change: transform;
+      gap: 18px;
     }
-    .game-top {
+    .voice-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
     }
-    .game-title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .game-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 13px;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(168, 85, 247, 0.28));
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .game-title {
-      font-size: 1.1rem;
+    .voice-title {
+      font-size: 1.12rem;
       font-weight: 700;
       color: #f8fafc;
     }
-    .game-sub {
+    .voice-sub {
       font-size: 0.8rem;
       color: #94a3b8;
+      margin-top: 2px;
     }
-    .game-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .game-btn {
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      background: rgba(30, 41, 59, 0.88);
-      color: #e2e8f0;
+    .voice-exit-btn {
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      background: rgba(244, 63, 94, 0.14);
+      color: #fda4af;
       font-size: 0.8rem;
-      font-weight: 600;
-      padding: 7px 13px;
+      font-weight: 700;
+      padding: 8px 14px;
       border-radius: 999px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+      transition: all 0.16s ease;
     }
-    .game-btn:hover:not(:disabled) {
-      border-color: var(--accent-1);
+    .voice-exit-btn:hover {
+      background: rgba(244, 63, 94, 0.28);
       color: #ffffff;
-      background: rgba(148, 163, 184, 0.18);
     }
-    .game-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .game-btn.hint-btn {
-      border-color: rgba(250, 204, 21, 0.45);
-      background: rgba(250, 204, 21, 0.12);
-      color: #fde047;
-    }
-    .game-btn.hint-btn:hover:not(:disabled) {
-      border-color: rgba(250, 204, 21, 0.85);
-      background: rgba(250, 204, 21, 0.22);
-      color: #fef08a;
-    }
-    .bulb-icon {
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0;
-    }
-
-    /* Oyun Seçici Kartları */
-    .game-hub-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-    .game-hub-card {
-      background: rgba(30, 41, 59, 0.72);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 18px;
-      padding: 18px 16px;
-      text-align: left;
-      color: #f8fafc;
-      cursor: pointer;
+    .voice-picker-box {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      transform: translateZ(0);
-      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-    }
-    .game-hub-card:hover {
-      transform: translateY(-3px) translateZ(0);
-      border-color: var(--accent-1);
-      background: rgba(30, 41, 59, 0.96);
-      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
-    }
-    .hub-icon-box {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(168, 85, 247, 0.22));
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--accent-1);
-    }
-    .hub-card-title {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: #f8fafc;
-    }
-    .hub-card-desc {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      line-height: 1.45;
-    }
-
-    /* Satranç */
-    .chess-body {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 255px;
-      gap: 20px;
-      align-items: start;
-    }
-    .chess-board {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      max-width: 540px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      grid-template-rows: repeat(8, 1fr);
-      border-radius: 16px;
-      overflow: hidden;
-      border: 2px solid rgba(148, 163, 184, 0.3);
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
-      contain: strict;
-      transform: translateZ(0);
-    }
-    @keyframes piecePop {
-      0% {
-        transform: translateZ(0) scale(0.58);
-        opacity: 0.72;
-      }
-      62% {
-        transform: translateZ(0) scale(1.16);
-        opacity: 1;
-      }
-      100% {
-        transform: translateZ(0) scale(1);
-        opacity: 1;
-      }
-    }
-    @keyframes capturePulse {
-      0% {
-        box-shadow: inset 0 0 0 0 rgba(244, 63, 94, 0.95);
-        background: rgba(244, 63, 94, 0.55);
-      }
-      100% {
-        box-shadow: inset 0 0 0 0 rgba(244, 63, 94, 0);
-      }
-    }
-    .sq {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      user-select: none;
-      position: relative;
-      padding: 0;
-      border: none;
-      transform: translateZ(0);
-      transition: background-color 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .sq.light {
-      background: #e2e8f0;
-    }
-    .sq.dark {
-      background: #1e293b;
-    }
-    .sq.capture-flash {
-      animation: capturePulse 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .piece-glyph {
-      display: inline-block;
-      font-size: clamp(1.75rem, 4.9vw, 2.85rem);
-      line-height: 1;
-      transform: translateZ(0);
-      will-change: transform, opacity;
-      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .piece-glyph.anim-move {
-      animation: piecePop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .piece-glyph.w-piece {
-      color: #f8fafc;
-      -webkit-text-stroke: 1.3px #0284c7;
-      text-shadow: 0 2px 7px rgba(2, 132, 199, 0.58), 0 0 1px #0f172a;
-    }
-    .piece-glyph.b-piece {
-      color: #a855f7;
-      -webkit-text-stroke: 1.2px #2e1065;
-      text-shadow: 0 2px 8px rgba(88, 28, 135, 0.68), 0 0 1px #090d16;
-    }
-    .sq:hover .piece-glyph {
-      transform: translateZ(0) scale(1.09);
-    }
-    .sq.selected {
-      box-shadow: inset 0 0 0 3px #38bdf8;
-      background: rgba(56, 189, 248, 0.38) !important;
-    }
-    .sq.last-move {
-      background: rgba(56, 189, 248, 0.24) !important;
-    }
-    .sq.hint-from, .sq.hint-to {
-      box-shadow: inset 0 0 0 3px #facc15;
-      background: rgba(250, 204, 21, 0.3) !important;
-    }
-    .sq.legal::after {
-      content: "";
-      width: 28%;
-      height: 28%;
-      border-radius: 50%;
-      background: rgba(56, 189, 248, 0.85);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);
-      pointer-events: none;
-      transition: transform 0.16s ease;
-    }
-    .sq.legal.capture-target {
-      background: rgba(244, 63, 94, 0.28) !important;
-      box-shadow: inset 0 0 0 2.5px rgba(251, 113, 133, 0.9);
-    }
-    .sq.legal.capture-target::after {
-      display: none;
-    }
-    .chess-side {
-      background: rgba(30, 41, 59, 0.68);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 16px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-    }
-    .chess-legend {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.76rem;
-      color: #cbd5e1;
-      background: rgba(9, 16, 33, 0.55);
-      padding: 9px 11px;
-      border-radius: 11px;
-      border: 1px solid rgba(148, 163, 184, 0.12);
-    }
-    .legend-row {
-      display: flex;
-      align-items: center;
       gap: 8px;
-    }
-    .dot-you {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #f8fafc;
-      border: 2px solid #0284c7;
-      flex-shrink: 0;
-    }
-    .dot-ai {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #a855f7;
-      border: 2px solid #2e1065;
-      flex-shrink: 0;
-    }
-    .chess-status {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--accent-1);
-      line-height: 1.4;
-    }
-    .chess-hint-box {
-      min-height: 22px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #fde047;
-      line-height: 1.35;
-    }
-    .chess-note {
-      font-size: 0.76rem;
-      color: #94a3b8;
-      line-height: 1.4;
-    }
-    .chess-moves-box {
-      background: rgba(9, 16, 33, 0.75);
-      border: 1px solid rgba(148, 163, 184, 0.14);
-      border-radius: 12px;
-      padding: 9px 11px;
-      height: 210px;
-      overflow-y: auto;
-      font-size: 0.78rem;
-      color: #cbd5e1;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-
-    /* X-O-X */
-    @keyframes markPop {
-      0% {
-        transform: translateZ(0) scale(0.45) rotate(-8deg);
-        opacity: 0.35;
-      }
-      65% {
-        transform: translateZ(0) scale(1.14) rotate(2deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateZ(0) scale(1) rotate(0deg);
-        opacity: 1;
-      }
-    }
-    .ttt-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      padding: 6px 0;
-    }
-    .ttt-status {
-      font-size: 0.96rem;
-      font-weight: 700;
-      color: var(--accent-1);
-      text-align: center;
-    }
-    .ttt-board {
-      width: 100%;
-      max-width: 330px;
-      aspect-ratio: 1 / 1;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 10px;
-      contain: strict;
-      transform: translateZ(0);
-    }
-    .ttt-cell {
-      border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      background: rgba(30, 41, 59, 0.82);
-      font-size: 2.5rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: translateZ(0);
-      will-change: transform;
-      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
-    }
-    .ttt-cell:hover:not(:disabled) {
-      transform: translateZ(0) scale(1.05);
-      border-color: var(--accent-1);
-    }
-    .ttt-cell.anim-mark {
-      animation: markPop 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .ttt-cell.x-mark {
-      color: var(--accent-1);
-    }
-    .ttt-cell.o-mark {
-      color: var(--accent-2);
-    }
-    .ttt-cell.win-cell {
-      background: rgba(56, 189, 248, 0.22);
-      border-color: var(--accent-1);
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
-    }
-    .ttt-score {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-      font-size: 0.82rem;
-      color: #cbd5e1;
       background: rgba(30, 41, 59, 0.65);
       border: 1px solid rgba(148, 163, 184, 0.18);
-      padding: 8px 16px;
-      border-radius: 999px;
+      border-radius: 18px;
+      padding: 14px;
     }
-
-    /* Kelime Oyunu */
-    @keyframes slotReveal {
+    .voice-picker-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .voice-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .voice-opt-btn {
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      background: rgba(15, 23, 42, 0.72);
+      color: #e2e8f0;
+      border-radius: 14px;
+      padding: 11px 13px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.18s ease;
+    }
+    .voice-opt-btn:hover {
+      border-color: var(--accent-1);
+    }
+    .voice-opt-btn.active {
+      background: var(--active-grad);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+    }
+    @keyframes voicePulseRing {
       0% {
-        transform: translateZ(0) translateY(6px) scale(0.82);
-        opacity: 0.4;
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.45);
       }
-      65% {
-        transform: translateZ(0) translateY(-2px) scale(1.08);
-        opacity: 1;
+      70% {
+        transform: scale(1.04);
+        box-shadow: 0 0 0 18px rgba(56, 189, 248, 0);
       }
       100% {
-        transform: translateZ(0) translateY(0) scale(1);
-        opacity: 1;
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
       }
     }
-    .word-wrap {
+    .voice-stage {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      padding: 4px 0;
+      gap: 14px;
+      padding: 14px 8px;
+      text-align: center;
     }
-    .word-meta-bar {
+    .voice-orb-btn {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      background: var(--send-grad);
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      transition: transform 0.16s ease, background 0.2s ease;
+    }
+    .voice-orb-btn:hover {
+      transform: scale(1.04);
+    }
+    .voice-orb-btn.listening {
+      background: linear-gradient(135deg, #10b981, #059669);
+      animation: voicePulseRing 1.6s infinite;
+    }
+    .voice-orb-btn.speaking {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      animation: voicePulseRing 1.5s infinite;
+    }
+    .voice-status-text {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--accent-1);
+    }
+    .voice-transcript-box {
       width: 100%;
-      max-width: 620px;
+      min-height: 92px;
+      max-height: 170px;
+      overflow-y: auto;
+      background: rgba(9, 16, 33, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 16px;
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+    }
+    .voice-actions-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: 10px;
       flex-wrap: wrap;
-      background: rgba(30, 41, 59, 0.68);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-size: 0.84rem;
     }
-    .word-clue {
+    .voice-sec-btn {
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      background: rgba(30, 41, 59, 0.85);
       color: #e2e8f0;
+      font-size: 0.8rem;
       font-weight: 600;
-    }
-    .word-lives {
-      color: var(--accent-1);
-      font-weight: 700;
-    }
-    .word-slots {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      min-height: 50px;
-    }
-    .word-slot {
-      min-width: 38px;
-      height: 46px;
-      padding: 0 8px;
-      border-radius: 12px;
-      background: rgba(30, 41, 59, 0.88);
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #f8fafc;
-      text-transform: uppercase;
-      transform: translateZ(0);
-      transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
-    }
-    .word-slot.revealed {
-      border-color: var(--accent-1);
-      color: var(--accent-1);
-    }
-    .word-slot.anim-reveal {
-      animation: slotReveal 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .word-status {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #fde047;
-      text-align: center;
-      min-height: 22px;
-    }
-    .word-keyboard {
-      width: 100%;
-      max-width: 620px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px;
-    }
-    .letter-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      background: rgba(30, 41, 59, 0.86);
-      color: #f8fafc;
-      font-size: 0.88rem;
-      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 999px;
       cursor: pointer;
-      transform: translateZ(0);
-      transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.14s ease, background 0.14s ease, opacity 0.14s ease;
+      transition: all 0.16s ease;
     }
-    .letter-btn:hover:not(:disabled) {
-      transform: translateZ(0) scale(1.06);
+    .voice-sec-btn:hover {
       border-color: var(--accent-1);
-      background: rgba(56, 189, 248, 0.2);
-    }
-    .letter-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-    .letter-btn.hit {
-      background: rgba(16, 185, 129, 0.25);
-      border-color: #34d399;
-      color: #6ee7b7;
-      opacity: 1;
-    }
-    .letter-btn.miss {
-      background: rgba(244, 63, 94, 0.2);
-      border-color: #fb7185;
-      color: #fda4af;
-      opacity: 0.55;
+      color: #ffffff;
     }
 
     /* Alt Yazı Barı ve Başlangıç Kartları */
@@ -1154,12 +792,6 @@
     body.mode-pc #inp {
       font-size: 1.03rem;
     }
-    body.mode-pc #gameModal {
-      max-width: 960px;
-    }
-    body.mode-pc .chess-board {
-      max-width: 580px;
-    }
 
     /* Ergonomik Mobil Mod */
     body.mode-mobile header {
@@ -1209,43 +841,15 @@
       width: 44px;
       height: 44px;
     }
-    body.mode-mobile #gameModal {
+    body.mode-mobile #voiceModal {
       max-width: 460px;
-      padding: 14px;
-      border-radius: 20px;
-      gap: 12px;
+      padding: 18px;
+      border-radius: 22px;
     }
-    body.mode-mobile .game-hub-grid {
+    body.mode-mobile .voice-options {
       grid-template-columns: 1fr;
-    }
-    body.mode-mobile .chess-body {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    body.mode-mobile .chess-board {
-      max-width: 390px;
-    }
-    body.mode-mobile .piece-glyph {
-      font-size: clamp(1.5rem, 6.2vw, 2.2rem);
-    }
-    body.mode-mobile .chess-moves-box {
-      height: 105px;
     }
 
-    @media (max-width: 760px) {
-      .game-hub-grid {
-        grid-template-columns: 1fr;
-      }
-      .chess-body {
-        grid-template-columns: 1fr;
-      }
-      .chess-board {
-        max-width: 440px;
-      }
-      .chess-moves-box {
-        height: 120px;
-      }
-    }
     @media (max-width: 680px) {
       #starter-cards {
         grid-template-columns: 1fr;
@@ -1260,6 +864,9 @@
       }
       .think-modes {
         justify-content: center;
+      }
+      .voice-options {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -1315,11 +922,12 @@
         </div>
       </div>
 
-      <button id="playGameBtn" type="button" class="action-pill-btn" onclick="toggleGameModal(true)">
-        <svg class="game-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M7 20h10M9 17h6l-1-5 3-3-1-4-3 1-1-2-1 2-3-1-1 4 3 3-1 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <button id="voiceChatBtn" type="button" class="action-pill-btn" onclick="openVoiceChat()">
+        <svg class="voice-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.9"/>
+          <path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
         </svg>
-        <span id="playGameLabel">Oyun Oyna</span>
+        <span id="voiceChatLabel">Voice chat with Vyn AI</span>
       </button>
       <button id="downloadChatBtn" type="button" class="action-pill-btn" onclick="downloadChatTxt()">İndir</button>
       <button id="newChatBtn" type="button" class="action-pill-btn" onclick="resetChat()">Yeni Sohbet</button>
@@ -1334,88 +942,47 @@
     </div>
   </div>
 
-  <!-- Oyun Merkezi Modal -->
-  <div id="gameOverlay" role="dialog" aria-modal="true" aria-labelledby="gameModalTitle">
-    <div id="gameModal">
-      <div class="game-top">
-        <div class="game-title-wrap">
-          <div class="game-badge" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M6 19h12M8 16h8l-1-4.5 2.5-2.5L16 5l-2.5 1L12 3.5 10.5 6 8 5l-1.5 4L9 11.5 8 16Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="12" cy="10" r="1.3" fill="#a855f7"/>
-            </svg>
-          </div>
-          <div>
-            <div id="gameModalTitle" class="game-title">VYN AI Oyun Merkezi</div>
-            <div id="gameModalSub" class="game-sub">3 oyun · Seçili dil kuralına uyumlu</div>
-          </div>
+  <!-- Sesli Sohbet Ekranı -->
+  <div id="voiceOverlay" role="dialog" aria-modal="true" aria-labelledby="voiceModalTitle">
+    <div id="voiceModal">
+      <div class="voice-top">
+        <div>
+          <div id="voiceModalTitle" class="voice-title">Voice chat with Vyn AI</div>
+          <div id="voiceModalSub" class="voice-sub">Sesini seç ve VYN AI ile sadece sesinle konuş</div>
         </div>
-        <div class="game-controls">
-          <button id="gameBackHubBtn" type="button" class="game-btn" style="display:none;" onclick="openGameHub()">Oyun Seçimi</button>
-          <button id="chessHintBtn" type="button" class="game-btn hint-btn" style="display:none;" onclick="showChessHint()">
-            <svg class="bulb-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.9.7 1.5 1.7 1.6 2.7h4c.1-1 .7-2 1.6-2.7A6 6 0 0 0 12 3Z" stroke="#facc15" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span id="chessHintLabel">İpucu</span>
+        <button id="voiceExitBtn" type="button" class="voice-exit-btn" onclick="exitVoiceChatToText()">Yazı ile Konuşmaya Geri Dön</button>
+      </div>
+
+      <div class="voice-picker-box">
+        <div id="voicePickerLabel" class="voice-picker-label">Konuşma Sesi Seçimi:</div>
+        <div class="voice-options">
+          <button type="button" id="voiceFemaleBtn" class="voice-opt-btn active" onclick="selectVoiceGender('female')">
+            <span>♀</span>
+            <span id="voiceFemaleLabel">Kadın Sesi</span>
           </button>
-          <button id="chessUndoBtn" type="button" class="game-btn" style="display:none;" onclick="undoChessMove()">Geri Al</button>
-          <button id="gameRestartBtn" type="button" class="game-btn" style="display:none;" onclick="restartActiveGame()">Yeni Oyun</button>
-          <button id="gameCloseBtn" type="button" class="game-btn" onclick="toggleGameModal(false)">Kapat</button>
+          <button type="button" id="voiceMaleBtn" class="voice-opt-btn" onclick="selectVoiceGender('male')">
+            <span>♂</span>
+            <span id="voiceMaleLabel">Erkek Sesi</span>
+          </button>
         </div>
       </div>
 
-      <!-- 1. Oyun Seçici Ekranı -->
-      <div id="gameHubView" class="game-hub-grid">
-        <button type="button" class="game-hub-card" onclick="selectGameMode('chess')">
-          <div class="hub-icon-box">♔</div>
-          <div id="hubChessTitle" class="hub-card-title">Satranç</div>
-          <div id="hubChessDesc" class="hub-card-desc">Sen Beyaz · VYN AI Siyah. İpucu ve Geri Al destekli tam satranç.</div>
+      <div class="voice-stage">
+        <button type="button" id="voiceOrbBtn" class="voice-orb-btn" onclick="toggleVoiceSession()">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span id="voiceOrbLabel">Başlat</span>
         </button>
 
-        <button type="button" class="game-hub-card" onclick="selectGameMode('ttt')">
-          <div class="hub-icon-box">X/O</div>
-          <div id="hubTttTitle" class="hub-card-title">X-O-X</div>
-          <div id="hubTttDesc" class="hub-card-desc">Sen X · VYN AI O. Hızlı strateji ve skor takibi.</div>
-        </button>
+        <div id="voiceStatusText" class="voice-status-text">Bir ses seçip başlatabilirsin</div>
+        <div id="voiceTranscriptBox" class="voice-transcript-box"></div>
 
-        <button type="button" class="game-hub-card" onclick="selectGameMode('word')">
-          <div class="hub-icon-box">A-Z</div>
-          <div id="hubWordTitle" class="hub-card-title">Kelime Oyunu</div>
-          <div id="hubWordDesc" class="hub-card-desc">Seçili dildeki kelimeleri ipucu ve harf tahminleriyle bul.</div>
-        </button>
-      </div>
-
-      <!-- 2. Satranç Görünümü -->
-      <div id="chessView" class="chess-body" style="display:none;">
-        <div id="chessBoard" class="chess-board" aria-label="Chess Board"></div>
-        <div class="chess-side">
-          <div id="chessStatus" class="chess-status">Sıra sende (Beyaz)</div>
-          <div id="chessHintBox" class="chess-hint-box"></div>
-          <div class="chess-legend">
-            <div class="legend-row"><span class="dot-you"></span><span id="legendYou">Senin Taşların (Beyaz)</span></div>
-            <div class="legend-row"><span class="dot-ai"></span><span id="legendAi">VYN AI Taşları (Siyah)</span></div>
-          </div>
-          <div id="chessNote" class="chess-note">Kırmızı çerçeveli kareler taş yiyebileceğin hedeflerdir.</div>
-          <div id="chessMoves" class="chess-moves-box"></div>
+        <div class="voice-actions-row">
+          <button type="button" id="voiceStopSpeechBtn" class="voice-sec-btn" onclick="stopVoiceAudioAndListen()">Sesi Durdur / Dinle</button>
+          <button type="button" id="voicePreviewBtn" class="voice-sec-btn" onclick="previewSelectedVoice()">Sesi Test Et</button>
         </div>
-      </div>
-
-      <!-- 3. X-O-X Görünümü -->
-      <div id="tttView" class="ttt-wrap" style="display:none;">
-        <div id="tttStatus" class="ttt-status">Sıra sende (X)</div>
-        <div id="tttBoard" class="ttt-board" aria-label="Tic Tac Toe Board"></div>
-        <div id="tttScore" class="ttt-score">Sen (X): 0 · Berabere: 0 · VYN AI (O): 0</div>
-      </div>
-
-      <!-- 4. Kelime Oyunu Görünümü -->
-      <div id="wordView" class="word-wrap" style="display:none;">
-        <div class="word-meta-bar">
-          <div id="wordClue" class="word-clue">İpucu: ...</div>
-          <div id="wordLives" class="word-lives">Kalan Hak: 6</div>
-        </div>
-        <div id="wordSlots" class="word-slots" aria-label="Word Slots"></div>
-        <div id="wordStatus" class="word-status"></div>
-        <div id="wordKeyboard" class="word-keyboard" aria-label="Letter Keyboard"></div>
       </div>
     </div>
   </div>
@@ -1489,8 +1056,8 @@
     const themesLabel = document.getElementById('themesLabel');
     const downloadChatBtn = document.getElementById('downloadChatBtn');
     const newChatBtn = document.getElementById('newChatBtn');
-    const playGameLabel = document.getElementById('playGameLabel');
-    const playGameBtn = document.getElementById('playGameBtn');
+    const voiceChatLabel = document.getElementById('voiceChatLabel');
+    const voiceChatBtn = document.getElementById('voiceChatBtn');
     const pcModeBtn = document.getElementById('pcModeBtn');
     const mobileModeBtn = document.getElementById('mobileModeBtn');
     const pcModeLabel = document.getElementById('pcModeLabel');
@@ -1507,49 +1074,15 @@
     let currentThinkingMode = 'logical';
     let activeAbortController = null;
     let isGeneratingReply = false;
-    let activeGameView = 'hub'; // 'hub' | 'chess' | 'ttt' | 'word'
 
-    const WORD_BANKS = {
-      tr: [
-        { word: "YILDIZ", clue: "Gökyüzünde parlayan gök cismi" },
-        { word: "GALAKSİ", clue: "Milyarlarca yıldızdan oluşan dev sistem" },
-        { word: "STRATEJİ", clue: "Hedefe ulaşmak için kurulan plan" },
-        { word: "PUSULA", clue: "Yön bulmaya yarayan araç" },
-        { word: "KODLAMA", clue: "Bilgisayarlara komut yazma sanatı" },
-        { word: "EFSANE", clue: "Nesilden nesile anlatılan öykü" }
-      ],
-      en: [
-        { word: "GALAXY", clue: "A vast system of billions of stars" },
-        { word: "STRATEGY", clue: "A careful plan to reach a goal" },
-        { word: "COMPASS", clue: "A tool that shows direction" },
-        { word: "HORIZON", clue: "Where earth and sky seem to meet" },
-        { word: "CIPHER", clue: "A secret code or puzzle key" },
-        { word: "VOYAGE", clue: "A long journey or adventure" }
-      ],
-      fr: [
-        { word: "GALAXIE", clue: "Immense ensemble d'étoiles" },
-        { word: "STRATEGIE", clue: "Plan d'action pour atteindre un but" },
-        { word: "BOUSSOLE", clue: "Instrument qui indique le nord" },
-        { word: "HORIZON", clue: "Ligne où le ciel rencontre la terre" },
-        { word: "MYSTERE", clue: "Ce qui est difficile à expliquer" },
-        { word: "VOYAGE", clue: "Grand déplacement ou aventure" }
-      ],
-      es: [
-        { word: "GALAXIA", clue: "Gran conjunto de estrellas y planetas" },
-        { word: "ESTRATEGIA", clue: "Plan diseñado para lograr una meta" },
-        { word: "BRUJULA", clue: "Instrumento para orientarse" },
-        { word: "HORIZONTE", clue: "Línea donde parece unirse cielo y tierra" },
-        { word: "MISTERIO", clue: "Algo secreto o difícil de resolver" },
-        { word: "VIAJE", clue: "Recorrido o aventura a un lugar" }
-      ]
-    };
-
-    const KEYBOARD_LETTERS = {
-      tr: "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split(""),
-      en: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
-      fr: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
-      es: "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("")
-    };
+    /* ================= SESLİ SOHBET DURUMU ================= */
+    let voiceModalOpen = false;
+    let selectedVoiceGender = 'female'; // 'female' | 'male'
+    let voiceSessionActive = false;
+    let isListeningMic = false;
+    let isSpeakingAi = false;
+    let detectedSpokenLang = 'tr';
+    let speechRecognitionInstance = null;
 
     const langUI = {
       tr: {
@@ -1559,32 +1092,28 @@
         mobileMode: "Mobil Mod",
         downloadChat: "İndir",
         newChat: "Yeni Sohbet",
-        playGame: "Oyun Oyna",
-        gameHubTitle: "VYN AI Oyun Merkezi",
-        gameHubSub: "3 oyun · Seçili dil kuralına uyumlu",
-        gameBackHub: "Oyun Seçimi",
-        gameRestart: "Yeni Oyun",
-        gameClose: "Kapat",
-        hubChessTitle: "Satranç",
-        hubChessDesc: "Sen Beyaz · VYN AI Siyah. İpucu ve Geri Al destekli tam satranç.",
-        hubTttTitle: "X-O-X",
-        hubTttDesc: "Sen X · VYN AI O. Hızlı strateji ve skor takibi.",
-        hubWordTitle: "Kelime Oyunu",
-        hubWordDesc: "Seçili dildeki kelimeleri ipucu ve harf tahminleriyle bul.",
-        tttTurnX: "Sıra sende (X)",
-        tttTurnO: "VYN AI düşünüyor (O)...",
-        tttWinX: "Tebrikler! Sen (X) kazandın!",
-        tttWinO: "VYN AI (O) kazandı!",
-        tttDraw: "Berabere! Güzel oyundu.",
-        tttScoreFmt: (w, d, l) => `Sen (X): ${w} · Berabere: ${d} · VYN AI (O): ${l}`,
-        wordCluePrefix: "İpucu: ",
-        wordLivesPrefix: "Kalan Hak: ",
-        wordWin: "Harika! Kelimeyi buldun!",
-        wordLoseFmt: (ans) => `Hakların bitti! Kelime: ${ans}`,
+        voiceChat: "Voice chat with Vyn AI",
+        voiceModalTitle: "Voice chat with Vyn AI",
+        voiceModalSub: "Konuşmadan önce ses seç, ardından VYN AI ile sesli sohbete başla",
+        voiceExitBtn: "Yazı ile Konuşmaya Geri Dön",
+        voicePickerLabel: "Konuşma Sesi Seçimi:",
+        voiceFemale: "Kadın Sesi",
+        voiceMale: "Erkek Sesi",
+        voiceStart: "Başlat",
+        voiceStop: "Durdur",
+        voiceReady: "Hazır · Başlat'a bas ve konuş",
+        voiceListening: "Seni dinliyorum...",
+        voiceThinking: "VYN AI düşünüyor...",
+        voiceSpeaking: "VYN AI konuşuyor...",
+        voiceNoSupport: "Bu tarayıcı sesli konuşmayı desteklemiyor (Chrome veya Edge dene).",
+        voicePreviewSample: "Selam! Ben VYN AI, seçtiğin sesle konuşuyorum.",
+        voiceStopAudio: "Sesi Durdur / Dinle",
+        voiceTestBtn: "Sesi Test Et",
         sendTitle: "Gönder",
         stopTitle: "Durdur",
         stoppedMsg: "Yanıt durduruldu.",
         langName: "Turkish",
+        speechLocale: "tr-TR",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if it is written in another language, but write 100% of your reply strictly in Turkish (Türkçe). Do NOT use any other language.",
         thinkLabels: { fast: "Hızlı", logical: "Mantıklı", planned: "Planlı" },
         thinkInstructions: {
@@ -1592,22 +1121,6 @@
           logical: "Mantıklı, gerekçeli ve analitik bir şekilde açıkla.",
           planned: "Adım adım, düzenli ve uygulanabilir bir plan sun."
         },
-        chessTitle: "Satranç · VYN AI",
-        chessSub: "Sen Beyaz · VYN AI Siyah",
-        chessHint: "İpucu",
-        chessUndo: "Geri Al",
-        legendYou: "Senin Taşların (Beyaz)",
-        legendAi: "VYN AI Taşları (Siyah)",
-        chessTurnWhite: "Sıra sende (Beyaz)",
-        chessTurnBlack: "VYN AI düşünüyor (Siyah)...",
-        chessCheckWhite: "Şah! Sıra sende (Beyaz)",
-        chessCheckBlack: "Şah! VYN AI düşünüyor...",
-        chessMateWhite: "Mat! VYN AI kazandı.",
-        chessMateBlack: "Mat! Tebrikler, kazandın!",
-        chessStalemate: "Pat! Oyun berabere bitti.",
-        chessNote: "Kırmızı çerçeveli kareler taş yiyebileceğin hedeflerdir.",
-        hintPrefix: "Önerilen hamle: ",
-        hintWaitTurn: "İpucu sadece senin sırasında (Beyaz) alınabilir.",
         welcome: "Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.",
         placeholder: "VYN AI'a bir şey sor...",
         thinking: "Düşünüyorum...",
@@ -1640,32 +1153,28 @@
         mobileMode: "Mobile Mode",
         downloadChat: "Save",
         newChat: "New Chat",
-        playGame: "Play Game",
-        gameHubTitle: "VYN AI Game Hub",
-        gameHubSub: "3 games · Follows selected language rule",
-        gameBackHub: "Game Select",
-        gameRestart: "New Game",
-        gameClose: "Close",
-        hubChessTitle: "Chess",
-        hubChessDesc: "You White · VYN AI Black. Full chess with Hint and Undo.",
-        hubTttTitle: "Tic-Tac-Toe",
-        hubTttDesc: "You X · VYN AI O. Fast strategy with score tracker.",
-        hubWordTitle: "Word Game",
-        hubWordDesc: "Guess words in your selected language using clues and letters.",
-        tttTurnX: "Your turn (X)",
-        tttTurnO: "VYN AI is thinking (O)...",
-        tttWinX: "Congrats! You (X) won!",
-        tttWinO: "VYN AI (O) won!",
-        tttDraw: "Draw! Well played.",
-        tttScoreFmt: (w, d, l) => `You (X): ${w} · Draw: ${d} · VYN AI (O): ${l}`,
-        wordCluePrefix: "Clue: ",
-        wordLivesPrefix: "Lives Left: ",
-        wordWin: "Awesome! You found the word!",
-        wordLoseFmt: (ans) => `Out of lives! Word: ${ans}`,
+        voiceChat: "Voice chat with Vyn AI",
+        voiceModalTitle: "Voice chat with Vyn AI",
+        voiceModalSub: "Choose a voice first, then talk with VYN AI using your voice",
+        voiceExitBtn: "Back to Text Chat",
+        voicePickerLabel: "Voice Selection:",
+        voiceFemale: "Female Voice",
+        voiceMale: "Male Voice",
+        voiceStart: "Start",
+        voiceStop: "Stop",
+        voiceReady: "Ready · Press Start and speak",
+        voiceListening: "Listening to you...",
+        voiceThinking: "VYN AI is thinking...",
+        voiceSpeaking: "VYN AI is speaking...",
+        voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
+        voicePreviewSample: "Hi! I am VYN AI, speaking with your selected voice.",
+        voiceStopAudio: "Stop Audio / Listen",
+        voiceTestBtn: "Test Voice",
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
         langName: "English",
+        speechLocale: "en-US",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish or any other language, but write 100% of your reply strictly in English. Never reply in Turkish or any other language.",
         thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
         thinkInstructions: {
@@ -1673,22 +1182,6 @@
           logical: "Explain logically with clear reasoning.",
           planned: "Provide a structured, step-by-step action plan."
         },
-        chessTitle: "Chess · VYN AI",
-        chessSub: "You White · VYN AI Black",
-        chessHint: "Hint",
-        chessUndo: "Undo",
-        legendYou: "Your Pieces (White)",
-        legendAi: "VYN AI Pieces (Black)",
-        chessTurnWhite: "Your turn (White)",
-        chessTurnBlack: "VYN AI is thinking (Black)...",
-        chessCheckWhite: "Check! Your turn (White)",
-        chessCheckBlack: "Check! VYN AI is thinking...",
-        chessMateWhite: "Checkmate! VYN AI wins.",
-        chessMateBlack: "Checkmate! You win!",
-        chessStalemate: "Stalemate! Draw game.",
-        chessNote: "Red-outlined squares are enemy pieces you can capture.",
-        hintPrefix: "Suggested move: ",
-        hintWaitTurn: "Hints are available only on your turn (White).",
         welcome: "Hi! I'm VYN AI. You can chat with me, get things done, or ask about anything you're curious about.",
         placeholder: "Ask VYN AI anything...",
         thinking: "Thinking...",
@@ -1721,32 +1214,28 @@
         mobileMode: "Mode Mobile",
         downloadChat: "Enregistrer",
         newChat: "Nouveau Chat",
-        playGame: "Jouer",
-        gameHubTitle: "Centre de Jeux VYN AI",
-        gameHubSub: "3 jeux · Conforme à la langue choisie",
-        gameBackHub: "Choix du Jeu",
-        gameRestart: "Nouvelle Partie",
-        gameClose: "Fermer",
-        hubChessTitle: "Échecs",
-        hubChessDesc: "Toi Blancs · VYN AI Noirs. Échecs avec Indice et Annuler.",
-        hubTttTitle: "Morpion (X-O-X)",
-        hubTttDesc: "Toi X · VYN AI O. Stratégie rapide et score.",
-        hubWordTitle: "Jeu de Mots",
-        hubWordDesc: "Devine les mots dans la langue choisie avec indices et lettres.",
-        tttTurnX: "À ton tour (X)",
-        tttTurnO: "VYN AI réfléchit (O)...",
-        tttWinX: "Bravo ! Tu (X) as gagné !",
-        tttWinO: "VYN AI (O) a gagné !",
-        tttDraw: "Match nul ! Belle partie.",
-        tttScoreFmt: (w, d, l) => `Toi (X) : ${w} · Nul : ${d} · VYN AI (O) : ${l}`,
-        wordCluePrefix: "Indice : ",
-        wordLivesPrefix: "Vies restantes : ",
-        wordWin: "Super ! Tu as trouvé le mot !",
-        wordLoseFmt: (ans) => `Plus de vies ! Le mot était : ${ans}`,
+        voiceChat: "Voice chat with Vyn AI",
+        voiceModalTitle: "Voice chat with Vyn AI",
+        voiceModalSub: "Choisis une voix avant de parler avec VYN AI",
+        voiceExitBtn: "Retour au Chat Texte",
+        voicePickerLabel: "Choix de la Voix :",
+        voiceFemale: "Voix Féminine",
+        voiceMale: "Voix Masculine",
+        voiceStart: "Démarrer",
+        voiceStop: "Arrêter",
+        voiceReady: "Prêt · Appuie sur Démarrer et parle",
+        voiceListening: "Je t'écoute...",
+        voiceThinking: "VYN AI réfléchit...",
+        voiceSpeaking: "VYN AI parle...",
+        voiceNoSupport: "La reconnaissance vocale n'est pas prise en charge ici (essaie Chrome ou Edge).",
+        voicePreviewSample: "Salut ! Je suis VYN AI avec la voix choisie.",
+        voiceStopAudio: "Couper / Écouter",
+        voiceTestBtn: "Tester la Voix",
         sendTitle: "Envoyer",
         stopTitle: "Arrêter",
         stoppedMsg: "Réponse arrêtée.",
         langName: "French",
+        speechLocale: "fr-FR",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish, English, or another language, but write 100% of your reply strictly in French (Français). Never reply in Turkish, English, or any other language.",
         thinkLabels: { fast: "Rapide", logical: "Logique", planned: "Planifié" },
         thinkInstructions: {
@@ -1754,22 +1243,6 @@
           logical: "Explique de manière logique et structurée.",
           planned: "Propose un plan d'action clair étape par étape."
         },
-        chessTitle: "Échecs · VYN AI",
-        chessSub: "Toi Blancs · VYN AI Noirs",
-        chessHint: "Indice",
-        chessUndo: "Annuler",
-        legendYou: "Tes Pièces (Blancs)",
-        legendAi: "Pièces VYN AI (Noirs)",
-        chessTurnWhite: "À ton tour (Blancs)",
-        chessTurnBlack: "VYN AI réfléchit (Noirs)...",
-        chessCheckWhite: "Échec ! À ton tour (Blancs)",
-        chessCheckBlack: "Échec ! VYN AI réfléchit...",
-        chessMateWhite: "Échec et mat ! VYN AI gagne.",
-        chessMateBlack: "Échec et mat ! Bien joué !",
-        chessStalemate: "Pat ! Partie nulle.",
-        chessNote: "Les cases bordées de rouge indiquent les pièces à capturer.",
-        hintPrefix: "Coup suggéré : ",
-        hintWaitTurn: "Les indices sont disponibles uniquement à ton tour (Blancs).",
         welcome: "Salut ! Je suis VYN AI. Tu peux discuter avec moi, effectuer des tâches ou me poser toutes tes questions.",
         placeholder: "Demande n'importe quoi à VYN AI...",
         thinking: "Réflexion en cours...",
@@ -1802,32 +1275,28 @@
         mobileMode: "Modo Móvil",
         downloadChat: "Guardar",
         newChat: "Nuevo Chat",
-        playGame: "Jugar",
-        gameHubTitle: "Centro de Juegos VYN AI",
-        gameHubSub: "3 juegos · Respeta el idioma seleccionado",
-        gameBackHub: "Elegir Juego",
-        gameRestart: "Nueva Partida",
-        gameClose: "Cerrar",
-        hubChessTitle: "Ajedrez",
-        hubChessDesc: "Tú Blancas · VYN AI Negras. Ajedrez con Pista y Deshacer.",
-        hubTttTitle: "Tres en Raya (X-O-X)",
-        hubTttDesc: "Tú X · VYN AI O. Estrategia rápida con marcador.",
-        hubWordTitle: "Juego de Palabras",
-        hubWordDesc: "Adivina palabras en el idioma elegido con pistas y letras.",
-        tttTurnX: "Tu turno (X)",
-        tttTurnO: "VYN AI está pensando (O)...",
-        tttWinX: "¡Felicidades! ¡Ganaste (X)!",
-        tttWinO: "¡VYN AI (O) ganó!",
-        tttDraw: "¡Empate! Buena partida.",
-        tttScoreFmt: (w, d, l) => `Tú (X): ${w} · Empate: ${d} · VYN AI (O): ${l}`,
-        wordCluePrefix: "Pista: ",
-        wordLivesPrefix: "Vidas restantes: ",
-        wordWin: "¡Genial! ¡Adivinaste la palabra!",
-        wordLoseFmt: (ans) => `¡Sin vidas! La palabra era: ${ans}`,
+        voiceChat: "Voice chat with Vyn AI",
+        voiceModalTitle: "Voice chat with Vyn AI",
+        voiceModalSub: "Elige una voz primero y habla con VYN AI por voz",
+        voiceExitBtn: "Volver al Chat de Texto",
+        voicePickerLabel: "Selección de Voz:",
+        voiceFemale: "Voz Femenina",
+        voiceMale: "Voz Masculina",
+        voiceStart: "Iniciar",
+        voiceStop: "Detener",
+        voiceReady: "Listo · Pulsa Iniciar y habla",
+        voiceListening: "Te estoy escuchando...",
+        voiceThinking: "VYN AI está pensando...",
+        voiceSpeaking: "VYN AI está hablando...",
+        voiceNoSupport: "El reconocimiento de voz no es compatible aquí (prueba Chrome o Edge).",
+        voicePreviewSample: "¡Hola! Soy VYN AI hablando con la voz elegida.",
+        voiceStopAudio: "Detener Audio / Escuchar",
+        voiceTestBtn: "Probar Voz",
         sendTitle: "Enviar",
         stopTitle: "Detener",
         stoppedMsg: "Respuesta detenida.",
         langName: "Spanish",
+        speechLocale: "es-ES",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish, English, French, or another language, but write 100% of your reply strictly in Spanish (Español). Never reply in Turkish, English, or any other language.",
         thinkLabels: { fast: "Rápido", logical: "Lógico", planned: "Planificado" },
         thinkInstructions: {
@@ -1835,22 +1304,6 @@
           logical: "Explica de forma lógica y razonada.",
           planned: "Presenta un plan paso a paso claro y práctico."
         },
-        chessTitle: "Ajedrez · VYN AI",
-        chessSub: "Tú Blancas · VYN AI Negras",
-        chessHint: "Pista",
-        chessUndo: "Deshacer",
-        legendYou: "Tus Piezas (Blancas)",
-        legendAi: "Piezas VYN AI (Negras)",
-        chessTurnWhite: "Tu turno (Blancas)",
-        chessTurnBlack: "VYN AI está pensando (Negras)...",
-        chessCheckWhite: "¡Jaque! Tu turno (Blancas)",
-        chessCheckBlack: "¡Jaque! VYN AI está pensando...",
-        chessMateWhite: "¡Jaque mate! Gana VYN AI.",
-        chessMateBlack: "¡Jaque mate! ¡Ganaste!",
-        chessStalemate: "¡Ahogado! Empate.",
-        chessNote: "Las casillas con borde rojo muestran piezas que puedes capturar.",
-        hintPrefix: "Jugada sugerida: ",
-        hintWaitTurn: "Las pistas solo están disponibles en tu turno (Blancas).",
         welcome: "¡Hola! Soy VYN AI. Puedes chatear conmigo, realizar acciones o preguntarme lo que quieras.",
         placeholder: "Pregúntale lo que sea a VYN AI...",
         thinking: "Pensando...",
@@ -1883,56 +1336,36 @@
         mobileMode: "Mobile Mode",
         downloadChat: "Save",
         newChat: "New Chat",
-        playGame: "Play Game",
-        gameHubTitle: "VYN AI Game Hub",
-        gameHubSub: "3 games · Auto-detects conversation language",
-        gameBackHub: "Game Select",
-        gameRestart: "New Game",
-        gameClose: "Close",
-        hubChessTitle: "Chess",
-        hubChessDesc: "You White · VYN AI Black. Full chess with Hint and Undo.",
-        hubTttTitle: "Tic-Tac-Toe",
-        hubTttDesc: "You X · VYN AI O. Fast strategy with score tracker.",
-        hubWordTitle: "Word Game",
-        hubWordDesc: "Guess words using clues and letters.",
-        tttTurnX: "Your turn (X)",
-        tttTurnO: "VYN AI is thinking (O)...",
-        tttWinX: "Congrats! You (X) won!",
-        tttWinO: "VYN AI (O) won!",
-        tttDraw: "Draw! Well played.",
-        tttScoreFmt: (w, d, l) => `You (X): ${w} · Draw: ${d} · VYN AI (O): ${l}`,
-        wordCluePrefix: "Clue: ",
-        wordLivesPrefix: "Lives Left: ",
-        wordWin: "Awesome! You found the word!",
-        wordLoseFmt: (ans) => `Out of lives! Word: ${ans}`,
+        voiceChat: "Voice chat with Vyn AI",
+        voiceModalTitle: "Voice chat with Vyn AI",
+        voiceModalSub: "Choose a voice and speak in any language — VYN AI replies in your language",
+        voiceExitBtn: "Back to Text Chat",
+        voicePickerLabel: "Voice Selection:",
+        voiceFemale: "Female Voice",
+        voiceMale: "Male Voice",
+        voiceStart: "Start",
+        voiceStop: "Stop",
+        voiceReady: "Ready · Speak in any language",
+        voiceListening: "Listening in your language...",
+        voiceThinking: "VYN AI is thinking...",
+        voiceSpeaking: "VYN AI is speaking...",
+        voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
+        voicePreviewSample: "Hi! I am VYN AI speaking with your selected voice.",
+        voiceStopAudio: "Stop Audio / Listen",
+        voiceTestBtn: "Test Voice",
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
         langName: "Auto-Detect (User Language)",
-        langLockRule: "AUTO-DETECT LANGUAGE MODE: Detect the exact language of the user's message and reply 100% in that same language. If the user switches languages between messages, seamlessly follow the language of the user's latest message.",
+        speechLocale: "",
+        langLockRule: "AUTO-DETECT LANGUAGE MODE: Detect the exact language of the user's message and reply 100% in that same language. Always respond in the language the user spoke or wrote, even when switching languages.",
         thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
         thinkInstructions: {
-          fast: "Give a short, clear, and direct answer in the user's message language.",
-          logical: "Explain logically with clear reasoning in the user's message language.",
-          planned: "Provide a structured, step-by-step action plan in the user's message language."
+          fast: "Give a short, clear, and direct answer in the user's spoken/written language.",
+          logical: "Explain logically with clear reasoning in the user's spoken/written language.",
+          planned: "Provide a structured, step-by-step action plan in the user's spoken/written language."
         },
-        chessTitle: "Chess · VYN AI",
-        chessSub: "You White · VYN AI Black",
-        chessHint: "Hint",
-        chessUndo: "Undo",
-        legendYou: "Your Pieces (White)",
-        legendAi: "VYN AI Pieces (Black)",
-        chessTurnWhite: "Your turn (White)",
-        chessTurnBlack: "VYN AI is thinking (Black)...",
-        chessCheckWhite: "Check! Your turn (White)",
-        chessCheckBlack: "Check! VYN AI is thinking...",
-        chessMateWhite: "Checkmate! VYN AI wins.",
-        chessMateBlack: "Checkmate! You win!",
-        chessStalemate: "Stalemate! Draw game.",
-        chessNote: "Red-outlined squares are enemy pieces you can capture.",
-        hintPrefix: "Suggested move: ",
-        hintWaitTurn: "Hints are available only on your turn (White).",
-        welcome: "Hi! I'm VYN AI. Write in any language you want and I will detect and reply in that exact language.",
+        welcome: "Hi! I'm VYN AI. Speak or write in any language you want and I will reply in your exact language.",
         placeholder: "Ask VYN AI in any language...",
         thinking: "Thinking...",
         error: "Could not get a response.",
@@ -1959,6 +1392,398 @@
       }
     };
 
+    /* ================= DİL TESPİT YARDIMCISI ('all' MODU İÇİN) ================= */
+    function detectLanguageFromText(text) {
+      if (!text) return 'en';
+      if (/[çğıöşüÇĞİÖŞÜ]/.test(text) || /\b(merhaba|selam|nasılsın|nasıl|nedir|neden|teşekkür|evet|hayır|lütfen|bana|için|konuş)\b/i.test(text)) {
+        return 'tr';
+      }
+      if (/[àâæçéèêëîïôœùûüÿÀÂÆÇÉÈÊËÎÏÔŒÙÛÜŸ]/.test(text) || /\b(bonjour|salut|comment|merci|pourquoi|avec|parler|français)\b/i.test(text)) {
+        return 'fr';
+      }
+      if (/[áéíóúüñ¿¡ÁÉÍÓÚÜÑ]/.test(text) || /\b(hola|cómo|gracias|por qué|hablar|español|buenos)\b/i.test(text)) {
+        return 'es';
+      }
+      if (/[äöüßÄÖÜ]/.test(text) || /\b(hallo|danke|warum|bitte|sprechen|deutsch)\b/i.test(text)) {
+        return 'de';
+      }
+      return 'en';
+    }
+
+    function getActiveSpeechLocale() {
+      if (currentLang === 'all') {
+        const map = { tr: 'tr-TR', en: 'en-US', fr: 'fr-FR', es: 'es-ES', de: 'de-DE' };
+        return map[detectedSpokenLang] || navigator.language || 'en-US';
+      }
+      const ui = langUI[currentLang] || langUI.tr;
+      return ui.speechLocale || 'tr-TR';
+    }
+
+    /* ================= KADIN & ERKEK SES SEÇİCİ ================= */
+    function pickBestVoice(gender, locale) {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      if (!voices.length) return null;
+
+      const langPrefix = (locale || 'tr-TR').slice(0, 2).toLowerCase();
+      const langMatches = voices.filter(v => (v.lang || '').toLowerCase().startsWith(langPrefix));
+      const pool = langMatches.length ? langMatches : voices;
+
+      const femaleHints = ['female', 'woman', 'girl', 'yelda', 'emel', 'seda', 'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'amelie', 'audrey', 'claire', 'helena', 'paulina', 'monica', 'google español', 'google français', 'google uk english female', 'google us english'];
+      const maleHints = ['male', 'man', 'boy', 'tolga', 'ahmet', 'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'thomas', 'jorge', 'diego', 'pablo', 'google uk english male'];
+
+      const hints = gender === 'female' ? femaleHints : maleHints;
+      const antiHints = gender === 'female' ? maleHints : femaleHints;
+
+      const scored = pool.map(v => {
+        const nameLower = (v.name || '').toLowerCase();
+        let score = 0;
+        if ((v.lang || '').toLowerCase() === (locale || '').toLowerCase()) score += 15;
+        if (hints.some(h => nameLower.includes(h))) score += 40;
+        if (antiHints.some(h => nameLower.includes(h))) score -= 35;
+        if (nameLower.includes('natural') || nameLower.includes('online') || nameLower.includes('neural')) score += 12;
+        return { voice: v, score };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      return scored[0] ? scored[0].voice : pool[0];
+    }
+
+    function speakAiText(text, onDone) {
+      if (!('speechSynthesis' in window) || !text) {
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
+
+      const cleanText = text.replace(/[#*_`~]/g, ' ').replace(/\s+/g, ' ').trim();
+      if (!cleanText) {
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      const locale = getActiveSpeechLocale();
+      utter.lang = locale;
+
+      const chosen = pickBestVoice(selectedVoiceGender, locale);
+      if (chosen) {
+        utter.voice = chosen;
+      }
+
+      if (selectedVoiceGender === 'female') {
+        utter.pitch = chosen ? 1.08 : 1.24;
+        utter.rate = 1.02;
+      } else {
+        utter.pitch = chosen ? 0.94 : 0.82;
+        utter.rate = 0.98;
+      }
+
+      isSpeakingAi = true;
+      updateVoiceStageUI();
+
+      utter.onend = () => {
+        isSpeakingAi = false;
+        updateVoiceStageUI();
+        if (typeof onDone === 'function') onDone();
+      };
+      utter.onerror = () => {
+        isSpeakingAi = false;
+        updateVoiceStageUI();
+        if (typeof onDone === 'function') onDone();
+      };
+
+      try {
+        window.speechSynthesis.speak(utter);
+      } catch {
+        isSpeakingAi = false;
+        updateVoiceStageUI();
+        if (typeof onDone === 'function') onDone();
+      }
+    }
+
+    function selectVoiceGender(gender) {
+      selectedVoiceGender = gender === 'male' ? 'male' : 'female';
+      document.getElementById('voiceFemaleBtn').classList.toggle('active', selectedVoiceGender === 'female');
+      document.getElementById('voiceMaleBtn').classList.toggle('active', selectedVoiceGender === 'male');
+      updateVoiceStageUI();
+    }
+
+    function previewSelectedVoice() {
+      const ui = langUI[currentLang] || langUI.tr;
+      speakAiText(ui.voicePreviewSample, () => {
+        if (voiceSessionActive && voiceModalOpen) {
+          startListeningMic();
+        }
+      });
+    }
+
+    function stopVoiceAudioAndListen() {
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch {}
+      }
+      isSpeakingAi = false;
+      if (voiceSessionActive && voiceModalOpen) {
+        startListeningMic();
+      } else {
+        updateVoiceStageUI();
+      }
+    }
+
+    function appendVoiceLog(speaker, message) {
+      const box = document.getElementById('voiceTranscriptBox');
+      if (!box) return;
+      const line = `${speaker}: ${message}\n\n`;
+      box.textContent += line;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function updateVoiceStageUI() {
+      const ui = langUI[currentLang] || langUI.tr;
+      const orbBtn = document.getElementById('voiceOrbBtn');
+      const orbLabel = document.getElementById('voiceOrbLabel');
+      const statusEl = document.getElementById('voiceStatusText');
+
+      orbBtn.classList.remove('listening', 'speaking');
+      if (isSpeakingAi) {
+        orbBtn.classList.add('speaking');
+        orbLabel.textContent = ui.voiceStop;
+        statusEl.textContent = ui.voiceSpeaking;
+      } else if (isListeningMic) {
+        orbBtn.classList.add('listening');
+        orbLabel.textContent = ui.voiceStop;
+        statusEl.textContent = ui.voiceListening;
+      } else if (voiceSessionActive) {
+        orbLabel.textContent = ui.voiceStop;
+        statusEl.textContent = ui.voiceThinking;
+      } else {
+        orbLabel.textContent = ui.voiceStart;
+        statusEl.textContent = ui.voiceReady;
+      }
+    }
+
+    function getSpeechRecognitionCtor() {
+      return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+    }
+
+    function stopListeningMic() {
+      isListeningMic = false;
+      if (speechRecognitionInstance) {
+        try {
+          speechRecognitionInstance.onresult = null;
+          speechRecognitionInstance.onerror = null;
+          speechRecognitionInstance.onend = null;
+          speechRecognitionInstance.stop();
+        } catch {}
+        speechRecognitionInstance = null;
+      }
+    }
+
+    function startListeningMic() {
+      const ui = langUI[currentLang] || langUI.tr;
+      const RecCtor = getSpeechRecognitionCtor();
+      if (!RecCtor) {
+        document.getElementById('voiceStatusText').textContent = ui.voiceNoSupport;
+        voiceSessionActive = false;
+        updateVoiceStageUI();
+        return;
+      }
+
+      stopListeningMic();
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch {}
+      }
+      isSpeakingAi = false;
+
+      const rec = new RecCtor();
+      speechRecognitionInstance = rec;
+      rec.lang = getActiveSpeechLocale();
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => {
+        isListeningMic = true;
+        updateVoiceStageUI();
+      };
+
+      rec.onresult = async (event) => {
+        isListeningMic = false;
+        const transcript = event?.results?.[0]?.[0]?.transcript?.trim() || '';
+        if (!transcript) {
+          if (voiceSessionActive && voiceModalOpen) startListeningMic();
+          return;
+        }
+
+        if (currentLang === 'all') {
+          detectedSpokenLang = detectLanguageFromText(transcript);
+        }
+
+        appendVoiceLog('You', transcript);
+        addBubble(transcript, 'user', false);
+        chatHistory.push({ role: 'user', text: transcript });
+        updateVoiceStageUI();
+
+        const reply = await requestAiReplyForVoice(transcript);
+        if (!voiceModalOpen) return;
+
+        if (reply) {
+          appendVoiceLog('VYN AI', reply);
+          addBubble(reply, 'ai', true);
+          chatHistory.push({ role: 'assistant', text: reply });
+          speakAiText(reply, () => {
+            if (voiceSessionActive && voiceModalOpen) {
+              startListeningMic();
+            }
+          });
+        } else if (voiceSessionActive && voiceModalOpen) {
+          startListeningMic();
+        }
+      };
+
+      rec.onerror = (e) => {
+        isListeningMic = false;
+        if (e && e.error === 'not-allowed') {
+          voiceSessionActive = false;
+          document.getElementById('voiceStatusText').textContent = ui.voiceNoSupport;
+          updateVoiceStageUI();
+          return;
+        }
+        if (voiceSessionActive && voiceModalOpen && !isSpeakingAi) {
+          setTimeout(() => {
+            if (voiceSessionActive && voiceModalOpen && !isSpeakingAi) {
+              startListeningMic();
+            }
+          }, 350);
+        } else {
+          updateVoiceStageUI();
+        }
+      };
+
+      rec.onend = () => {
+        isListeningMic = false;
+        if (voiceSessionActive && voiceModalOpen && !isSpeakingAi && !isGeneratingReply) {
+          setTimeout(() => {
+            if (voiceSessionActive && voiceModalOpen && !isSpeakingAi && !isGeneratingReply) {
+              startListeningMic();
+            }
+          }, 220);
+        } else {
+          updateVoiceStageUI();
+        }
+      };
+
+      try {
+        rec.start();
+      } catch {
+        isListeningMic = false;
+        updateVoiceStageUI();
+      }
+    }
+
+    async function requestAiReplyForVoice(spokenText) {
+      const ui = langUI[currentLang] || langUI.tr;
+      const modeInstruction =
+        (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
+      const langRule = ui.langLockRule || '';
+      const lockedHistory = buildLockedHistory(currentLang);
+      const voiceStyleNote = "Keep the spoken response clear, natural, and conversational for voice chat.";
+      const outboundMessage = [langRule, `User message: ${spokenText}`, modeInstruction, voiceStyleNote]
+        .filter(Boolean)
+        .join('\n\n');
+
+      isGeneratingReply = true;
+      syncSendButtonState();
+      try {
+        const r = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: outboundMessage,
+            rawMessage: spokenText,
+            history: lockedHistory,
+            lang: currentLang,
+            forceLang: currentLang === 'all' ? 'auto' : currentLang,
+            targetLanguage: currentLang === 'all' ? detectedSpokenLang : ui.langName,
+            thinkingMode: currentThinkingMode
+          })
+        });
+        const data = await r.json();
+        if (r.ok && data.reply) {
+          return data.reply;
+        }
+        return data.error || ui.error;
+      } catch {
+        return ui.netErr;
+      } finally {
+        isGeneratingReply = false;
+        syncSendButtonState();
+      }
+    }
+
+    function toggleVoiceSession() {
+      if (voiceSessionActive || isListeningMic || isSpeakingAi) {
+        voiceSessionActive = false;
+        stopListeningMic();
+        if ('speechSynthesis' in window) {
+          try { window.speechSynthesis.cancel(); } catch {}
+        }
+        isSpeakingAi = false;
+        updateVoiceStageUI();
+      } else {
+        voiceSessionActive = true;
+        updateVoiceStageUI();
+        startListeningMic();
+      }
+    }
+
+    function openVoiceChat() {
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.getVoices(); } catch {}
+      }
+      voiceModalOpen = true;
+      document.getElementById('voiceOverlay').classList.add('open');
+      voiceChatBtn.classList.add('active-mode');
+      updateVoiceTexts();
+      updateVoiceStageUI();
+    }
+
+    function exitVoiceChatToText() {
+      voiceModalOpen = false;
+      voiceSessionActive = false;
+      isSpeakingAi = false;
+      stopListeningMic();
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch {}
+      }
+      document.getElementById('voiceOverlay').classList.remove('open');
+      voiceChatBtn.classList.remove('active-mode');
+      updateVoiceStageUI();
+      inp.focus();
+    }
+
+    function updateVoiceTexts() {
+      const ui = langUI[currentLang] || langUI.tr;
+      voiceChatLabel.textContent = ui.voiceChat;
+      document.getElementById('voiceModalTitle').textContent = ui.voiceModalTitle;
+      document.getElementById('voiceModalSub').textContent = ui.voiceModalSub;
+      document.getElementById('voiceExitBtn').textContent = ui.voiceExitBtn;
+      document.getElementById('voicePickerLabel').textContent = ui.voicePickerLabel;
+      document.getElementById('voiceFemaleLabel').textContent = ui.voiceFemale;
+      document.getElementById('voiceMaleLabel').textContent = ui.voiceMale;
+      document.getElementById('voiceStopSpeechBtn').textContent = ui.voiceStopAudio;
+      document.getElementById('voicePreviewBtn').textContent = ui.voiceTestBtn;
+      updateVoiceStageUI();
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    /* ================= YAZILI SOHBET & AYARLAR ================= */
     function buildLockedHistory(lang) {
       const ui = langUI[lang] || langUI.tr;
       if (lang === 'all') {
@@ -2107,104 +1932,6 @@
       renderWelcomeBubble();
     }
 
-    /* ================= OYUN MERKEZİ YÖNETİMİ ================= */
-    function syncGameModalChrome() {
-      const ui = langUI[currentLang] || langUI.tr;
-      const backBtn = document.getElementById('gameBackHubBtn');
-      const hintBtn = document.getElementById('chessHintBtn');
-      const undoBtn = document.getElementById('chessUndoBtn');
-      const restartBtn = document.getElementById('gameRestartBtn');
-
-      const hubView = document.getElementById('gameHubView');
-      const chessView = document.getElementById('chessView');
-      const tttView = document.getElementById('tttView');
-      const wordView = document.getElementById('wordView');
-
-      hubView.style.display = activeGameView === 'hub' ? 'grid' : 'none';
-      chessView.style.display = activeGameView === 'chess' ? 'grid' : 'none';
-      tttView.style.display = activeGameView === 'ttt' ? 'flex' : 'none';
-      wordView.style.display = activeGameView === 'word' ? 'flex' : 'none';
-
-      backBtn.style.display = activeGameView === 'hub' ? 'none' : 'inline-flex';
-      restartBtn.style.display = activeGameView === 'hub' ? 'none' : 'inline-flex';
-      hintBtn.style.display = activeGameView === 'chess' ? 'inline-flex' : 'none';
-      undoBtn.style.display = activeGameView === 'chess' ? 'inline-flex' : 'none';
-
-      if (activeGameView === 'hub') {
-        document.getElementById('gameModalTitle').textContent = ui.gameHubTitle;
-        document.getElementById('gameModalSub').textContent = ui.gameHubSub;
-      } else if (activeGameView === 'chess') {
-        document.getElementById('gameModalTitle').textContent = ui.chessTitle;
-        document.getElementById('gameModalSub').textContent = ui.chessSub;
-      } else if (activeGameView === 'ttt') {
-        document.getElementById('gameModalTitle').textContent = ui.hubTttTitle;
-        document.getElementById('gameModalSub').textContent = ui.gameHubSub;
-      } else if (activeGameView === 'word') {
-        document.getElementById('gameModalTitle').textContent = ui.hubWordTitle;
-        document.getElementById('gameModalSub').textContent = ui.gameHubSub;
-      }
-    }
-
-    function openGameHub() {
-      activeGameView = 'hub';
-      syncGameModalChrome();
-    }
-
-    function selectGameMode(mode) {
-      activeGameView = mode;
-      syncGameModalChrome();
-      if (mode === 'chess') {
-        if (chessBoard.length === 0) initChessGame();
-        else ensureChessBoardBuilt();
-      } else if (mode === 'ttt') {
-        if (tttBoard.length === 0) initTttGame();
-        else ensureTttBoardBuilt();
-      } else if (mode === 'word') {
-        if (!wordState.target) initWordGame();
-        else ensureWordBoardBuilt();
-      }
-    }
-
-    function restartActiveGame() {
-      if (activeGameView === 'chess') initChessGame();
-      else if (activeGameView === 'ttt') initTttGame();
-      else if (activeGameView === 'word') initWordGame();
-    }
-
-    function toggleGameModal(open) {
-      const overlay = document.getElementById('gameOverlay');
-      overlay.classList.toggle('open', open);
-      playGameBtn.classList.toggle('active-mode', open);
-      if (open) {
-        syncGameModalChrome();
-      }
-    }
-
-    function updateAllGameTexts() {
-      const ui = langUI[currentLang] || langUI.tr;
-      playGameLabel.textContent = ui.playGame;
-      document.getElementById('gameBackHubBtn').textContent = ui.gameBackHub;
-      document.getElementById('gameRestartBtn').textContent = ui.gameRestart;
-      document.getElementById('gameCloseBtn').textContent = ui.gameClose;
-      document.getElementById('hubChessTitle').textContent = ui.hubChessTitle;
-      document.getElementById('hubChessDesc').textContent = ui.hubChessDesc;
-      document.getElementById('hubTttTitle').textContent = ui.hubTttTitle;
-      document.getElementById('hubTttDesc').textContent = ui.hubTttDesc;
-      document.getElementById('hubWordTitle').textContent = ui.hubWordTitle;
-      document.getElementById('hubWordDesc').textContent = ui.hubWordDesc;
-
-      document.getElementById('chessHintLabel').textContent = ui.chessHint;
-      document.getElementById('chessUndoBtn').textContent = ui.chessUndo;
-      document.getElementById('legendYou').textContent = ui.legendYou;
-      document.getElementById('legendAi').textContent = ui.legendAi;
-      document.getElementById('chessNote').textContent = ui.chessNote;
-
-      syncGameModalChrome();
-      updateChessStatusText();
-      updateTttUI();
-      initWordGame();
-    }
-
     function setLang(lang) {
       currentLang = lang;
       document.documentElement.lang = lang === 'all' ? 'en' : lang;
@@ -2230,7 +1957,11 @@
       updateThinkingButtonsUI();
       refreshCopyButtons();
       syncSendButtonState();
-      updateAllGameTexts();
+      updateVoiceTexts();
+
+      if (isListeningMic && voiceSessionActive) {
+        startListeningMic();
+      }
     }
 
     function autoResize(el) {
@@ -2353,6 +2084,10 @@
       const q = inp.value.trim();
       if (!q || isGeneratingReply) return;
 
+      if (currentLang === 'all') {
+        detectedSpokenLang = detectLanguageFromText(q);
+      }
+
       const ui = langUI[currentLang] || langUI.tr;
       const modeInstruction =
         (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
@@ -2383,7 +2118,7 @@
             history: lockedHistory,
             lang: currentLang,
             forceLang: currentLang === 'all' ? 'auto' : currentLang,
-            targetLanguage: ui.langName,
+            targetLanguage: currentLang === 'all' ? detectedSpokenLang : ui.langName,
             thinkingMode: currentThinkingMode
           })
         });
@@ -2412,839 +2147,7 @@
       }
     }
 
-    /* ================= 1. SATRANÇ MOTORU (60 FPS YERİNDE GÜNCELLEME) ================= */
-    const PIECE_GLYPHS = {
-      wK: '♔', wQ: '♕', wR: '♖', wB: '♗', wN: '♘', wP: '♙',
-      bK: '♚', bQ: '♛', bR: '♜', bB: '♝', bN: '♞', bP: '♟'
-    };
-    const PIECE_VALUES = { P: 100, N: 320, B: 330, R: 500, Q: 900, K: 20000 };
-    const FILES = 'abcdefgh';
-
-    let chessBoard = [];
-    let chessTurn = 'w';
-    let chessSelected = null;
-    let chessLegalMoves = [];
-    let chessLastMove = null;
-    let chessCaptureCoord = null;
-    let chessHintMove = null;
-    let chessMoveLog = [];
-    let chessUndoStack = [];
-    let chessGameOver = null;
-    let chessAiBusy = false;
-    let chessAiTimer = null;
-    let chessRafId = null;
-    let castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
-    let chessCellRefs = [];
-
-    function scheduleChessRender() {
-      if (chessRafId) return;
-      chessRafId = requestAnimationFrame(() => {
-        chessRafId = null;
-        renderChessBoard();
-      });
-    }
-
-    function captureChessSnapshot() {
-      return {
-        board: cloneBoard(chessBoard),
-        turn: chessTurn,
-        lastMove: chessLastMove ? { ...chessLastMove } : null,
-        moveLog: chessMoveLog.slice(),
-        gameOver: chessGameOver,
-        rights: { ...castlingRights }
-      };
-    }
-
-    function restoreChessSnapshot(snap) {
-      if (chessAiTimer) {
-        clearTimeout(chessAiTimer);
-        chessAiTimer = null;
-      }
-      chessBoard = cloneBoard(snap.board);
-      chessTurn = snap.turn;
-      chessLastMove = snap.lastMove ? { ...snap.lastMove } : null;
-      chessCaptureCoord = null;
-      chessMoveLog = snap.moveLog.slice();
-      chessGameOver = snap.gameOver;
-      castlingRights = { ...snap.rights };
-      chessSelected = null;
-      chessLegalMoves = [];
-      chessHintMove = null;
-      chessAiBusy = false;
-      document.getElementById('chessHintBox').textContent = '';
-      document.getElementById('chessMoves').textContent = chessMoveLog.join('\n');
-      updateChessStatusText();
-      scheduleChessRender();
-    }
-
-    function undoChessMove() {
-      if (chessAiBusy || chessUndoStack.length === 0) return;
-      let targetSnap = chessUndoStack.pop();
-      if (chessTurn === 'w' && targetSnap.turn === 'b' && chessUndoStack.length > 0) {
-        targetSnap = chessUndoStack.pop();
-      }
-      restoreChessSnapshot(targetSnap);
-    }
-
-    function initChessGame() {
-      if (chessAiTimer) {
-        clearTimeout(chessAiTimer);
-        chessAiTimer = null;
-      }
-      const backRank = ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'];
-      chessBoard = Array.from({ length: 8 }, () => Array(8).fill(null));
-      for (let c = 0; c < 8; c++) {
-        chessBoard[0][c] = 'b' + backRank[c];
-        chessBoard[1][c] = 'bP';
-        chessBoard[6][c] = 'wP';
-        chessBoard[7][c] = 'w' + backRank[c];
-      }
-      chessTurn = 'w';
-      chessSelected = null;
-      chessLegalMoves = [];
-      chessLastMove = null;
-      chessCaptureCoord = null;
-      chessHintMove = null;
-      chessMoveLog = [];
-      chessUndoStack = [];
-      chessGameOver = null;
-      chessAiBusy = false;
-      castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
-      document.getElementById('chessMoves').textContent = '';
-      document.getElementById('chessHintBox').textContent = '';
-      updateChessStatusText();
-      ensureChessBoardBuilt();
-      renderChessBoard();
-    }
-
-    function inBounds(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
-    function pieceColor(p) { return p ? p[0] : null; }
-    function pieceType(p) { return p ? p[1] : null; }
-    function coordToAlg(r, c) { return FILES[c] + (8 - r); }
-
-    function findKing(board, color) {
-      for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-          if (board[r][c] === color + 'K') return { r, c };
-        }
-      }
-      return null;
-    }
-
-    function isSquareAttacked(board, r, c, byColor) {
-      const pawnDir = byColor === 'w' ? -1 : 1;
-      for (const dc of [-1, 1]) {
-        const pr = r - pawnDir;
-        const pc = c + dc;
-        if (inBounds(pr, pc) && board[pr][pc] === byColor + 'P') return true;
-      }
-      const knightJumps = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
-      for (const [dr, dc] of knightJumps) {
-        const nr = r + dr, nc = c + dc;
-        if (inBounds(nr, nc) && board[nr][nc] === byColor + 'N') return true;
-      }
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
-          if (dr === 0 && dc === 0) continue;
-          const kr = r + dr, kc = c + dc;
-          if (inBounds(kr, kc) && board[kr][kc] === byColor + 'K') return true;
-        }
-      }
-      const ortho = [[-1,0],[1,0],[0,-1],[0,1]];
-      for (const [dr, dc] of ortho) {
-        let nr = r + dr, nc = c + dc;
-        while (inBounds(nr, nc)) {
-          const p = board[nr][nc];
-          if (p) {
-            if (pieceColor(p) === byColor && (pieceType(p) === 'R' || pieceType(p) === 'Q')) return true;
-            break;
-          }
-          nr += dr; nc += dc;
-        }
-      }
-      const diag = [[-1,-1],[-1,1],[1,-1],[1,1]];
-      for (const [dr, dc] of diag) {
-        let nr = r + dr, nc = c + dc;
-        while (inBounds(nr, nc)) {
-          const p = board[nr][nc];
-          if (p) {
-            if (pieceColor(p) === byColor && (pieceType(p) === 'B' || pieceType(p) === 'Q')) return true;
-            break;
-          }
-          nr += dr; nc += dc;
-        }
-      }
-      return false;
-    }
-
-    function isInCheck(board, color) {
-      const kingPos = findKing(board, color);
-      if (!kingPos) return false;
-      const enemy = color === 'w' ? 'b' : 'w';
-      return isSquareAttacked(board, kingPos.r, kingPos.c, enemy);
-    }
-
-    function cloneBoard(board) { return board.map(row => row.slice()); }
-
-    function applyMoveOnBoard(board, rights, move) {
-      const next = cloneBoard(board);
-      const nextRights = { ...rights };
-      const piece = next[move.fr][move.fc];
-      const color = pieceColor(piece);
-      const type = pieceType(piece);
-      const capturedPiece = next[move.tr][move.tc] || null;
-
-      next[move.fr][move.fc] = null;
-      next[move.tr][move.tc] = piece;
-
-      if (type === 'K' && Math.abs(move.tc - move.fc) === 2) {
-        if (move.tc === 6) {
-          next[move.fr][5] = next[move.fr][7];
-          next[move.fr][7] = null;
-        } else if (move.tc === 2) {
-          next[move.fr][3] = next[move.fr][0];
-          next[move.fr][0] = null;
-        }
-      }
-      if (type === 'P' && (move.tr === 0 || move.tr === 7)) {
-        next[move.tr][move.tc] = color + 'Q';
-      }
-      if (type === 'K') {
-        nextRights[color + 'K'] = false;
-        nextRights[color + 'Q'] = false;
-      }
-      if (type === 'R') {
-        if (move.fr === 7 && move.fc === 0) nextRights.wQ = false;
-        if (move.fr === 7 && move.fc === 7) nextRights.wK = false;
-        if (move.fr === 0 && move.fc === 0) nextRights.bQ = false;
-        if (move.fr === 0 && move.fc === 7) nextRights.bK = false;
-      }
-      if (move.tr === 7 && move.tc === 0) nextRights.wQ = false;
-      if (move.tr === 7 && move.tc === 7) nextRights.wK = false;
-      if (move.tr === 0 && move.tc === 0) nextRights.bQ = false;
-      if (move.tr === 0 && move.tc === 7) nextRights.bK = false;
-
-      return { board: next, rights: nextRights, captured: capturedPiece };
-    }
-
-    function generateLegalMoves(color, board = chessBoard, rights = castlingRights) {
-      const pseudo = [];
-      const enemy = color === 'w' ? 'b' : 'w';
-
-      for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-          const p = board[r][c];
-          if (!p || pieceColor(p) !== color) continue;
-          const t = pieceType(p);
-
-          if (t === 'P') {
-            const dir = color === 'w' ? -1 : 1;
-            const startRow = color === 'w' ? 6 : 1;
-            if (inBounds(r + dir, c) && !board[r + dir][c]) {
-              pseudo.push({ fr: r, fc: c, tr: r + dir, tc: c });
-              if (r === startRow && !board[r + dir * 2][c]) {
-                pseudo.push({ fr: r, fc: c, tr: r + dir * 2, tc: c });
-              }
-            }
-            for (const dc of [-1, 1]) {
-              const nr = r + dir, nc = c + dc;
-              if (inBounds(nr, nc) && board[nr][nc] && pieceColor(board[nr][nc]) === enemy) {
-                pseudo.push({ fr: r, fc: c, tr: nr, tc: nc });
-              }
-            }
-          } else if (t === 'N') {
-            for (const [dr, dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]) {
-              const nr = r + dr, nc = c + dc;
-              if (inBounds(nr, nc) && pieceColor(board[nr][nc]) !== color) {
-                pseudo.push({ fr: r, fc: c, tr: nr, tc: nc });
-              }
-            }
-          } else if (t === 'K') {
-            for (let dr = -1; dr <= 1; dr++) {
-              for (let dc = -1; dc <= 1; dc++) {
-                if (dr === 0 && dc === 0) continue;
-                const nr = r + dr, nc = c + dc;
-                if (inBounds(nr, nc) && pieceColor(board[nr][nc]) !== color) {
-                  pseudo.push({ fr: r, fc: c, tr: nr, tc: nc });
-                }
-              }
-            }
-            const baseRow = color === 'w' ? 7 : 0;
-            if (r === baseRow && c === 4 && !isInCheck(board, color)) {
-              if (rights[color + 'K'] && !board[baseRow][5] && !board[baseRow][6] &&
-                  !isSquareAttacked(board, baseRow, 5, enemy) && !isSquareAttacked(board, baseRow, 6, enemy) &&
-                  board[baseRow][7] === color + 'R') {
-                pseudo.push({ fr: baseRow, fc: 4, tr: baseRow, tc: 6 });
-              }
-              if (rights[color + 'Q'] && !board[baseRow][3] && !board[baseRow][2] && !board[baseRow][1] &&
-                  !isSquareAttacked(board, baseRow, 3, enemy) && !isSquareAttacked(board, baseRow, 2, enemy) &&
-                  board[baseRow][0] === color + 'R') {
-                pseudo.push({ fr: baseRow, fc: 4, tr: baseRow, tc: 2 });
-              }
-            }
-          } else {
-            const dirs = [];
-            if (t === 'R' || t === 'Q') dirs.push([-1,0],[1,0],[0,-1],[0,1]);
-            if (t === 'B' || t === 'Q') dirs.push([-1,-1],[-1,1],[1,-1],[1,1]);
-            for (const [dr, dc] of dirs) {
-              let nr = r + dr, nc = c + dc;
-              while (inBounds(nr, nc)) {
-                const target = board[nr][nc];
-                if (!target) {
-                  pseudo.push({ fr: r, fc: c, tr: nr, tc: nc });
-                } else {
-                  if (pieceColor(target) !== color) {
-                    pseudo.push({ fr: r, fc: c, tr: nr, tc: nc });
-                  }
-                  break;
-                }
-                nr += dr; nc += dc;
-              }
-            }
-          }
-        }
-      }
-
-      const legal = [];
-      for (const m of pseudo) {
-        const sim = applyMoveOnBoard(board, rights, m);
-        if (!isInCheck(sim.board, color)) {
-          legal.push(m);
-        }
-      }
-      return legal;
-    }
-
-    function updateChessStatusText() {
-      const ui = langUI[currentLang] || langUI.tr;
-      const el = document.getElementById('chessStatus');
-      const hintBtn = document.getElementById('chessHintBtn');
-      const undoBtn = document.getElementById('chessUndoBtn');
-      if (hintBtn) {
-        hintBtn.disabled = Boolean(chessGameOver || chessAiBusy || chessTurn !== 'w');
-      }
-      if (undoBtn) {
-        undoBtn.disabled = Boolean(chessAiBusy || chessUndoStack.length === 0);
-      }
-      if (!el) return;
-      if (chessGameOver === 'mate_w') {
-        el.textContent = ui.chessMateWhite;
-      } else if (chessGameOver === 'mate_b') {
-        el.textContent = ui.chessMateBlack;
-      } else if (chessGameOver === 'stalemate') {
-        el.textContent = ui.chessStalemate;
-      } else if (chessTurn === 'w') {
-        el.textContent = isInCheck(chessBoard, 'w') ? ui.chessCheckWhite : ui.chessTurnWhite;
-      } else {
-        el.textContent = isInCheck(chessBoard, 'b') ? ui.chessCheckBlack : ui.chessTurnBlack;
-      }
-    }
-
-    function appendMoveToLog(who, move, captured) {
-      const sep = captured ? 'x' : '-';
-      const capTag = captured ? ` (${PIECE_GLYPHS[captured] || captured})` : '';
-      const label = `${who}: ${coordToAlg(move.fr)}${sep}${coordToAlg(move.tr)}${capTag}`;
-      chessMoveLog.push(label);
-      const box = document.getElementById('chessMoves');
-      box.textContent = chessMoveLog.join('\n');
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function ensureChessBoardBuilt() {
-      const boardEl = document.getElementById('chessBoard');
-      if (!boardEl || chessCellRefs.length === 64) return;
-      boardEl.innerHTML = '';
-      chessCellRefs = [];
-      for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-          const sq = document.createElement('button');
-          sq.type = 'button';
-          const isLight = (r + c) % 2 === 0;
-          sq.dataset.baseClass = 'sq ' + (isLight ? 'light' : 'dark');
-          sq.className = sq.dataset.baseClass;
-
-          const span = document.createElement('span');
-          span.className = 'piece-glyph';
-          sq.appendChild(span);
-
-          sq.onclick = () => handleChessSquareClick(r, c);
-          boardEl.appendChild(sq);
-          chessCellRefs.push({ sq, span, r, c });
-        }
-      }
-    }
-
-    function renderChessBoard() {
-      ensureChessBoardBuilt();
-      for (let i = 0; i < chessCellRefs.length; i++) {
-        const { sq, span, r, c } = chessCellRefs[i];
-        let cls = sq.dataset.baseClass;
-
-        if (chessHintMove && chessHintMove.fr === r && chessHintMove.fc === c) {
-          cls += ' hint-from';
-        }
-        if (chessHintMove && chessHintMove.tr === r && chessHintMove.tc === c) {
-          cls += ' hint-to';
-        }
-        if (chessSelected && chessSelected.r === r && chessSelected.c === c) {
-          cls += ' selected';
-        }
-        if (chessLastMove &&
-            ((chessLastMove.fr === r && chessLastMove.fc === c) ||
-             (chessLastMove.tr === r && chessLastMove.tc === c))) {
-          cls += ' last-move';
-        }
-
-        const isLegalTarget = chessLegalMoves.some(m => m.tr === r && m.tc === c);
-        const piece = chessBoard[r][c];
-        if (isLegalTarget) {
-          cls += ' legal';
-          if (piece && pieceColor(piece) !== 'w') {
-            cls += ' capture-target';
-          }
-        }
-
-        const isCapturedSquare = chessCaptureCoord && chessCaptureCoord.r === r && chessCaptureCoord.c === c;
-        if (isCapturedSquare) {
-          cls += ' capture-flash';
-        }
-
-        if (sq.className !== cls) {
-          sq.className = cls;
-        }
-
-        const isJustArrived = chessLastMove && chessLastMove.tr === r && chessLastMove.tc === c;
-        if (piece) {
-          const glyph = PIECE_GLYPHS[piece] || '';
-          const colorCls = pieceColor(piece) === 'w' ? 'w-piece' : 'b-piece';
-          if (span.textContent !== glyph) {
-            span.textContent = glyph;
-          }
-          span.className = 'piece-glyph ' + colorCls;
-          if (isJustArrived) {
-            void span.offsetWidth;
-            span.classList.add('anim-move');
-          }
-        } else if (span.textContent !== '') {
-          span.textContent = '';
-          span.className = 'piece-glyph';
-        }
-      }
-      chessCaptureCoord = null;
-    }
-
-    function checkAndHandleEndgame(nextTurn) {
-      const legal = generateLegalMoves(nextTurn);
-      if (legal.length === 0) {
-        if (isInCheck(chessBoard, nextTurn)) {
-          chessGameOver = nextTurn === 'w' ? 'mate_w' : 'mate_b';
-        } else {
-          chessGameOver = 'stalemate';
-        }
-        updateChessStatusText();
-        return true;
-      }
-      return false;
-    }
-
-    function evaluateMoveForColor(color, move) {
-      const enemy = color === 'w' ? 'b' : 'w';
-      let score = Math.random() * 14;
-      const target = chessBoard[move.tr][move.tc];
-      if (target) {
-        score += (PIECE_VALUES[pieceType(target)] || 100) * 1.15;
-      }
-      if (move.tr >= 3 && move.tr <= 4 && move.tc >= 3 && move.tc <= 4) {
-        score += 22;
-      }
-      const sim = applyMoveOnBoard(chessBoard, castlingRights, move);
-      if (isInCheck(sim.board, enemy)) {
-        score += 35;
-      }
-      if (isSquareAttacked(sim.board, move.tr, move.tc, enemy)) {
-        const movingPiece = sim.board[move.tr][move.tc];
-        score -= (PIECE_VALUES[pieceType(movingPiece)] || 100) * 0.85;
-      }
-      return score;
-    }
-
-    function pickBestHeuristicMove(color, legalMoves) {
-      let best = legalMoves[0];
-      let bestScore = -999999;
-      for (const m of legalMoves) {
-        const s = evaluateMoveForColor(color, m);
-        if (s > bestScore) {
-          bestScore = s;
-          best = m;
-        }
-      }
-      return best;
-    }
-
-    function showChessHint() {
-      const ui = langUI[currentLang] || langUI.tr;
-      const hintBox = document.getElementById('chessHintBox');
-      if (chessGameOver || chessAiBusy || chessTurn !== 'w') {
-        if (hintBox) hintBox.textContent = ui.hintWaitTurn;
-        return;
-      }
-      const legalMoves = generateLegalMoves('w');
-      if (legalMoves.length === 0) return;
-
-      const best = pickBestHeuristicMove('w', legalMoves);
-      chessHintMove = best;
-      chessSelected = { r: best.fr, c: best.fc };
-      chessLegalMoves = legalMoves.filter(m => m.fr === best.fr && m.fc === best.fc);
-
-      const moveLabel = `${coordToAlg(best.fr)} → ${coordToAlg(best.tr)}`;
-      if (hintBox) hintBox.textContent = ui.hintPrefix + moveLabel;
-      scheduleChessRender();
-    }
-
-    function handleChessSquareClick(r, c) {
-      if (chessGameOver || chessAiBusy || chessTurn !== 'w') return;
-
-      const clickedPiece = chessBoard[r][c];
-      const moveMatch = chessLegalMoves.find(m => m.tr === r && m.tc === c);
-
-      if (moveMatch) {
-        chessUndoStack.push(captureChessSnapshot());
-        const sim = applyMoveOnBoard(chessBoard, castlingRights, moveMatch);
-        chessBoard = sim.board;
-        castlingRights = sim.rights;
-        chessLastMove = moveMatch;
-        chessCaptureCoord = sim.captured ? { r: moveMatch.tr, c: moveMatch.tc } : null;
-        chessHintMove = null;
-        chessSelected = null;
-        chessLegalMoves = [];
-        chessTurn = 'b';
-        document.getElementById('chessHintBox').textContent = '';
-        appendMoveToLog('Sen', moveMatch, sim.captured);
-        updateChessStatusText();
-        scheduleChessRender();
-
-        if (!checkAndHandleEndgame('b')) {
-          chessAiBusy = true;
-          updateChessStatusText();
-          chessAiTimer = setTimeout(() => {
-            chessAiTimer = null;
-            runSmoothBlackMove();
-          }, 160);
-        }
-        return;
-      }
-
-      if (clickedPiece && pieceColor(clickedPiece) === 'w') {
-        if (chessSelected && chessSelected.r === r && chessSelected.c === c) {
-          chessSelected = null;
-          chessLegalMoves = [];
-        } else {
-          chessSelected = { r, c };
-          chessLegalMoves = generateLegalMoves('w').filter(m => m.fr === r && m.fc === c);
-        }
-        scheduleChessRender();
-      } else {
-        chessSelected = null;
-        chessLegalMoves = [];
-        scheduleChessRender();
-      }
-    }
-
-    function runSmoothBlackMove() {
-      const legalMoves = generateLegalMoves('b');
-      if (legalMoves.length === 0) {
-        chessAiBusy = false;
-        return;
-      }
-      const chosenMove = pickBestHeuristicMove('b', legalMoves);
-      const sim = applyMoveOnBoard(chessBoard, castlingRights, chosenMove);
-      chessBoard = sim.board;
-      castlingRights = sim.rights;
-      chessLastMove = chosenMove;
-      chessCaptureCoord = sim.captured ? { r: chosenMove.tr, c: chosenMove.tc } : null;
-      chessTurn = 'w';
-      chessAiBusy = false;
-      appendMoveToLog('VYN AI', chosenMove, sim.captured);
-      checkAndHandleEndgame('w');
-      updateChessStatusText();
-      scheduleChessRender();
-    }
-
-    /* ================= 2. X-O-X MOTORU (60 FPS YERİNDE GÜNCELLEME) ================= */
-    const TTT_WINS = [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8],
-      [0, 3, 6], [1, 4, 7], [2, 5, 8],
-      [0, 4, 8], [2, 4, 6]
-    ];
-    let tttBoard = [];
-    let tttTurn = 'X';
-    let tttOver = null;
-    let tttWinLine = [];
-    let tttLastIdx = -1;
-    let tttScore = { w: 0, d: 0, l: 0 };
-    let tttAiTimer = null;
-    let tttCellRefs = [];
-
-    function checkTttWinner(board) {
-      for (const line of TTT_WINS) {
-        const [a, b, c] = line;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-          return { winner: board[a], line };
-        }
-      }
-      if (board.every(cell => cell !== null)) {
-        return { winner: 'draw', line: [] };
-      }
-      return null;
-    }
-
-    function initTttGame() {
-      if (tttAiTimer) {
-        clearTimeout(tttAiTimer);
-        tttAiTimer = null;
-      }
-      tttBoard = Array(9).fill(null);
-      tttTurn = 'X';
-      tttOver = null;
-      tttWinLine = [];
-      tttLastIdx = -1;
-      ensureTttBoardBuilt();
-      updateTttUI();
-    }
-
-    function pickTttAiMove() {
-      for (let i = 0; i < 9; i++) {
-        if (!tttBoard[i]) {
-          const copy = tttBoard.slice();
-          copy[i] = 'O';
-          if (checkTttWinner(copy)?.winner === 'O') return i;
-        }
-      }
-      for (let i = 0; i < 9; i++) {
-        if (!tttBoard[i]) {
-          const copy = tttBoard.slice();
-          copy[i] = 'X';
-          if (checkTttWinner(copy)?.winner === 'X') return i;
-        }
-      }
-      if (!tttBoard[4]) return 4;
-      const corners = [0, 2, 6, 8].filter(i => !tttBoard[i]);
-      if (corners.length) return corners[Math.floor(Math.random() * corners.length)];
-      const empty = tttBoard.map((v, i) => (v ? null : i)).filter(v => v !== null);
-      return empty[Math.floor(Math.random() * empty.length)];
-    }
-
-    function handleTttClick(idx) {
-      if (tttOver || tttTurn !== 'X' || tttBoard[idx]) return;
-      tttBoard[idx] = 'X';
-      tttLastIdx = idx;
-      const resAfterX = checkTttWinner(tttBoard);
-      if (resAfterX) {
-        tttOver = resAfterX.winner;
-        tttWinLine = resAfterX.line;
-        if (tttOver === 'X') tttScore.w++;
-        else if (tttOver === 'draw') tttScore.d++;
-        updateTttUI();
-        return;
-      }
-
-      tttTurn = 'O';
-      updateTttUI();
-      tttAiTimer = setTimeout(() => {
-        tttAiTimer = null;
-        if (tttOver) return;
-        const aiIdx = pickTttAiMove();
-        if (aiIdx !== undefined) {
-          tttBoard[aiIdx] = 'O';
-          tttLastIdx = aiIdx;
-        }
-        const resAfterO = checkTttWinner(tttBoard);
-        if (resAfterO) {
-          tttOver = resAfterO.winner;
-          tttWinLine = resAfterO.line;
-          if (tttOver === 'O') tttScore.l++;
-          else if (tttOver === 'draw') tttScore.d++;
-        } else {
-          tttTurn = 'X';
-        }
-        updateTttUI();
-      }, 150);
-    }
-
-    function ensureTttBoardBuilt() {
-      const boardEl = document.getElementById('tttBoard');
-      if (!boardEl || tttCellRefs.length === 9) return;
-      boardEl.innerHTML = '';
-      tttCellRefs = [];
-      for (let i = 0; i < 9; i++) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'ttt-cell';
-        btn.onclick = () => handleTttClick(i);
-        boardEl.appendChild(btn);
-        tttCellRefs.push(btn);
-      }
-    }
-
-    function updateTttUI() {
-      const ui = langUI[currentLang] || langUI.tr;
-      const statusEl = document.getElementById('tttStatus');
-      const scoreEl = document.getElementById('tttScore');
-      if (!statusEl || !scoreEl) return;
-
-      if (tttOver === 'X') statusEl.textContent = ui.tttWinX;
-      else if (tttOver === 'O') statusEl.textContent = ui.tttWinO;
-      else if (tttOver === 'draw') statusEl.textContent = ui.tttDraw;
-      else statusEl.textContent = tttTurn === 'X' ? ui.tttTurnX : ui.tttTurnO;
-
-      scoreEl.textContent = ui.tttScoreFmt(tttScore.w, tttScore.d, tttScore.l);
-
-      ensureTttBoardBuilt();
-      for (let i = 0; i < 9; i++) {
-        const btn = tttCellRefs[i];
-        const val = tttBoard[i] || '';
-        let cls = 'ttt-cell';
-        if (val === 'X') cls += ' x-mark';
-        else if (val === 'O') cls += ' o-mark';
-        if (tttWinLine.includes(i)) cls += ' win-cell';
-        if (btn.textContent !== val) btn.textContent = val;
-        btn.className = cls;
-        if (i === tttLastIdx && val) {
-          void btn.offsetWidth;
-          btn.classList.add('anim-mark');
-        }
-        btn.disabled = Boolean(tttOver || val || tttTurn !== 'X');
-      }
-      tttLastIdx = -1;
-    }
-
-    /* ================= 3. KELİME OYUNU MOTORU (60 FPS YERİNDE GÜNCELLEME) ================= */
-    let wordState = {
-      target: '',
-      clue: '',
-      guessed: new Set(),
-      lives: 6,
-      over: false,
-      lastLetter: ''
-    };
-    let wordSlotRefs = [];
-    let wordKeyRefs = new Map();
-
-    function initWordGame() {
-      const bankKey = currentLang === 'all' ? 'en' : currentLang;
-      const bank = WORD_BANKS[bankKey] || WORD_BANKS.tr;
-      const picked = bank[Math.floor(Math.random() * bank.length)];
-      wordState = {
-        target: picked.word,
-        clue: picked.clue,
-        guessed: new Set(),
-        lives: 6,
-        over: false,
-        lastLetter: ''
-      };
-      buildWordDomStructure();
-      renderWordGame();
-    }
-
-    function buildWordDomStructure() {
-      const slotsEl = document.getElementById('wordSlots');
-      const kbEl = document.getElementById('wordKeyboard');
-      if (!slotsEl || !kbEl) return;
-
-      slotsEl.innerHTML = '';
-      wordSlotRefs = [];
-      for (let i = 0; i < wordState.target.length; i++) {
-        const slot = document.createElement('div');
-        slot.className = 'word-slot';
-        slotsEl.appendChild(slot);
-        wordSlotRefs.push(slot);
-      }
-
-      kbEl.innerHTML = '';
-      wordKeyRefs.clear();
-      const kbKey = currentLang === 'all' ? 'en' : currentLang;
-      const letters = KEYBOARD_LETTERS[kbKey] || KEYBOARD_LETTERS.tr;
-      for (const ltr of letters) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'letter-btn';
-        btn.textContent = ltr;
-        btn.onclick = () => handleWordLetter(ltr);
-        kbEl.appendChild(btn);
-        wordKeyRefs.set(ltr, btn);
-      }
-    }
-
-    function ensureWordBoardBuilt() {
-      if (wordSlotRefs.length !== wordState.target.length || wordKeyRefs.size === 0) {
-        buildWordDomStructure();
-      }
-    }
-
-    function handleWordLetter(letter) {
-      if (wordState.over || wordState.guessed.has(letter)) return;
-      wordState.guessed.add(letter);
-      wordState.lastLetter = letter;
-
-      if (!wordState.target.includes(letter)) {
-        wordState.lives = Math.max(0, wordState.lives - 1);
-      }
-
-      const allFound = [...wordState.target].every(ch => wordState.guessed.has(ch));
-      if (allFound || wordState.lives <= 0) {
-        wordState.over = true;
-      }
-
-      renderWordGame();
-    }
-
-    function renderWordGame() {
-      const ui = langUI[currentLang] || langUI.tr;
-      const clueEl = document.getElementById('wordClue');
-      const livesEl = document.getElementById('wordLives');
-      const statusEl = document.getElementById('wordStatus');
-      if (!clueEl || !livesEl || !statusEl) return;
-
-      clueEl.textContent = ui.wordCluePrefix + wordState.clue;
-      livesEl.textContent = ui.wordLivesPrefix + wordState.lives;
-
-      const allFound = [...wordState.target].every(ch => wordState.guessed.has(ch));
-      if (wordState.over) {
-        statusEl.textContent = allFound ? ui.wordWin : ui.wordLoseFmt(wordState.target);
-      } else {
-        statusEl.textContent = '';
-      }
-
-      ensureWordBoardBuilt();
-      for (let i = 0; i < wordState.target.length; i++) {
-        const ch = wordState.target[i];
-        const slot = wordSlotRefs[i];
-        if (!slot) continue;
-        const showChar = wordState.guessed.has(ch) || (wordState.over && !allFound);
-        const nextTxt = showChar ? ch : '·';
-        if (slot.textContent !== nextTxt) {
-          slot.textContent = nextTxt;
-        }
-        slot.className = 'word-slot' + (showChar ? ' revealed' : '');
-        if (showChar && wordState.lastLetter === ch) {
-          void slot.offsetWidth;
-          slot.classList.add('anim-reveal');
-        }
-      }
-
-      for (const [ltr, btn] of wordKeyRefs.entries()) {
-        const already = wordState.guessed.has(ltr);
-        let cls = 'letter-btn';
-        if (already) {
-          cls += wordState.target.includes(ltr) ? ' hit' : ' miss';
-        }
-        btn.className = cls;
-        btn.disabled = wordState.over || already;
-      }
-      wordState.lastLetter = '';
-    }
-
-    updateAllGameTexts();
+    updateVoiceTexts();
   </script>
 </body>
-</html>
+</html>  
