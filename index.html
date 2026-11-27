@@ -408,6 +408,7 @@
       align-items: center;
       justify-content: center;
       padding: 16px;
+      contain: layout style;
     }
     #gameOverlay.open {
       display: flex;
@@ -417,7 +418,7 @@
       max-width: 900px;
       max-height: 94vh;
       overflow-y: auto;
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(15, 23, 42, 0.97);
       border: 1px solid rgba(148, 163, 184, 0.26);
       border-radius: 24px;
       padding: 22px;
@@ -425,7 +426,8 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      transition: max-width 0.2s ease, padding 0.2s ease;
+      transform: translateZ(0);
+      will-change: transform;
     }
     .game-top {
       display: flex;
@@ -477,7 +479,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.16s ease;
+      transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
     }
     .game-btn:hover:not(:disabled) {
       border-color: var(--accent-1);
@@ -521,10 +523,11 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      transition: transform 0.16s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      transform: translateZ(0);
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
     }
     .game-hub-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-3px) translateZ(0);
       border-color: var(--accent-1);
       background: rgba(30, 41, 59, 0.96);
       box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
@@ -572,11 +575,31 @@
       overflow: hidden;
       border: 2px solid rgba(148, 163, 184, 0.3);
       box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+      contain: strict;
+      transform: translateZ(0);
     }
     @keyframes piecePop {
-      0% { transform: scale(0.72); }
-      65% { transform: scale(1.12); }
-      100% { transform: scale(1); }
+      0% {
+        transform: translateZ(0) scale(0.58);
+        opacity: 0.72;
+      }
+      62% {
+        transform: translateZ(0) scale(1.16);
+        opacity: 1;
+      }
+      100% {
+        transform: translateZ(0) scale(1);
+        opacity: 1;
+      }
+    }
+    @keyframes capturePulse {
+      0% {
+        box-shadow: inset 0 0 0 0 rgba(244, 63, 94, 0.95);
+        background: rgba(244, 63, 94, 0.55);
+      }
+      100% {
+        box-shadow: inset 0 0 0 0 rgba(244, 63, 94, 0);
+      }
     }
     .sq {
       display: flex;
@@ -587,7 +610,8 @@
       position: relative;
       padding: 0;
       border: none;
-      transition: background 0.14s ease, box-shadow 0.14s ease;
+      transform: translateZ(0);
+      transition: background-color 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .sq.light {
       background: #e2e8f0;
@@ -595,14 +619,19 @@
     .sq.dark {
       background: #1e293b;
     }
+    .sq.capture-flash {
+      animation: capturePulse 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    }
     .piece-glyph {
       display: inline-block;
       font-size: clamp(1.75rem, 4.9vw, 2.85rem);
       line-height: 1;
-      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateZ(0);
+      will-change: transform, opacity;
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .piece-glyph.anim-move {
-      animation: piecePop 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: piecePop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .piece-glyph.w-piece {
       color: #f8fafc;
@@ -615,7 +644,7 @@
       text-shadow: 0 2px 8px rgba(88, 28, 135, 0.68), 0 0 1px #090d16;
     }
     .sq:hover .piece-glyph {
-      transform: scale(1.07);
+      transform: translateZ(0) scale(1.09);
     }
     .sq.selected {
       box-shadow: inset 0 0 0 3px #38bdf8;
@@ -636,6 +665,7 @@
       background: rgba(56, 189, 248, 0.85);
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);
       pointer-events: none;
+      transition: transform 0.16s ease;
     }
     .sq.legal.capture-target {
       background: rgba(244, 63, 94, 0.28) !important;
@@ -717,6 +747,20 @@
     }
 
     /* X-O-X */
+    @keyframes markPop {
+      0% {
+        transform: translateZ(0) scale(0.45) rotate(-8deg);
+        opacity: 0.35;
+      }
+      65% {
+        transform: translateZ(0) scale(1.14) rotate(2deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateZ(0) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
     .ttt-wrap {
       display: flex;
       flex-direction: column;
@@ -738,6 +782,8 @@
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       gap: 10px;
+      contain: strict;
+      transform: translateZ(0);
     }
     .ttt-cell {
       border-radius: 16px;
@@ -749,11 +795,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.14s ease, border-color 0.16s ease, background 0.16s ease;
+      transform: translateZ(0);
+      will-change: transform;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
     }
     .ttt-cell:hover:not(:disabled) {
-      transform: scale(1.04);
+      transform: translateZ(0) scale(1.05);
       border-color: var(--accent-1);
+    }
+    .ttt-cell.anim-mark {
+      animation: markPop 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .ttt-cell.x-mark {
       color: var(--accent-1);
@@ -780,6 +831,20 @@
     }
 
     /* Kelime Oyunu */
+    @keyframes slotReveal {
+      0% {
+        transform: translateZ(0) translateY(6px) scale(0.82);
+        opacity: 0.4;
+      }
+      65% {
+        transform: translateZ(0) translateY(-2px) scale(1.08);
+        opacity: 1;
+      }
+      100% {
+        transform: translateZ(0) translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
     .word-wrap {
       display: flex;
       flex-direction: column;
@@ -830,10 +895,15 @@
       font-weight: 800;
       color: #f8fafc;
       text-transform: uppercase;
+      transform: translateZ(0);
+      transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
     }
     .word-slot.revealed {
       border-color: var(--accent-1);
       color: var(--accent-1);
+    }
+    .word-slot.anim-reveal {
+      animation: slotReveal 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .word-status {
       font-size: 0.9rem;
@@ -860,9 +930,11 @@
       font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.14s ease;
+      transform: translateZ(0);
+      transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.14s ease, background 0.14s ease, opacity 0.14s ease;
     }
     .letter-btn:hover:not(:disabled) {
+      transform: translateZ(0) scale(1.06);
       border-color: var(--accent-1);
       background: rgba(56, 189, 248, 0.2);
     }
@@ -1805,83 +1877,83 @@
         ]
       },
       all: {
-        subtitle: "Sohbet, İşlem & Bilgi Asistanı (All Languages)",
-        themes: "Temalar:",
-        pcMode: "PC Mod",
-        mobileMode: "Mobil Mod",
-        downloadChat: "İndir",
-        newChat: "Yeni Sohbet",
-        playGame: "Oyun Oyna",
-        gameHubTitle: "VYN AI Oyun Merkezi",
-        gameHubSub: "3 oyun · Otomatik dil uyumlu",
-        gameBackHub: "Oyun Seçimi",
-        gameRestart: "Yeni Oyun",
-        gameClose: "Kapat",
-        hubChessTitle: "Satranç",
-        hubChessDesc: "Sen Beyaz · VYN AI Siyah. İpucu ve Geri Al destekli tam satranç.",
-        hubTttTitle: "X-O-X",
-        hubTttDesc: "Sen X · VYN AI O. Hızlı strateji ve skor takibi.",
-        hubWordTitle: "Kelime Oyunu",
-        hubWordDesc: "Kelimeleri ipucu ve harf tahminleriyle bul.",
-        tttTurnX: "Sıra sende (X)",
-        tttTurnO: "VYN AI düşünüyor (O)...",
-        tttWinX: "Tebrikler! Sen (X) kazandın!",
-        tttWinO: "VYN AI (O) kazandı!",
-        tttDraw: "Berabere! Güzel oyundu.",
-        tttScoreFmt: (w, d, l) => `Sen (X): ${w} · Berabere: ${d} · VYN AI (O): ${l}`,
-        wordCluePrefix: "İpucu: ",
-        wordLivesPrefix: "Kalan Hak: ",
-        wordWin: "Harika! Kelimeyi buldun!",
-        wordLoseFmt: (ans) => `Hakların bitti! Kelime: ${ans}`,
-        sendTitle: "Gönder",
-        stopTitle: "Durdur",
-        stoppedMsg: "Yanıt durduruldu.",
+        subtitle: "Chat, Actions & Knowledge Assistant",
+        themes: "Themes:",
+        pcMode: "PC Mode",
+        mobileMode: "Mobile Mode",
+        downloadChat: "Save",
+        newChat: "New Chat",
+        playGame: "Play Game",
+        gameHubTitle: "VYN AI Game Hub",
+        gameHubSub: "3 games · Auto-detects conversation language",
+        gameBackHub: "Game Select",
+        gameRestart: "New Game",
+        gameClose: "Close",
+        hubChessTitle: "Chess",
+        hubChessDesc: "You White · VYN AI Black. Full chess with Hint and Undo.",
+        hubTttTitle: "Tic-Tac-Toe",
+        hubTttDesc: "You X · VYN AI O. Fast strategy with score tracker.",
+        hubWordTitle: "Word Game",
+        hubWordDesc: "Guess words using clues and letters.",
+        tttTurnX: "Your turn (X)",
+        tttTurnO: "VYN AI is thinking (O)...",
+        tttWinX: "Congrats! You (X) won!",
+        tttWinO: "VYN AI (O) won!",
+        tttDraw: "Draw! Well played.",
+        tttScoreFmt: (w, d, l) => `You (X): ${w} · Draw: ${d} · VYN AI (O): ${l}`,
+        wordCluePrefix: "Clue: ",
+        wordLivesPrefix: "Lives Left: ",
+        wordWin: "Awesome! You found the word!",
+        wordLoseFmt: (ans) => `Out of lives! Word: ${ans}`,
+        sendTitle: "Send",
+        stopTitle: "Stop",
+        stoppedMsg: "Response stopped.",
         langName: "Auto-Detect (User Language)",
         langLockRule: "AUTO-DETECT LANGUAGE MODE: Detect the exact language of the user's message and reply 100% in that same language. If the user switches languages between messages, seamlessly follow the language of the user's latest message.",
-        thinkLabels: { fast: "Hızlı", logical: "Mantıklı", planned: "Planlı" },
+        thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
         thinkInstructions: {
           fast: "Give a short, clear, and direct answer in the user's message language.",
           logical: "Explain logically with clear reasoning in the user's message language.",
           planned: "Provide a structured, step-by-step action plan in the user's message language."
         },
-        chessTitle: "Satranç · VYN AI",
-        chessSub: "Sen Beyaz · VYN AI Siyah",
-        chessHint: "İpucu",
-        chessUndo: "Geri Al",
-        legendYou: "Senin Taşların (Beyaz)",
-        legendAi: "VYN AI Taşları (Siyah)",
-        chessTurnWhite: "Sıra sende (Beyaz)",
-        chessTurnBlack: "VYN AI düşünüyor (Siyah)...",
-        chessCheckWhite: "Şah! Sıra sende (Beyaz)",
-        chessCheckBlack: "Şah! VYN AI düşünüyor...",
-        chessMateWhite: "Mat! VYN AI kazandı.",
-        chessMateBlack: "Mat! Tebrikler, kazandın!",
-        chessStalemate: "Pat! Oyun berabere bitti.",
-        chessNote: "Kırmızı çerçeveli kareler taş yiyebileceğin hedeflerdir.",
-        hintPrefix: "Önerilen hamle: ",
-        hintWaitTurn: "İpucu sadece senin sırasında (Beyaz) alınabilir.",
-        welcome: "Selam! Ben VYN AI. Hangi dilde yazarsan sana o dilde yanıt veririm.",
-        placeholder: "VYN AI'a istediğin dilde bir şey sor...",
-        thinking: "Düşünüyorum...",
-        error: "Cevap alınamadı.",
-        netErr: "Bağlantı hatası oldu.",
-        copy: "Kopyala",
-        copied: "Kopyalandı!",
+        chessTitle: "Chess · VYN AI",
+        chessSub: "You White · VYN AI Black",
+        chessHint: "Hint",
+        chessUndo: "Undo",
+        legendYou: "Your Pieces (White)",
+        legendAi: "VYN AI Pieces (Black)",
+        chessTurnWhite: "Your turn (White)",
+        chessTurnBlack: "VYN AI is thinking (Black)...",
+        chessCheckWhite: "Check! Your turn (White)",
+        chessCheckBlack: "Check! VYN AI is thinking...",
+        chessMateWhite: "Checkmate! VYN AI wins.",
+        chessMateBlack: "Checkmate! You win!",
+        chessStalemate: "Stalemate! Draw game.",
+        chessNote: "Red-outlined squares are enemy pieces you can capture.",
+        hintPrefix: "Suggested move: ",
+        hintWaitTurn: "Hints are available only on your turn (White).",
+        welcome: "Hi! I'm VYN AI. Write in any language you want and I will detect and reply in that exact language.",
+        placeholder: "Ask VYN AI in any language...",
+        thinking: "Thinking...",
+        error: "Could not get a response.",
+        netErr: "Network error occurred.",
+        copy: "Copy",
+        copied: "Copied!",
         cards: [
           {
-            title: "Serbest Sohbet",
-            desc: "Günün nasıl geçiyor? Bana bir fikir anlat.",
-            prompt: "Selam VYN AI! Bugün aklımdaki bir fikri seninle paylaşmak ve üzerine konuşmak istiyorum."
+            title: "Open Chat",
+            desc: "How's your day going? Share an idea.",
+            prompt: "Hey VYN AI! I want to share an idea with you and brainstorm together."
           },
           {
-            title: "Hızlı Bilgi",
-            desc: "Karmaşık bir konuyu sade şekilde açıkla.",
-            prompt: "Bana yapay zekanın nasıl çalıştığını kısa, net ve sade örneklerle açıklar mısın?"
+            title: "Quick Explain",
+            desc: "Break down a topic simply and clearly.",
+            prompt: "Can you explain how artificial intelligence works in simple terms with clear examples?"
           },
           {
-            title: "Strateji & Plan",
-            desc: "Hedefin için net bir strateji ve yol haritası çıkar.",
-            prompt: "Bir hedefe ulaşmak için adım adım uygulanabilir bir strateji ve yol haritası oluştur."
+            title: "Strategy & Plan",
+            desc: "Build a clear strategy and roadmap for a goal.",
+            prompt: "Create a step-by-step practical strategy and roadmap to achieve a goal."
           }
         ]
       }
@@ -2081,12 +2153,15 @@
     function selectGameMode(mode) {
       activeGameView = mode;
       syncGameModalChrome();
-      if (mode === 'chess' && chessBoard.length === 0) {
-        initChessGame();
-      } else if (mode === 'ttt' && tttBoard.length === 0) {
-        initTttGame();
-      } else if (mode === 'word' && !wordState.target) {
-        initWordGame();
+      if (mode === 'chess') {
+        if (chessBoard.length === 0) initChessGame();
+        else ensureChessBoardBuilt();
+      } else if (mode === 'ttt') {
+        if (tttBoard.length === 0) initTttGame();
+        else ensureTttBoardBuilt();
+      } else if (mode === 'word') {
+        if (!wordState.target) initWordGame();
+        else ensureWordBoardBuilt();
       }
     }
 
@@ -2337,7 +2412,7 @@
       }
     }
 
-    /* ================= 1. SATRANÇ MOTORU ================= */
+    /* ================= 1. SATRANÇ MOTORU (60 FPS YERİNDE GÜNCELLEME) ================= */
     const PIECE_GLYPHS = {
       wK: '♔', wQ: '♕', wR: '♖', wB: '♗', wN: '♘', wP: '♙',
       bK: '♚', bQ: '♛', bR: '♜', bB: '♝', bN: '♞', bP: '♟'
@@ -2350,12 +2425,24 @@
     let chessSelected = null;
     let chessLegalMoves = [];
     let chessLastMove = null;
+    let chessCaptureCoord = null;
     let chessHintMove = null;
     let chessMoveLog = [];
     let chessUndoStack = [];
     let chessGameOver = null;
     let chessAiBusy = false;
+    let chessAiTimer = null;
+    let chessRafId = null;
     let castlingRights = { wK: true, wQ: true, bK: true, bQ: true };
+    let chessCellRefs = [];
+
+    function scheduleChessRender() {
+      if (chessRafId) return;
+      chessRafId = requestAnimationFrame(() => {
+        chessRafId = null;
+        renderChessBoard();
+      });
+    }
 
     function captureChessSnapshot() {
       return {
@@ -2369,19 +2456,25 @@
     }
 
     function restoreChessSnapshot(snap) {
+      if (chessAiTimer) {
+        clearTimeout(chessAiTimer);
+        chessAiTimer = null;
+      }
       chessBoard = cloneBoard(snap.board);
       chessTurn = snap.turn;
       chessLastMove = snap.lastMove ? { ...snap.lastMove } : null;
+      chessCaptureCoord = null;
       chessMoveLog = snap.moveLog.slice();
       chessGameOver = snap.gameOver;
       castlingRights = { ...snap.rights };
       chessSelected = null;
       chessLegalMoves = [];
       chessHintMove = null;
+      chessAiBusy = false;
       document.getElementById('chessHintBox').textContent = '';
       document.getElementById('chessMoves').textContent = chessMoveLog.join('\n');
       updateChessStatusText();
-      renderChessBoard();
+      scheduleChessRender();
     }
 
     function undoChessMove() {
@@ -2394,6 +2487,10 @@
     }
 
     function initChessGame() {
+      if (chessAiTimer) {
+        clearTimeout(chessAiTimer);
+        chessAiTimer = null;
+      }
       const backRank = ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'];
       chessBoard = Array.from({ length: 8 }, () => Array(8).fill(null));
       for (let c = 0; c < 8; c++) {
@@ -2406,6 +2503,7 @@
       chessSelected = null;
       chessLegalMoves = [];
       chessLastMove = null;
+      chessCaptureCoord = null;
       chessHintMove = null;
       chessMoveLog = [];
       chessUndoStack = [];
@@ -2415,6 +2513,7 @@
       document.getElementById('chessMoves').textContent = '';
       document.getElementById('chessHintBox').textContent = '';
       updateChessStatusText();
+      ensureChessBoardBuilt();
       renderChessBoard();
     }
 
@@ -2422,16 +2521,6 @@
     function pieceColor(p) { return p ? p[0] : null; }
     function pieceType(p) { return p ? p[1] : null; }
     function coordToAlg(r, c) { return FILES[c] + (8 - r); }
-
-    function algToCoord(alg) {
-      if (!alg || typeof alg !== 'string') return null;
-      const clean = alg.trim().toLowerCase().replace(/[^a-h1-8]/g, '');
-      if (clean.length < 2) return null;
-      const c = FILES.indexOf(clean[0]);
-      const r = 8 - parseInt(clean[1], 10);
-      if (!inBounds(r, c)) return null;
-      return { r, c };
-    }
 
     function findKing(board, color) {
       for (let r = 0; r < 8; r++) {
@@ -2626,26 +2715,6 @@
       return legal;
     }
 
-    function boardToFen(board = chessBoard, turn = chessTurn) {
-      const rows = board.map(row => {
-        let empty = 0;
-        let out = '';
-        for (const cell of row) {
-          if (!cell) {
-            empty++;
-          } else {
-            if (empty > 0) { out += empty; empty = 0; }
-            const col = cell[0];
-            const typ = cell[1];
-            out += col === 'w' ? typ.toUpperCase() : typ.toLowerCase();
-          }
-        }
-        if (empty > 0) out += empty;
-        return out;
-      });
-      return `${rows.join('/')} ${turn}`;
-    }
-
     function updateChessStatusText() {
       const ui = langUI[currentLang] || langUI.tr;
       const el = document.getElementById('chessStatus');
@@ -2681,54 +2750,87 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    function renderChessBoard() {
+    function ensureChessBoardBuilt() {
       const boardEl = document.getElementById('chessBoard');
-      if (!boardEl) return;
+      if (!boardEl || chessCellRefs.length === 64) return;
       boardEl.innerHTML = '';
-
+      chessCellRefs = [];
       for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
           const sq = document.createElement('button');
           sq.type = 'button';
           const isLight = (r + c) % 2 === 0;
-          sq.className = 'sq ' + (isLight ? 'light' : 'dark');
+          sq.dataset.baseClass = 'sq ' + (isLight ? 'light' : 'dark');
+          sq.className = sq.dataset.baseClass;
 
-          if (chessHintMove && chessHintMove.fr === r && chessHintMove.fc === c) {
-            sq.classList.add('hint-from');
-          }
-          if (chessHintMove && chessHintMove.tr === r && chessHintMove.tc === c) {
-            sq.classList.add('hint-to');
-          }
-          if (chessSelected && chessSelected.r === r && chessSelected.c === c) {
-            sq.classList.add('selected');
-          }
-          if (chessLastMove &&
-              ((chessLastMove.fr === r && chessLastMove.fc === c) ||
-               (chessLastMove.tr === r && chessLastMove.tc === c))) {
-            sq.classList.add('last-move');
-          }
-
-          const isLegalTarget = chessLegalMoves.some(m => m.tr === r && m.tc === c);
-          const piece = chessBoard[r][c];
-          if (isLegalTarget) {
-            sq.classList.add('legal');
-            if (piece && pieceColor(piece) !== 'w') {
-              sq.classList.add('capture-target');
-            }
-          }
-
-          if (piece) {
-            const span = document.createElement('span');
-            const isJustArrived = chessLastMove && chessLastMove.tr === r && chessLastMove.tc === c;
-            span.className = 'piece-glyph ' + (pieceColor(piece) === 'w' ? 'w-piece' : 'b-piece') + (isJustArrived ? ' anim-move' : '');
-            span.textContent = PIECE_GLYPHS[piece] || '';
-            sq.appendChild(span);
-          }
+          const span = document.createElement('span');
+          span.className = 'piece-glyph';
+          sq.appendChild(span);
 
           sq.onclick = () => handleChessSquareClick(r, c);
           boardEl.appendChild(sq);
+          chessCellRefs.push({ sq, span, r, c });
         }
       }
+    }
+
+    function renderChessBoard() {
+      ensureChessBoardBuilt();
+      for (let i = 0; i < chessCellRefs.length; i++) {
+        const { sq, span, r, c } = chessCellRefs[i];
+        let cls = sq.dataset.baseClass;
+
+        if (chessHintMove && chessHintMove.fr === r && chessHintMove.fc === c) {
+          cls += ' hint-from';
+        }
+        if (chessHintMove && chessHintMove.tr === r && chessHintMove.tc === c) {
+          cls += ' hint-to';
+        }
+        if (chessSelected && chessSelected.r === r && chessSelected.c === c) {
+          cls += ' selected';
+        }
+        if (chessLastMove &&
+            ((chessLastMove.fr === r && chessLastMove.fc === c) ||
+             (chessLastMove.tr === r && chessLastMove.tc === c))) {
+          cls += ' last-move';
+        }
+
+        const isLegalTarget = chessLegalMoves.some(m => m.tr === r && m.tc === c);
+        const piece = chessBoard[r][c];
+        if (isLegalTarget) {
+          cls += ' legal';
+          if (piece && pieceColor(piece) !== 'w') {
+            cls += ' capture-target';
+          }
+        }
+
+        const isCapturedSquare = chessCaptureCoord && chessCaptureCoord.r === r && chessCaptureCoord.c === c;
+        if (isCapturedSquare) {
+          cls += ' capture-flash';
+        }
+
+        if (sq.className !== cls) {
+          sq.className = cls;
+        }
+
+        const isJustArrived = chessLastMove && chessLastMove.tr === r && chessLastMove.tc === c;
+        if (piece) {
+          const glyph = PIECE_GLYPHS[piece] || '';
+          const colorCls = pieceColor(piece) === 'w' ? 'w-piece' : 'b-piece';
+          if (span.textContent !== glyph) {
+            span.textContent = glyph;
+          }
+          span.className = 'piece-glyph ' + colorCls;
+          if (isJustArrived) {
+            void span.offsetWidth;
+            span.classList.add('anim-move');
+          }
+        } else if (span.textContent !== '') {
+          span.textContent = '';
+          span.className = 'piece-glyph';
+        }
+      }
+      chessCaptureCoord = null;
     }
 
     function checkAndHandleEndgame(nextTurn) {
@@ -2796,7 +2898,7 @@
 
       const moveLabel = `${coordToAlg(best.fr)} → ${coordToAlg(best.tr)}`;
       if (hintBox) hintBox.textContent = ui.hintPrefix + moveLabel;
-      renderChessBoard();
+      scheduleChessRender();
     }
 
     function handleChessSquareClick(r, c) {
@@ -2811,6 +2913,7 @@
         chessBoard = sim.board;
         castlingRights = sim.rights;
         chessLastMove = moveMatch;
+        chessCaptureCoord = sim.captured ? { r: moveMatch.tr, c: moveMatch.tc } : null;
         chessHintMove = null;
         chessSelected = null;
         chessLegalMoves = [];
@@ -2818,10 +2921,15 @@
         document.getElementById('chessHintBox').textContent = '';
         appendMoveToLog('Sen', moveMatch, sim.captured);
         updateChessStatusText();
-        renderChessBoard();
+        scheduleChessRender();
 
         if (!checkAndHandleEndgame('b')) {
-          setTimeout(() => triggerVynAiChessMove(moveMatch), 110);
+          chessAiBusy = true;
+          updateChessStatusText();
+          chessAiTimer = setTimeout(() => {
+            chessAiTimer = null;
+            runSmoothBlackMove();
+          }, 160);
         }
         return;
       }
@@ -2834,90 +2942,35 @@
           chessSelected = { r, c };
           chessLegalMoves = generateLegalMoves('w').filter(m => m.fr === r && m.fc === c);
         }
-        renderChessBoard();
+        scheduleChessRender();
       } else {
         chessSelected = null;
         chessLegalMoves = [];
-        renderChessBoard();
+        scheduleChessRender();
       }
     }
 
-    function pickFallbackBlackMove(legalMoves) {
-      return pickBestHeuristicMove('b', legalMoves);
-    }
-
-    function parseAiMoveFromReply(replyText, legalMoves) {
-      if (!replyText) return null;
-      const tokens = replyText.match(/[a-h][1-8][-\s→>*x]*[a-h][1-8]/gi) || [];
-      for (const tok of tokens) {
-        const pair = tok.toLowerCase().match(/[a-h][1-8]/g);
-        if (pair && pair.length >= 2) {
-          const from = algToCoord(pair[0]);
-          const to = algToCoord(pair[1]);
-          if (from && to) {
-            const matched = legalMoves.find(
-              m => m.fr === from.r && m.fc === from.c && m.tr === to.r && m.tc === to.c
-            );
-            if (matched) return matched;
-          }
-        }
-      }
-      return null;
-    }
-
-    async function triggerVynAiChessMove(userMove) {
+    function runSmoothBlackMove() {
       const legalMoves = generateLegalMoves('b');
-      if (legalMoves.length === 0) return;
-
-      chessAiBusy = true;
-      updateChessStatusText();
-
-      const legalListStr = legalMoves
-        .map(m => `${coordToAlg(m.fr)}${coordToAlg(m.tr)}`)
-        .join(', ');
-      const fen = boardToFen(chessBoard, 'b');
-      const promptForAi =
-        `Satranç oyunundayız. Sen SİYAH taşsın, kullanıcı BEYAZ taşla ${coordToAlg(userMove.fr)}${coordToAlg(userMove.tr)} oynadı. ` +
-        `Güncel tahta (FEN): ${fen}. ` +
-        `Geçerli siyah hamlelerin şunlar: [${legalListStr}]. ` +
-        `Sadece bu listeden en iyi hamleyi seç ve cevabının başına hamleyi şu formatta yaz (örnek: e7e5):`;
-
-      let chosenMove = null;
-      try {
-        const r = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: promptForAi,
-            history: [],
-            lang: currentLang,
-            forceLang: currentLang === 'all' ? 'auto' : currentLang,
-            thinkingMode: currentThinkingMode
-          })
-        });
-        if (r.ok) {
-          const data = await r.json();
-          chosenMove = parseAiMoveFromReply(data.reply, legalMoves);
-        }
-      } catch {}
-
-      if (!chosenMove) {
-        chosenMove = pickFallbackBlackMove(legalMoves);
+      if (legalMoves.length === 0) {
+        chessAiBusy = false;
+        return;
       }
-
+      const chosenMove = pickBestHeuristicMove('b', legalMoves);
       const sim = applyMoveOnBoard(chessBoard, castlingRights, chosenMove);
       chessBoard = sim.board;
       castlingRights = sim.rights;
       chessLastMove = chosenMove;
+      chessCaptureCoord = sim.captured ? { r: chosenMove.tr, c: chosenMove.tc } : null;
       chessTurn = 'w';
       chessAiBusy = false;
       appendMoveToLog('VYN AI', chosenMove, sim.captured);
       checkAndHandleEndgame('w');
       updateChessStatusText();
-      renderChessBoard();
+      scheduleChessRender();
     }
 
-    /* ================= 2. X-O-X MOTORU ================= */
+    /* ================= 2. X-O-X MOTORU (60 FPS YERİNDE GÜNCELLEME) ================= */
     const TTT_WINS = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8],
       [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -2927,7 +2980,10 @@
     let tttTurn = 'X';
     let tttOver = null;
     let tttWinLine = [];
+    let tttLastIdx = -1;
     let tttScore = { w: 0, d: 0, l: 0 };
+    let tttAiTimer = null;
+    let tttCellRefs = [];
 
     function checkTttWinner(board) {
       for (const line of TTT_WINS) {
@@ -2943,10 +2999,16 @@
     }
 
     function initTttGame() {
+      if (tttAiTimer) {
+        clearTimeout(tttAiTimer);
+        tttAiTimer = null;
+      }
       tttBoard = Array(9).fill(null);
       tttTurn = 'X';
       tttOver = null;
       tttWinLine = [];
+      tttLastIdx = -1;
+      ensureTttBoardBuilt();
       updateTttUI();
     }
 
@@ -2975,6 +3037,7 @@
     function handleTttClick(idx) {
       if (tttOver || tttTurn !== 'X' || tttBoard[idx]) return;
       tttBoard[idx] = 'X';
+      tttLastIdx = idx;
       const resAfterX = checkTttWinner(tttBoard);
       if (resAfterX) {
         tttOver = resAfterX.winner;
@@ -2987,11 +3050,13 @@
 
       tttTurn = 'O';
       updateTttUI();
-      setTimeout(() => {
+      tttAiTimer = setTimeout(() => {
+        tttAiTimer = null;
         if (tttOver) return;
         const aiIdx = pickTttAiMove();
         if (aiIdx !== undefined) {
           tttBoard[aiIdx] = 'O';
+          tttLastIdx = aiIdx;
         }
         const resAfterO = checkTttWinner(tttBoard);
         if (resAfterO) {
@@ -3003,15 +3068,29 @@
           tttTurn = 'X';
         }
         updateTttUI();
-      }, 180);
+      }, 150);
+    }
+
+    function ensureTttBoardBuilt() {
+      const boardEl = document.getElementById('tttBoard');
+      if (!boardEl || tttCellRefs.length === 9) return;
+      boardEl.innerHTML = '';
+      tttCellRefs = [];
+      for (let i = 0; i < 9; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ttt-cell';
+        btn.onclick = () => handleTttClick(i);
+        boardEl.appendChild(btn);
+        tttCellRefs.push(btn);
+      }
     }
 
     function updateTttUI() {
       const ui = langUI[currentLang] || langUI.tr;
       const statusEl = document.getElementById('tttStatus');
-      const boardEl = document.getElementById('tttBoard');
       const scoreEl = document.getElementById('tttScore');
-      if (!statusEl || !boardEl || !scoreEl) return;
+      if (!statusEl || !scoreEl) return;
 
       if (tttOver === 'X') statusEl.textContent = ui.tttWinX;
       else if (tttOver === 'O') statusEl.textContent = ui.tttWinO;
@@ -3020,36 +3099,36 @@
 
       scoreEl.textContent = ui.tttScoreFmt(tttScore.w, tttScore.d, tttScore.l);
 
-      boardEl.innerHTML = '';
+      ensureTttBoardBuilt();
       for (let i = 0; i < 9; i++) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'ttt-cell';
-        const val = tttBoard[i];
-        if (val === 'X') {
-          btn.textContent = 'X';
-          btn.classList.add('x-mark');
-        } else if (val === 'O') {
-          btn.textContent = 'O';
-          btn.classList.add('o-mark');
-        }
-        if (tttWinLine.includes(i)) {
-          btn.classList.add('win-cell');
+        const btn = tttCellRefs[i];
+        const val = tttBoard[i] || '';
+        let cls = 'ttt-cell';
+        if (val === 'X') cls += ' x-mark';
+        else if (val === 'O') cls += ' o-mark';
+        if (tttWinLine.includes(i)) cls += ' win-cell';
+        if (btn.textContent !== val) btn.textContent = val;
+        btn.className = cls;
+        if (i === tttLastIdx && val) {
+          void btn.offsetWidth;
+          btn.classList.add('anim-mark');
         }
         btn.disabled = Boolean(tttOver || val || tttTurn !== 'X');
-        btn.onclick = () => handleTttClick(i);
-        boardEl.appendChild(btn);
       }
+      tttLastIdx = -1;
     }
 
-    /* ================= 3. KELİME OYUNU MOTORU ================= */
+    /* ================= 3. KELİME OYUNU MOTORU (60 FPS YERİNDE GÜNCELLEME) ================= */
     let wordState = {
       target: '',
       clue: '',
       guessed: new Set(),
       lives: 6,
-      over: false
+      over: false,
+      lastLetter: ''
     };
+    let wordSlotRefs = [];
+    let wordKeyRefs = new Map();
 
     function initWordGame() {
       const bankKey = currentLang === 'all' ? 'en' : currentLang;
@@ -3060,23 +3139,59 @@
         clue: picked.clue,
         guessed: new Set(),
         lives: 6,
-        over: false
+        over: false,
+        lastLetter: ''
       };
+      buildWordDomStructure();
       renderWordGame();
+    }
+
+    function buildWordDomStructure() {
+      const slotsEl = document.getElementById('wordSlots');
+      const kbEl = document.getElementById('wordKeyboard');
+      if (!slotsEl || !kbEl) return;
+
+      slotsEl.innerHTML = '';
+      wordSlotRefs = [];
+      for (let i = 0; i < wordState.target.length; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'word-slot';
+        slotsEl.appendChild(slot);
+        wordSlotRefs.push(slot);
+      }
+
+      kbEl.innerHTML = '';
+      wordKeyRefs.clear();
+      const kbKey = currentLang === 'all' ? 'en' : currentLang;
+      const letters = KEYBOARD_LETTERS[kbKey] || KEYBOARD_LETTERS.tr;
+      for (const ltr of letters) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'letter-btn';
+        btn.textContent = ltr;
+        btn.onclick = () => handleWordLetter(ltr);
+        kbEl.appendChild(btn);
+        wordKeyRefs.set(ltr, btn);
+      }
+    }
+
+    function ensureWordBoardBuilt() {
+      if (wordSlotRefs.length !== wordState.target.length || wordKeyRefs.size === 0) {
+        buildWordDomStructure();
+      }
     }
 
     function handleWordLetter(letter) {
       if (wordState.over || wordState.guessed.has(letter)) return;
       wordState.guessed.add(letter);
+      wordState.lastLetter = letter;
 
       if (!wordState.target.includes(letter)) {
         wordState.lives = Math.max(0, wordState.lives - 1);
       }
 
       const allFound = [...wordState.target].every(ch => wordState.guessed.has(ch));
-      if (allFound) {
-        wordState.over = true;
-      } else if (wordState.lives <= 0) {
+      if (allFound || wordState.lives <= 0) {
         wordState.over = true;
       }
 
@@ -3087,10 +3202,8 @@
       const ui = langUI[currentLang] || langUI.tr;
       const clueEl = document.getElementById('wordClue');
       const livesEl = document.getElementById('wordLives');
-      const slotsEl = document.getElementById('wordSlots');
       const statusEl = document.getElementById('wordStatus');
-      const kbEl = document.getElementById('wordKeyboard');
-      if (!clueEl || !livesEl || !slotsEl || !statusEl || !kbEl) return;
+      if (!clueEl || !livesEl || !statusEl) return;
 
       clueEl.textContent = ui.wordCluePrefix + wordState.clue;
       livesEl.textContent = ui.wordLivesPrefix + wordState.lives;
@@ -3102,31 +3215,33 @@
         statusEl.textContent = '';
       }
 
-      slotsEl.innerHTML = '';
-      for (const ch of wordState.target) {
-        const slot = document.createElement('div');
+      ensureWordBoardBuilt();
+      for (let i = 0; i < wordState.target.length; i++) {
+        const ch = wordState.target[i];
+        const slot = wordSlotRefs[i];
+        if (!slot) continue;
         const showChar = wordState.guessed.has(ch) || (wordState.over && !allFound);
+        const nextTxt = showChar ? ch : '·';
+        if (slot.textContent !== nextTxt) {
+          slot.textContent = nextTxt;
+        }
         slot.className = 'word-slot' + (showChar ? ' revealed' : '');
-        slot.textContent = showChar ? ch : '·';
-        slotsEl.appendChild(slot);
+        if (showChar && wordState.lastLetter === ch) {
+          void slot.offsetWidth;
+          slot.classList.add('anim-reveal');
+        }
       }
 
-      kbEl.innerHTML = '';
-      const kbKey = currentLang === 'all' ? 'en' : currentLang;
-      const letters = KEYBOARD_LETTERS[kbKey] || KEYBOARD_LETTERS.tr;
-      for (const ltr of letters) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'letter-btn';
-        btn.textContent = ltr;
+      for (const [ltr, btn] of wordKeyRefs.entries()) {
         const already = wordState.guessed.has(ltr);
+        let cls = 'letter-btn';
         if (already) {
-          btn.classList.add(wordState.target.includes(ltr) ? 'hit' : 'miss');
+          cls += wordState.target.includes(ltr) ? ' hit' : ' miss';
         }
+        btn.className = cls;
         btn.disabled = wordState.over || already;
-        btn.onclick = () => handleWordLetter(ltr);
-        kbEl.appendChild(btn);
       }
+      wordState.lastLetter = '';
     }
 
     updateAllGameTexts();
