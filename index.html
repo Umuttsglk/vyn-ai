@@ -1083,6 +1083,7 @@
     let isSpeakingAi = false;
     let detectedSpokenLang = 'tr';
     let speechRecognitionInstance = null;
+    let speechQueueToken = 0;
 
     const langUI = {
       tr: {
@@ -1106,7 +1107,7 @@
         voiceThinking: "VYN AI düşünüyor...",
         voiceSpeaking: "VYN AI konuşuyor...",
         voiceNoSupport: "Bu tarayıcı sesli konuşmayı desteklemiyor (Chrome veya Edge dene).",
-        voicePreviewSample: "Selam! Ben VYN AI, seçtiğin sesle konuşuyorum.",
+        voicePreviewSample: "Selam! Ben VYN AI, kadın sesini seçtiysen tatlı ve net, erkek sesini seçtiysen tok ve akıcı konuşuyorum.",
         voiceStopAudio: "Sesi Durdur / Dinle",
         voiceTestBtn: "Sesi Test Et",
         sendTitle: "Gönder",
@@ -1167,7 +1168,7 @@
         voiceThinking: "VYN AI is thinking...",
         voiceSpeaking: "VYN AI is speaking...",
         voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
-        voicePreviewSample: "Hi! I am VYN AI, speaking with your selected voice.",
+        voicePreviewSample: "Hi! I am VYN AI, speaking smoothly with your selected voice.",
         voiceStopAudio: "Stop Audio / Listen",
         voiceTestBtn: "Test Voice",
         sendTitle: "Send",
@@ -1228,7 +1229,7 @@
         voiceThinking: "VYN AI réfléchit...",
         voiceSpeaking: "VYN AI parle...",
         voiceNoSupport: "La reconnaissance vocale n'est pas prise en charge ici (essaie Chrome ou Edge).",
-        voicePreviewSample: "Salut ! Je suis VYN AI avec la voix choisie.",
+        voicePreviewSample: "Salut ! Je suis VYN AI avec la voix que tu as choisie.",
         voiceStopAudio: "Couper / Écouter",
         voiceTestBtn: "Tester la Voix",
         sendTitle: "Envoyer",
@@ -1289,7 +1290,7 @@
         voiceThinking: "VYN AI está pensando...",
         voiceSpeaking: "VYN AI está hablando...",
         voiceNoSupport: "El reconocimiento de voz no es compatible aquí (prueba Chrome o Edge).",
-        voicePreviewSample: "¡Hola! Soy VYN AI hablando con la voz elegida.",
+        voicePreviewSample: "¡Hola! Soy VYN AI hablando con fluidez con la voz elegida.",
         voiceStopAudio: "Detener Audio / Escuchar",
         voiceTestBtn: "Probar Voz",
         sendTitle: "Enviar",
@@ -1350,7 +1351,7 @@
         voiceThinking: "VYN AI is thinking...",
         voiceSpeaking: "VYN AI is speaking...",
         voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
-        voicePreviewSample: "Hi! I am VYN AI speaking with your selected voice.",
+        voicePreviewSample: "Hi! I am VYN AI speaking smoothly with your selected voice.",
         voiceStopAudio: "Stop Audio / Listen",
         voiceTestBtn: "Test Voice",
         sendTitle: "Send",
@@ -1419,34 +1420,90 @@
       return ui.speechLocale || 'tr-TR';
     }
 
-    /* ================= KADIN & ERKEK SES SEÇİCİ ================= */
+    /* ================= KADIN & ERKEK SES SEÇİCİ + TAKILMASIZ KUYRUK ================= */
     function pickBestVoice(gender, locale) {
       if (!('speechSynthesis' in window)) return null;
       const voices = window.speechSynthesis.getVoices() || [];
       if (!voices.length) return null;
 
       const langPrefix = (locale || 'tr-TR').slice(0, 2).toLowerCase();
-      const langMatches = voices.filter(v => (v.lang || '').toLowerCase().startsWith(langPrefix));
-      const pool = langMatches.length ? langMatches : voices;
+      const femaleKeywords = [
+        'female', 'woman', 'girl', 'lady',
+        'yelda', 'emel', 'seda', 'zeynep', 'elif', 'ayşe', 'ayse', 'deniz',
+        'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'aria', 'jenny', 'claire',
+        'amelie', 'audrey', 'julie', 'helena', 'paulina', 'monica', 'lucia', 'sofia', 'elena', 'maria',
+        'google español', 'google français', 'google uk english female'
+      ];
+      const maleKeywords = [
+        'male', 'man', 'boy', 'guy',
+        'tolga', 'ahmet', 'mehmet', 'emre', 'kaan', 'mert',
+        'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'george', 'ryan', 'thomas',
+        'jorge', 'diego', 'pablo', 'carlos',
+        'google uk english male'
+      ];
 
-      const femaleHints = ['female', 'woman', 'girl', 'yelda', 'emel', 'seda', 'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'amelie', 'audrey', 'claire', 'helena', 'paulina', 'monica', 'google español', 'google français', 'google uk english female', 'google us english'];
-      const maleHints = ['male', 'man', 'boy', 'tolga', 'ahmet', 'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'thomas', 'jorge', 'diego', 'pablo', 'google uk english male'];
+      const targetHints = gender === 'female' ? femaleKeywords : maleKeywords;
+      const oppositeHints = gender === 'female' ? maleKeywords : femaleKeywords;
 
-      const hints = gender === 'female' ? femaleHints : maleHints;
-      const antiHints = gender === 'female' ? maleHints : femaleHints;
-
-      const scored = pool.map(v => {
+      const scored = voices.map(v => {
         const nameLower = (v.name || '').toLowerCase();
+        const voiceLang = (v.lang || '').toLowerCase();
         let score = 0;
-        if ((v.lang || '').toLowerCase() === (locale || '').toLowerCase()) score += 15;
-        if (hints.some(h => nameLower.includes(h))) score += 40;
-        if (antiHints.some(h => nameLower.includes(h))) score -= 35;
-        if (nameLower.includes('natural') || nameLower.includes('online') || nameLower.includes('neural')) score += 12;
+
+        if (voiceLang === (locale || '').toLowerCase()) score += 25;
+        else if (voiceLang.startsWith(langPrefix)) score += 15;
+
+        if (targetHints.some(h => nameLower.includes(h))) score += 60;
+        if (oppositeHints.some(h => nameLower.includes(h))) score -= 55;
+        if (nameLower.includes('natural') || nameLower.includes('online') || nameLower.includes('neural')) score += 10;
+
         return { voice: v, score };
       });
 
       scored.sort((a, b) => b.score - a.score);
-      return scored[0] ? scored[0].voice : pool[0];
+      return scored[0] ? scored[0].voice : voices[0];
+    }
+
+    function splitIntoSmoothChunks(text) {
+      const cleaned = text
+        .replace(/[#*_`~]/g, ' ')
+        .replace(/([.!?;:]+)/g, '$1|')
+        .replace(/,\s+/g, ', |');
+
+      const rawParts = cleaned
+        .split('|')
+        .map(s => s.replace(/\s+/g, ' ').trim())
+        .filter(Boolean);
+
+      const chunks = [];
+      for (const part of rawParts) {
+        if (part.length <= 180) {
+          chunks.push(part);
+        } else {
+          const words = part.split(' ');
+          let buf = '';
+          for (const w of words) {
+            if ((buf + ' ' + w).trim().length > 170) {
+              if (buf.trim()) chunks.push(buf.trim());
+              buf = w;
+            } else {
+              buf = (buf + ' ' + w).trim();
+            }
+          }
+          if (buf.trim()) chunks.push(buf.trim());
+        }
+      }
+      return chunks;
+    }
+
+    function cancelSpeechQueue() {
+      speechQueueToken++;
+      isSpeakingAi = false;
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch {}
+      }
     }
 
     function speakAiText(text, onDone) {
@@ -1454,54 +1511,70 @@
         if (typeof onDone === 'function') onDone();
         return;
       }
-      try {
-        window.speechSynthesis.cancel();
-      } catch {}
 
-      const cleanText = text.replace(/[#*_`~]/g, ' ').replace(/\s+/g, ' ').trim();
-      if (!cleanText) {
+      cancelSpeechQueue();
+      const token = speechQueueToken;
+      const chunks = splitIntoSmoothChunks(text);
+      if (!chunks.length) {
         if (typeof onDone === 'function') onDone();
         return;
       }
 
-      const utter = new SpeechSynthesisUtterance(cleanText);
       const locale = getActiveSpeechLocale();
-      utter.lang = locale;
+      const chosenVoice = pickBestVoice(selectedVoiceGender, locale);
+      const voiceNameLower = (chosenVoice?.name || '').toLowerCase();
+      const voiceLooksFemale = ['female', 'woman', 'girl', 'yelda', 'emel', 'seda', 'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'claire', 'amelie', 'helena', 'paulina', 'monica', 'sofia', 'elena'].some(k => voiceNameLower.includes(k));
+      const voiceLooksMale = ['male', 'man', 'boy', 'tolga', 'ahmet', 'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'thomas', 'jorge', 'diego', 'pablo'].some(k => voiceNameLower.includes(k));
 
-      const chosen = pickBestVoice(selectedVoiceGender, locale);
-      if (chosen) {
-        utter.voice = chosen;
-      }
-
+      let pitch = 1.0;
+      let rate = 1.0;
       if (selectedVoiceGender === 'female') {
-        utter.pitch = chosen ? 1.08 : 1.24;
-        utter.rate = 1.02;
+        pitch = voiceLooksFemale ? 1.12 : 1.34;
+        rate = 1.02;
       } else {
-        utter.pitch = chosen ? 0.94 : 0.82;
-        utter.rate = 0.98;
+        pitch = voiceLooksMale ? 0.92 : 0.80;
+        rate = 0.96;
       }
 
       isSpeakingAi = true;
       updateVoiceStageUI();
 
-      utter.onend = () => {
-        isSpeakingAi = false;
-        updateVoiceStageUI();
-        if (typeof onDone === 'function') onDone();
-      };
-      utter.onerror = () => {
-        isSpeakingAi = false;
-        updateVoiceStageUI();
-        if (typeof onDone === 'function') onDone();
+      let idx = 0;
+      const playNextChunk = () => {
+        if (token !== speechQueueToken) return;
+        if (idx >= chunks.length) {
+          isSpeakingAi = false;
+          updateVoiceStageUI();
+          if (typeof onDone === 'function') onDone();
+          return;
+        }
+
+        const utter = new SpeechSynthesisUtterance(chunks[idx]);
+        idx++;
+        utter.lang = locale;
+        if (chosenVoice) utter.voice = chosenVoice;
+        utter.pitch = pitch;
+        utter.rate = rate;
+        utter.volume = 1.0;
+
+        let advanced = false;
+        const goNext = () => {
+          if (advanced || token !== speechQueueToken) return;
+          advanced = true;
+          setTimeout(playNextChunk, 45);
+        };
+
+        utter.onend = goNext;
+        utter.onerror = goNext;
+
+        try {
+          window.speechSynthesis.speak(utter);
+        } catch {
+          goNext();
+        }
       };
 
-      try {
-        window.speechSynthesis.speak(utter);
-      } catch {
-        isSpeakingAi = false;
-        updateVoiceStageUI();
-        if (typeof onDone === 'function') onDone();
-      }
+      playNextChunk();
     }
 
     function selectVoiceGender(gender) {
@@ -1521,10 +1594,7 @@
     }
 
     function stopVoiceAudioAndListen() {
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch {}
-      }
-      isSpeakingAi = false;
+      cancelSpeechQueue();
       if (voiceSessionActive && voiceModalOpen) {
         startListeningMic();
       } else {
@@ -1592,10 +1662,7 @@
       }
 
       stopListeningMic();
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch {}
-      }
-      isSpeakingAi = false;
+      cancelSpeechQueue();
 
       const rec = new RecCtor();
       speechRecognitionInstance = rec;
@@ -1726,10 +1793,7 @@
       if (voiceSessionActive || isListeningMic || isSpeakingAi) {
         voiceSessionActive = false;
         stopListeningMic();
-        if ('speechSynthesis' in window) {
-          try { window.speechSynthesis.cancel(); } catch {}
-        }
-        isSpeakingAi = false;
+        cancelSpeechQueue();
         updateVoiceStageUI();
       } else {
         voiceSessionActive = true;
@@ -1752,11 +1816,8 @@
     function exitVoiceChatToText() {
       voiceModalOpen = false;
       voiceSessionActive = false;
-      isSpeakingAi = false;
       stopListeningMic();
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch {}
-      }
+      cancelSpeechQueue();
       document.getElementById('voiceOverlay').classList.remove('open');
       voiceChatBtn.classList.remove('active-mode');
       updateVoiceStageUI();
@@ -2150,4 +2211,4 @@
     updateVoiceTexts();
   </script>
 </body>
-</html>  
+</html>
