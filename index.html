@@ -262,17 +262,6 @@
       background: rgba(148, 163, 184, 0.18);
       border-color: var(--accent-1);
     }
-    .action-pill-btn.active-mode {
-      color: #ffffff;
-      background: var(--active-grad);
-      border-color: transparent;
-      box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
-    }
-    .voice-pill-icon {
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0;
-    }
 
     #chat {
       flex: 1;
@@ -397,157 +386,500 @@
       border-color: var(--accent-1);
     }
 
-    /* Sesli Sohbet Modu (Voice Chat with Vyn AI - Akıcı & Doğal Erkek Sesi) */
-    #voiceOverlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 45;
-      background: rgba(5, 8, 17, 0.88);
-      backdrop-filter: blur(12px);
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-    }
-    #voiceOverlay.open {
-      display: flex;
-    }
-    #voiceModal {
-      width: 100%;
-      max-width: 560px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      border-radius: 26px;
-      padding: 24px;
-      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.75);
+    /* Alt Yazı Barı ve Başlangıç Kartları */
+    #bar-wrap {
+      padding: 6px 16px 20px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(to top, rgba(7, 11, 20, 0.94) 65%, transparent);
     }
-    .voice-top {
+    #starter-cards {
+      width: 100%;
+      max-width: 820px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      transition: max-width 0.2s ease;
+    }
+    .starter-card {
+      background: rgba(30, 41, 59, 0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 16px;
+      padding: 10px 12px;
+      color: #e2e8f0;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.16s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .starter-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-1);
+      background: rgba(30, 41, 59, 0.95);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.45);
+    }
+    .starter-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(148, 163, 184, 0.16), rgba(148, 163, 184, 0.06));
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+    .starter-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+    .starter-meta {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .starter-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .starter-desc {
+      font-size: 0.73rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .composer-row {
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: max-width 0.2s ease;
+    }
+
+    #bar {
+      flex: 1;
+      min-width: 0;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 26px;
+      padding: 8px 10px 8px 18px;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.2s, box-shadow 0.2s, padding 0.2s ease;
+    }
+    #bar:focus-within {
+      border-color: var(--accent-1);
+      box-shadow: 0 10px 32px rgba(15, 23, 42, 0.45);
+    }
+    #inp {
+      flexTamamdır kankam, sesli sohbeti (`Voice chat with Vyn AI`) de tamamen kaldırıp dosyayı tertemiz, sade ve hızlı yazışma asistanı haline getiriyoruz!
+
+### Neler Kaldırıldı & Neler Korundu?
+* **Kaldırılanlar:** Üst menüdeki `Voice chat with Vyn AI` butonu, tam ekran sesli sohbet penceresi (`#voiceOverlay`), `SpeechRecognition` ve `speechSynthesis` ses/mikrofon kodlarının tamamı çıkarıldı.
+* **Korunanlar:** 4 tema (`Kozmik`, `Siber Mavi`, `Süpernova Mor`, `Zümrüt`), `PC Mod` / `Mobil Mod`, `Türkçe` / `English` / `Français` / `Español` / `All` dil seçenekleri, 3 düşünme modu (`Hızlı`, `Mantıklı`, `Planlı`), başlangıç kartları, kopyalama butonu, `Durdur` butonu, sohbeti `.txt` indirme ve `Yeni Sohbet` butonları eksiksiz duruyor.
+
+İşte güncellenmiş `index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#091021" />
+  <title>VYN AI</title>
+  <link id="faviconLink" rel="icon" type="image/png" href="" />
+  <script>
+    (function () {
+      try {
+        const c = document.createElement('canvas');
+        c.width = 64;
+        c.height = 64;
+        const ctx = c.getContext('2d');
+        if (!ctx) return;
+
+        ctx.fillStyle = '#091021';
+        ctx.beginPath();
+        ctx.roundRect(0, 0, 64, 64, 16);
+        ctx.fill();
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.strokeStyle = '#a855f7';
+        ctx.lineWidth = 6.5;
+        ctx.beginPath();
+        ctx.moveTo(12, 20);
+        ctx.lineTo(24, 46);
+        ctx.lineTo(36, 22);
+        ctx.lineTo(46, 38);
+        ctx.lineTo(54, 18);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 6.5;
+        ctx.beginPath();
+        ctx.moveTo(12, 20);
+        ctx.lineTo(24, 46);
+        ctx.lineTo(36, 22);
+        ctx.stroke();
+
+        const dataUrl = c.toDataURL('image/png');
+        window.__VYN_ICON_URL__ = dataUrl;
+
+        const link = document.getElementById('faviconLink');
+        if (link) link.href = dataUrl;
+      } catch {}
+    })();
+  </script>
+  <style>
+    :root {
+      --bg-glow-1: rgba(124, 58, 237, 0.24);
+      --bg-glow-2: rgba(56, 189, 248, 0.18);
+      --bg-base: linear-gradient(160deg, #070b14 0%, #0f172a 55%, #091021 100%);
+      --accent-1: #38bdf8;
+      --accent-2: #a855f7;
+      --send-grad: linear-gradient(135deg, #38bdf8, #2563eb);
+      --active-grad: linear-gradient(135deg, #2563eb, #7c3aed);
+      --user-grad: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    body[data-theme="cosmic"] {
+      --bg-glow-1: rgba(124, 58, 237, 0.24);
+      --bg-glow-2: rgba(56, 189, 248, 0.18);
+      --bg-base: linear-gradient(160deg, #070b14 0%, #0f172a 55%, #091021 100%);
+      --accent-1: #38bdf8;
+      --accent-2: #a855f7;
+      --send-grad: linear-gradient(135deg, #38bdf8, #2563eb);
+      --active-grad: linear-gradient(135deg, #2563eb, #7c3aed);
+      --user-grad: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    body[data-theme="cyber"] {
+      --bg-glow-1: rgba(6, 182, 212, 0.26);
+      --bg-glow-2: rgba(59, 130, 246, 0.2);
+      --bg-base: linear-gradient(160deg, #041018 0%, #081c2c 55%, #05121d 100%);
+      --accent-1: #22d3ee;
+      --accent-2: #3b82f6;
+      --send-grad: linear-gradient(135deg, #22d3ee, #0284c7);
+      --active-grad: linear-gradient(135deg, #0891b2, #2563eb);
+      --user-grad: linear-gradient(135deg, #0284c7, #0369a1);
+    }
+
+    body[data-theme="nova"] {
+      --bg-glow-1: rgba(168, 85, 247, 0.28);
+      --bg-glow-2: rgba(236, 72, 153, 0.18);
+      --bg-base: linear-gradient(160deg, #10071a 0%, #1d0e33 55%, #120820 100%);
+      --accent-1: #c084fc;
+      --accent-2: #f472b6;
+      --send-grad: linear-gradient(135deg, #c084fc, #9333ea);
+      --active-grad: linear-gradient(135deg, #9333ea, #db2777);
+      --user-grad: linear-gradient(135deg, #9333ea, #7e22ce);
+    }
+
+    body[data-theme="emerald"] {
+      --bg-glow-1: rgba(16, 185, 129, 0.24);
+      --bg-glow-2: rgba(20, 184, 166, 0.18);
+      --bg-base: linear-gradient(160deg, #05130f 0%, #0b241d 55%, #061712 100%);
+      --accent-1: #34d399;
+      --accent-2: #2dd4bf;
+      --send-grad: linear-gradient(135deg, #34d399, #059669);
+      --active-grad: linear-gradient(135deg, #059669, #0d9488);
+      --user-grad: linear-gradient(135deg, #059669, #047857);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body {
+      background:
+        radial-gradient(circle at 15% 20%, var(--bg-glow-1), transparent 46%),
+        radial-gradient(circle at 85% 80%, var(--bg-glow-2), transparent 46%),
+        var(--bg-base);
+      background-attachment: fixed;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      transition: background 0.35s ease;
+    }
+    header {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+      padding: 12px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
     }
-    .voice-title {
-      font-size: 1.12rem;
-      font-weight: 700;
-      color: #f8fafc;
-    }
-    .voice-sub {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin-top: 2px;
-    }
-    .voice-exit-btn {
-      border: 1px solid rgba(244, 63, 94, 0.45);
-      background: rgba(244, 63, 94, 0.14);
-      color: #fda4af;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.16s ease;
-    }
-    .voice-exit-btn:hover {
-      background: rgba(244, 63, 94, 0.28);
-      color: #ffffff;
-    }
-    @keyframes voicePulseRing {
-      0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.45);
-      }
-      70% {
-        transform: scale(1.04);
-        box-shadow: 0 0 0 18px rgba(56, 189, 248, 0);
-      }
-      100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
-      }
-    }
-    .voice-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 8px;
-      text-align: center;
-    }
-    .voice-orb-btn {
-      width: 98px;
-      height: 98px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.25);
-      background: var(--send-grad);
-      color: #ffffff;
-      font-size: 0.88rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-      transition: transform 0.16s ease, background 0.2s ease;
-    }
-    .voice-orb-btn:hover {
-      transform: scale(1.04);
-    }
-    .voice-orb-btn.listening {
-      background: linear-gradient(135deg, #10b981, #059669);
-      animation: voicePulseRing 1.6s infinite;
-    }
-    .voice-orb-btn.speaking {
-      background: linear-gradient(135deg, #a855f7, #ec4899);
-      animation: voicePulseRing 1.5s infinite;
-    }
-    .voice-status-text {
-      font-size: 0.94rem;
-      font-weight: 700;
-      color: var(--accent-1);
-    }
-    .voice-transcript-box {
-      width: 100%;
-      min-height: 96px;
-      max-height: 175px;
-      overflow-y: auto;
-      background: rgba(9, 16, 33, 0.78);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 16px;
-      padding: 12px 14px;
-      text-align: left;
-      font-size: 0.86rem;
-      line-height: 1.5;
-      color: #e2e8f0;
-      white-space: pre-wrap;
-    }
-    .voice-actions-row {
+    .header-left {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 10px;
       flex-wrap: wrap;
     }
-    .voice-sec-btn {
-      border: 1px solid rgba(148, 163, 184, 0.26);
-      background: rgba(30, 41, 59, 0.85);
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+      font-size: 1.05rem;
+      color: var(--accent-1);
+      margin-right: 4px;
+    }
+    .brand-logo {
+      display: block;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.45));
+    }
+    .pill-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 999px;
+      padding: 3px 6px;
+    }
+    .group-label {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+      padding-left: 5px;
+      padding-right: 2px;
+    }
+    .lang-btn, .device-btn {
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.18s ease;
+    }
+    .lang-btn:hover, .device-btn:hover {
+      color: #ffffff;
+      background: rgba(148, 163, 184, 0.14);
+    }
+    .lang-btn.active, .device-btn.active {
+      color: #ffffff;
+      background: var(--active-grad);
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+    }
+    .device-icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    .theme-swatches {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 4px;
+    }
+    .theme-swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+    .theme-swatch:hover {
+      transform: scale(1.14);
+      border-color: rgba(255, 255, 255, 0.75);
+    }
+    .theme-swatch.active {
+      transform: scale(1.16);
+      border-color: #ffffff;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9), 0 0 12px var(--accent-1);
+    }
+    .theme-swatch[data-theme="cosmic"] {
+      background: linear-gradient(135deg, #38bdf8, #7c3aed);
+    }
+    .theme-swatch[data-theme="cyber"] {
+      background: linear-gradient(135deg, #22d3ee, #2563eb);
+    }
+    .theme-swatch[data-theme="nova"] {
+      background: linear-gradient(135deg, #c084fc, #ec4899);
+    }
+    .theme-swatch[data-theme="emerald"] {
+      background: linear-gradient(135deg, #34d399, #0d9488);
+    }
+
+    .header-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .action-pill-btn {
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(30, 41, 59, 0.75);
       color: #e2e8f0;
       font-size: 0.8rem;
       font-weight: 600;
-      padding: 8px 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .action-pill-btn:hover {
+      color: #ffffff;
+      background: rgba(148, 163, 184, 0.18);
+      border-color: var(--accent-1);
+    }
+
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+      transition: max-width 0.2s ease, padding 0.2s ease;
+    }
+    @keyframes msgEnter {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .msg {
+      padding: 12px 16px;
+      border-radius: 16px;
+      max-width: 80%;
+      line-height: 1.5;
+      user-select: text;
+      -webkit-user-select: text;
+      animation: msgEnter 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .msg-text {
+      white-space: pre-wrap;
+    }
+    .user {
+      background: var(--user-grad);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.35);
+    }
+    .ai {
+      background: rgba(30, 41, 59, 0.82);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    @keyframes typingWave {
+      0%, 60%, 100% {
+        transform: translateY(0) scale(0.88);
+        opacity: 0.45;
+      }
+      30% {
+        transform: translateY(-6px) scale(1.15);
+        opacity: 1;
+      }
+    }
+    @keyframes typingPulse {
+      0%, 100% { opacity: 0.68; }
+      50% { opacity: 1; }
+    }
+    .typing-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 2px 0;
+    }
+    .typing-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      animation: typingPulse 1.6s ease-in-out infinite;
+    }
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: typingWave 1.25s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(1) {
+      background: var(--accent-1);
+      box-shadow: 0 0 8px var(--accent-1);
+      animation-delay: 0s;
+    }
+    .typing-dot:nth-child(2) {
+      background: #e2e8f0;
+      box-shadow: 0 0 8px rgba(248, 250, 252, 0.55);
+      animation-delay: 0.18s;
+    }
+    .typing-dot:nth-child(3) {
+      background: var(--accent-2);
+      box-shadow: 0 0 8px var(--accent-2);
+      animation-delay: 0.36s;
+    }
+
+    .copy-btn {
+      margin-top: 8px;
+      padding: 4px 10px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.22);
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.16s ease;
     }
-    .voice-sec-btn:hover {
-      border-color: var(--accent-1);
+    .copy-btn:hover {
       color: #ffffff;
+      border-color: var(--accent-1);
+      background: rgba(148, 163, 184, 0.16);
+    }
+    .copy-btn.copied {
+      color: var(--accent-1);
+      border-color: var(--accent-1);
     }
 
     /* Alt Yazı Barı ve Başlangıç Kartları */
@@ -798,11 +1130,6 @@
       width: 44px;
       height: 44px;
     }
-    body.mode-mobile #voiceModal {
-      max-width: 460px;
-      padding: 18px;
-      border-radius: 22px;
-    }
 
     @media (max-width: 680px) {
       #starter-cards {
@@ -826,7 +1153,7 @@
   <header>
     <div class="header-left">
       <div class="brand-wrap">
-        <svg class="brand-logo" width="28" height="28" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="brand-logo" width="28" height="28" viewBox="0 0 64 64" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" aria-hidden="true">
           <rect width="64" height="64" rx="16" fill="#091021" stroke="rgba(56,189,248,0.35)" stroke-width="2"/>
           <path d="M12 20 L24 46 L36 22 L46 38 L54 18" fill="none" stroke="#a855f7" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M12 20 L24 46 L36 22" fill="none" stroke="#38bdf8" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -873,13 +1200,6 @@
         </div>
       </div>
 
-      <button id="voiceChatBtn" type="button" class="action-pill-btn" onclick="openVoiceChat()">
-        <svg class="voice-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.9"/>
-          <path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
-        </svg>
-        <span id="voiceChatLabel">Voice chat with Vyn AI</span>
-      </button>
       <button id="downloadChatBtn" type="button" class="action-pill-btn" onclick="downloadChatTxt()">İndir</button>
       <button id="newChatBtn" type="button" class="action-pill-btn" onclick="resetChat()">Yeni Sohbet</button>
       <div id="headerSub" class="header-sub">Sohbet, İşlem & Bilgi Asistanı</div>
@@ -890,37 +1210,6 @@
     <div id="welcomeMsg" class="msg ai">
       <div class="msg-text">Selam! Ben VYN AI. Sohbet edebilir, işlem yaptırabilir veya merak ettiğin konuları sorabilirsin.</div>
       <button type="button" class="copy-btn" onclick="copyBubbleText(this)">Kopyala</button>
-    </div>
-  </div>
-
-  <!-- Sesli Sohbet Ekranı (Sabit Doğal Erkek Sesi) -->
-  <div id="voiceOverlay" role="dialog" aria-modal="true" aria-labelledby="voiceModalTitle">
-    <div id="voiceModal">
-      <div class="voice-top">
-        <div>
-          <div id="voiceModalTitle" class="voice-title">Voice chat with Vyn AI</div>
-          <div id="voiceModalSub" class="voice-sub">VYN AI ile akıcı ve anlaşılır sesli sohbet</div>
-        </div>
-        <button id="voiceExitBtn" type="button" class="voice-exit-btn" onclick="exitVoiceChatToText()">Yazı ile Konuşmaya Geri Dön</button>
-      </div>
-
-      <div class="voice-stage">
-        <button type="button" id="voiceOrbBtn" class="voice-orb-btn" onclick="toggleVoiceSession()">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="2"/>
-            <path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <span id="voiceOrbLabel">Başlat</span>
-        </button>
-
-        <div id="voiceStatusText" class="voice-status-text">Başlat'a bas ve konuş</div>
-        <div id="voiceTranscriptBox" class="voice-transcript-box"></div>
-
-        <div class="voice-actions-row">
-          <button type="button" id="voiceStopSpeechBtn" class="voice-sec-btn" onclick="stopVoiceAudioAndListen()">Sesi Durdur / Dinle</button>
-          <button type="button" id="voicePreviewBtn" class="voice-sec-btn" onclick="previewSelectedVoice()">Sesi Test Et</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -993,8 +1282,6 @@
     const themesLabel = document.getElementById('themesLabel');
     const downloadChatBtn = document.getElementById('downloadChatBtn');
     const newChatBtn = document.getElementById('newChatBtn');
-    const voiceChatLabel = document.getElementById('voiceChatLabel');
-    const voiceChatBtn = document.getElementById('voiceChatBtn');
     const pcModeBtn = document.getElementById('pcModeBtn');
     const mobileModeBtn = document.getElementById('mobileModeBtn');
     const pcModeLabel = document.getElementById('pcModeLabel');
@@ -1012,17 +1299,6 @@
     let activeAbortController = null;
     let isGeneratingReply = false;
 
-    /* ================= SESLİ SOHBET DURUMU (AKICI & DOĞAL ERKEK SESİ) ================= */
-    let voiceModalOpen = false;
-    const FIXED_VOICE_GENDER = 'male';
-    let voiceSessionActive = false;
-    let isListeningMic = false;
-    let isSpeakingAi = false;
-    let detectedSpokenLang = 'tr';
-    let speechRecognitionInstance = null;
-    let speechQueueToken = 0;
-    let speechKeepAliveTimer = null;
-
     const langUI = {
       tr: {
         subtitle: "Sohbet, İşlem & Bilgi Asistanı",
@@ -1031,25 +1307,10 @@
         mobileMode: "Mobil Mod",
         downloadChat: "İndir",
         newChat: "Yeni Sohbet",
-        voiceChat: "Voice chat with Vyn AI",
-        voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "VYN AI ile akıcı ve anlaşılır sesli sohbet",
-        voiceExitBtn: "Yazı ile Konuşmaya Geri Dön",
-        voiceStart: "Başlat",
-        voiceStop: "Durdur",
-        voiceReady: "Hazır · Başlat'a bas ve konuş",
-        voiceListening: "Seni dinliyorum...",
-        voiceThinking: "VYN AI düşünüyor...",
-        voiceSpeaking: "VYN AI konuşuyor...",
-        voiceNoSupport: "Bu tarayıcı sesli konuşmayı desteklemiyor (Chrome veya Edge dene).",
-        voicePreviewSample: "Selam kankam! Ben VYN AI, şu an akıcı, doğal ve anlaşılır bir tonla seninle konuşuyorum.",
-        voiceStopAudio: "Sesi Durdur / Dinle",
-        voiceTestBtn: "Sesi Test Et",
         sendTitle: "Gönder",
         stopTitle: "Durdur",
         stoppedMsg: "Yanıt durduruldu.",
         langName: "Turkish",
-        speechLocale: "tr-TR",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if it is written in another language, but write 100% of your reply strictly in Turkish (Türkçe). Do NOT use any other language.",
         thinkLabels: { fast: "Hızlı", logical: "Mantıklı", planned: "Planlı" },
         thinkInstructions: {
@@ -1089,25 +1350,10 @@
         mobileMode: "Mobile Mode",
         downloadChat: "Save",
         newChat: "New Chat",
-        voiceChat: "Voice chat with Vyn AI",
-        voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Smooth, clear, and natural voice chat with VYN AI",
-        voiceExitBtn: "Back to Text Chat",
-        voiceStart: "Start",
-        voiceStop: "Stop",
-        voiceReady: "Ready · Press Start and speak",
-        voiceListening: "Listening to you...",
-        voiceThinking: "VYN AI is thinking...",
-        voiceSpeaking: "VYN AI is speaking...",
-        voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
-        voicePreviewSample: "Hey there! I am VYN AI, speaking smoothly and clearly with a natural voice.",
-        voiceStopAudio: "Stop Audio / Listen",
-        voiceTestBtn: "Test Voice",
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
         langName: "English",
-        speechLocale: "en-US",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish or any other language, but write 100% of your reply strictly in English. Never reply in Turkish or any other language.",
         thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
         thinkInstructions: {
@@ -1147,25 +1393,10 @@
         mobileMode: "Mode Mobile",
         downloadChat: "Enregistrer",
         newChat: "Nouveau Chat",
-        voiceChat: "Voice chat with Vyn AI",
-        voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Discussion vocale fluide et naturelle avec VYN AI",
-        voiceExitBtn: "Retour au Chat Texte",
-        voiceStart: "Démarrer",
-        voiceStop: "Arrêter",
-        voiceReady: "Prêt · Appuie sur Démarrer et parle",
-        voiceListening: "Je t'écoute...",
-        voiceThinking: "VYN AI réfléchit...",
-        voiceSpeaking: "VYN AI parle...",
-        voiceNoSupport: "La reconnaissance vocale n'est pas prise en charge ici (essaie Chrome ou Edge).",
-        voicePreviewSample: "Salut ! Je suis VYN AI et je parle de façon claire et fluide.",
-        voiceStopAudio: "Couper / Écouter",
-        voiceTestBtn: "Tester la Voix",
         sendTitle: "Envoyer",
         stopTitle: "Arrêter",
         stoppedMsg: "Réponse arrêtée.",
         langName: "French",
-        speechLocale: "fr-FR",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish, English, or another language, but write 100% of your reply strictly in French (Français). Never reply in Turkish, English, or any other language.",
         thinkLabels: { fast: "Rapide", logical: "Logique", planned: "Planifié" },
         thinkInstructions: {
@@ -1205,25 +1436,10 @@
         mobileMode: "Modo Móvil",
         downloadChat: "Guardar",
         newChat: "Nuevo Chat",
-        voiceChat: "Voice chat with Vyn AI",
-        voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Chat de voz fluido, claro y natural con VYN AI",
-        voiceExitBtn: "Volver al Chat de Texto",
-        voiceStart: "Iniciar",
-        voiceStop: "Detener",
-        voiceReady: "Listo · Pulsa Iniciar y habla",
-        voiceListening: "Te estoy escuchando...",
-        voiceThinking: "VYN AI está pensando...",
-        voiceSpeaking: "VYN AI está hablando...",
-        voiceNoSupport: "El reconocimiento de voz no es compatible aquí (prueba Chrome o Edge).",
-        voicePreviewSample: "¡Hola! Soy VYN AI hablando con total claridad y fluidez.",
-        voiceStopAudio: "Detener Audio / Escuchar",
-        voiceTestBtn: "Probar Voz",
         sendTitle: "Enviar",
         stopTitle: "Detener",
         stoppedMsg: "Respuesta detenida.",
         langName: "Spanish",
-        speechLocale: "es-ES",
         langLockRule: "MANDATORY LANGUAGE LOCK: Understand the user's message even if written in Turkish, English, French, or another language, but write 100% of your reply strictly in Spanish (Español). Never reply in Turkish, English, or any other language.",
         thinkLabels: { fast: "Rápido", logical: "Lógico", planned: "Planificado" },
         thinkInstructions: {
@@ -1263,25 +1479,10 @@
         mobileMode: "Mobile Mode",
         downloadChat: "Save",
         newChat: "New Chat",
-        voiceChat: "Voice chat with Vyn AI",
-        voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Speak in any language — VYN AI replies smoothly in your language",
-        voiceExitBtn: "Back to Text Chat",
-        voiceStart: "Start",
-        voiceStop: "Stop",
-        voiceReady: "Ready · Speak in any language",
-        voiceListening: "Listening in your language...",
-        voiceThinking: "VYN AI is thinking...",
-        voiceSpeaking: "VYN AI is speaking...",
-        voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
-        voicePreviewSample: "Hi! I am VYN AI speaking smoothly and clearly in your language.",
-        voiceStopAudio: "Stop Audio / Listen",
-        voiceTestBtn: "Test Voice",
         sendTitle: "Send",
         stopTitle: "Stop",
         stoppedMsg: "Response stopped.",
         langName: "Auto-Detect (User Language)",
-        speechLocale: "",
         langLockRule: "AUTO-DETECT LANGUAGE MODE: Detect the exact language of the user's message and reply 100% in that same language. Always respond in the language the user spoke or wrote, even when switching languages.",
         thinkLabels: { fast: "Fast", logical: "Logical", planned: "Planned" },
         thinkInstructions: {
@@ -1316,471 +1517,6 @@
       }
     };
 
-    /* ================= DİL TESPİT YARDIMCISI ('all' MODU İÇİN) ================= */
-    function detectLanguageFromText(text) {
-      if (!text) return 'en';
-      if (/[çğıöşüÇĞİÖŞÜ]/.test(text) || /\b(merhaba|selam|nasılsın|nasıl|nedir|neden|teşekkür|evet|hayır|lütfen|bana|için|konuş)\b/i.test(text)) {
-        return 'tr';
-      }
-      if (/[àâæçéèêëîïôœùûüÿÀÂÆÇÉÈÊËÎÏÔŒÙÛÜŸ]/.test(text) || /\b(bonjour|salut|comment|merci|pourquoi|avec|parler|français)\b/i.test(text)) {
-        return 'fr';
-      }
-      if (/[áéíóúüñ¿¡ÁÉÍÓÚÜÑ]/.test(text) || /\b(hola|cómo|gracias|por qué|hablar|español|buenos)\b/i.test(text)) {
-        return 'es';
-      }
-      if (/[äöüßÄÖÜ]/.test(text) || /\b(hallo|danke|warum|bitte|sprechen|deutsch)\b/i.test(text)) {
-        return 'de';
-      }
-      return 'en';
-    }
-
-    function getActiveSpeechLocale() {
-      if (currentLang === 'all') {
-        const map = { tr: 'tr-TR', en: 'en-US', fr: 'fr-FR', es: 'es-ES', de: 'de-DE' };
-        return map[detectedSpokenLang] || navigator.language || 'en-US';
-      }
-      const ui = langUI[currentLang] || langUI.tr;
-      return ui.speechLocale || 'tr-TR';
-    }
-
-    /* ================= DOĞAL & AKICI ERKEK SESİ MOTORU ================= */
-    function pickNaturalMaleVoice(locale) {
-      if (!('speechSynthesis' in window)) return null;
-      const voices = window.speechSynthesis.getVoices() || [];
-      if (!voices.length) return null;
-
-      const langPrefix = (locale || 'tr-TR').slice(0, 2).toLowerCase();
-      const langMatches = voices.filter(v => (v.lang || '').toLowerCase().startsWith(langPrefix));
-      const pool = langMatches.length ? langMatches : voices;
-
-      const maleKeywords = [
-        'male', 'man', 'boy', 'guy',
-        'tolga', 'ahmet', 'mehmet', 'emre', 'kaan', 'mert',
-        'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'george', 'ryan', 'thomas', 'guy', 'christopher', 'andrew',
-        'jorge', 'diego', 'pablo', 'carlos',
-        'google uk english male'
-      ];
-      const femaleKeywords = [
-        'female', 'woman', 'girl', 'lady',
-        'yelda', 'emel', 'seda', 'zeynep', 'elif', 'ayşe', 'ayse',
-        'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'aria', 'jenny', 'claire',
-        'amelie', 'audrey', 'julie', 'helena', 'paulina', 'monica', 'lucia', 'sofia', 'elena', 'maria'
-      ];
-
-      const scored = pool.map(v => {
-        const nameLower = (v.name || '').toLowerCase();
-        const voiceLang = (v.lang || '').toLowerCase();
-        let score = 0;
-
-        if (voiceLang === (locale || '').toLowerCase()) score += 20;
-        if (nameLower.includes('google') || nameLower.includes('natural') || nameLower.includes('neural') || nameLower.includes('online')) {
-          score += 45;
-        }
-        if (maleKeywords.some(h => nameLower.includes(h))) score += 50;
-        if (femaleKeywords.some(h => nameLower.includes(h))) score -= 45;
-
-        return { voice: v, score };
-      });
-
-      scored.sort((a, b) => b.score - a.score);
-      return scored[0] ? scored[0].voice : pool[0];
-    }
-
-    function sanitizeSpeechText(rawText) {
-      return rawText
-        .replace(/```[\s\S]*?```/g, ' ')
-        .replace(/[#*_`~|>[\]{}]/g, ' ')
-        .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, ' ')
-        .replace(/\n+/g, '. ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
-
-    function splitIntoNaturalSentences(text) {
-      const cleaned = sanitizeSpeechText(text);
-      if (!cleaned) return [];
-
-      // Sadece gerçek cümle sonlarında (. ! ?) böl; virgüllerde kesinti yapma
-      const sentences = cleaned
-        .match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [cleaned];
-
-      const result = [];
-      let current = '';
-
-      for (const rawSent of sentences) {
-        const s = rawSent.trim();
-        if (!s) continue;
-        if ((current + ' ' + s).trim().length <= 240) {
-          current = (current + ' ' + s).trim();
-        } else {
-          if (current) result.push(current);
-          current = s;
-        }
-      }
-      if (current) result.push(current);
-      return result;
-    }
-
-    function stopKeepAliveTimer() {
-      if (speechKeepAliveTimer) {
-        clearInterval(speechKeepAliveTimer);
-        speechKeepAliveTimer = null;
-      }
-    }
-
-    function cancelSpeechQueue() {
-      speechQueueToken++;
-      isSpeakingAi = false;
-      stopKeepAliveTimer();
-      if ('speechSynthesis' in window) {
-        try {
-          window.speechSynthesis.cancel();
-        } catch {}
-      }
-    }
-
-    function speakAiText(text, onDone) {
-      if (!('speechSynthesis' in window) || !text) {
-        if (typeof onDone === 'function') onDone();
-        return;
-      }
-
-      cancelSpeechQueue();
-      const token = speechQueueToken;
-      const sentences = splitIntoNaturalSentences(text);
-      if (!sentences.length) {
-        if (typeof onDone === 'function') onDone();
-        return;
-      }
-
-      const locale = getActiveSpeechLocale();
-      const chosenVoice = pickNaturalMaleVoice(locale);
-      const voiceNameLower = (chosenVoice?.name || '').toLowerCase();
-      const isNaturalOrGoogle =
-        voiceNameLower.includes('google') ||
-        voiceNameLower.includes('natural') ||
-        voiceNameLower.includes('neural') ||
-        voiceNameLower.includes('online');
-      const voiceLooksMale = ['male', 'man', 'boy', 'tolga', 'ahmet', 'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'thomas', 'jorge', 'diego', 'pablo'].some(k => voiceNameLower.includes(k));
-
-      // Robotumsu olmaması için doğal perde (0.94 - 0.98) ve akıcı konuşma temposu (1.03)
-      const pitch = (isNaturalOrGoogle || voiceLooksMale) ? 0.97 : 0.92;
-      const rate = 1.03;
-
-      isSpeakingAi = true;
-      updateVoiceStageUI();
-
-      // Chrome'da uzun okumalarda motorun duraksamasını engelleyen canlı tutucu
-      speechKeepAliveTimer = setInterval(() => {
-        if (!isSpeakingAi || token !== speechQueueToken) {
-          stopKeepAliveTimer();
-          return;
-        }
-        try {
-          if (window.speechSynthesis.paused) {
-            window.speechSynthesis.resume();
-          }
-        } catch {}
-      }, 2500);
-
-      let idx = 0;
-      const speakNextSentence = () => {
-        if (token !== speechQueueToken) return;
-        if (idx >= sentences.length) {
-          stopKeepAliveTimer();
-          isSpeakingAi = false;
-          updateVoiceStageUI();
-          if (typeof onDone === 'function') onDone();
-          return;
-        }
-
-        const utter = new SpeechSynthesisUtterance(sentences[idx]);
-        idx++;
-        utter.lang = locale;
-        if (chosenVoice) utter.voice = chosenVoice;
-        utter.pitch = pitch;
-        utter.rate = rate;
-        utter.volume = 1.0;
-
-        let finished = false;
-        const nextImmediate = () => {
-          if (finished || token !== speechQueueToken) return;
-          finished = true;
-          speakNextSentence();
-        };
-
-        utter.onend = nextImmediate;
-        utter.onerror = nextImmediate;
-
-        try {
-          window.speechSynthesis.speak(utter);
-        } catch {
-          nextImmediate();
-        }
-      };
-
-      speakNextSentence();
-    }
-
-    function previewSelectedVoice() {
-      const ui = langUI[currentLang] || langUI.tr;
-      speakAiText(ui.voicePreviewSample, () => {
-        if (voiceSessionActive && voiceModalOpen) {
-          startListeningMic();
-        }
-      });
-    }
-
-    function stopVoiceAudioAndListen() {
-      cancelSpeechQueue();
-      if (voiceSessionActive && voiceModalOpen) {
-        startListeningMic();
-      } else {
-        updateVoiceStageUI();
-      }
-    }
-
-    function appendVoiceLog(speaker, message) {
-      const box = document.getElementById('voiceTranscriptBox');
-      if (!box) return;
-      const line = `${speaker}: ${message}\n\n`;
-      box.textContent += line;
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function updateVoiceStageUI() {
-      const ui = langUI[currentLang] || langUI.tr;
-      const orbBtn = document.getElementById('voiceOrbBtn');
-      const orbLabel = document.getElementById('voiceOrbLabel');
-      const statusEl = document.getElementById('voiceStatusText');
-
-      orbBtn.classList.remove('listening', 'speaking');
-      if (isSpeakingAi) {
-        orbBtn.classList.add('speaking');
-        orbLabel.textContent = ui.voiceStop;
-        statusEl.textContent = ui.voiceSpeaking;
-      } else if (isListeningMic) {
-        orbBtn.classList.add('listening');
-        orbLabel.textContent = ui.voiceStop;
-        statusEl.textContent = ui.voiceListening;
-      } else if (voiceSessionActive) {
-        orbLabel.textContent = ui.voiceStop;
-        statusEl.textContent = ui.voiceThinking;
-      } else {
-        orbLabel.textContent = ui.voiceStart;
-        statusEl.textContent = ui.voiceReady;
-      }
-    }
-
-    function getSpeechRecognitionCtor() {
-      return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-    }
-
-    function stopListeningMic() {
-      isListeningMic = false;
-      if (speechRecognitionInstance) {
-        try {
-          speechRecognitionInstance.onresult = null;
-          speechRecognitionInstance.onerror = null;
-          speechRecognitionInstance.onend = null;
-          speechRecognitionInstance.stop();
-        } catch {}
-        speechRecognitionInstance = null;
-      }
-    }
-
-    function startListeningMic() {
-      const ui = langUI[currentLang] || langUI.tr;
-      const RecCtor = getSpeechRecognitionCtor();
-      if (!RecCtor) {
-        document.getElementById('voiceStatusText').textContent = ui.voiceNoSupport;
-        voiceSessionActive = false;
-        updateVoiceStageUI();
-        return;
-      }
-
-      stopListeningMic();
-      cancelSpeechQueue();
-
-      const rec = new RecCtor();
-      speechRecognitionInstance = rec;
-      rec.lang = getActiveSpeechLocale();
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-
-      rec.onstart = () => {
-        isListeningMic = true;
-        updateVoiceStageUI();
-      };
-
-      rec.onresult = async (event) => {
-        isListeningMic = false;
-        const transcript = event?.results?.[0]?.[0]?.transcript?.trim() || '';
-        if (!transcript) {
-          if (voiceSessionActive && voiceModalOpen) startListeningMic();
-          return;
-        }
-
-        if (currentLang === 'all') {
-          detectedSpokenLang = detectLanguageFromText(transcript);
-        }
-
-        appendVoiceLog('You', transcript);
-        addBubble(transcript, 'user', false);
-        chatHistory.push({ role: 'user', text: transcript });
-        updateVoiceStageUI();
-
-        const reply = await requestAiReplyForVoice(transcript);
-        if (!voiceModalOpen) return;
-
-        if (reply) {
-          appendVoiceLog('VYN AI', reply);
-          addBubble(reply, 'ai', true);
-          chatHistory.push({ role: 'assistant', text: reply });
-          speakAiText(reply, () => {
-            if (voiceSessionActive && voiceModalOpen) {
-              startListeningMic();
-            }
-          });
-        } else if (voiceSessionActive && voiceModalOpen) {
-          startListeningMic();
-        }
-      };
-
-      rec.onerror = (e) => {
-        isListeningMic = false;
-        if (e && e.error === 'not-allowed') {
-          voiceSessionActive = false;
-          document.getElementById('voiceStatusText').textContent = ui.voiceNoSupport;
-          updateVoiceStageUI();
-          return;
-        }
-        if (voiceSessionActive && voiceModalOpen && !isSpeakingAi) {
-          setTimeout(() => {
-            if (voiceSessionActive && voiceModalOpen && !isSpeakingAi) {
-              startListeningMic();
-            }
-          }, 250);
-        } else {
-          updateVoiceStageUI();
-        }
-      };
-
-      rec.onend = () => {
-        isListeningMic = false;
-        if (voiceSessionActive && voiceModalOpen && !isSpeakingAi && !isGeneratingReply) {
-          setTimeout(() => {
-            if (voiceSessionActive && voiceModalOpen && !isSpeakingAi && !isGeneratingReply) {
-              startListeningMic();
-            }
-          }, 180);
-        } else {
-          updateVoiceStageUI();
-        }
-      };
-
-      try {
-        rec.start();
-      } catch {
-        isListeningMic = false;
-        updateVoiceStageUI();
-      }
-    }
-
-    async function requestAiReplyForVoice(spokenText) {
-      const ui = langUI[currentLang] || langUI.tr;
-      const modeInstruction =
-        (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
-      const langRule = ui.langLockRule || '';
-      const lockedHistory = buildLockedHistory(currentLang);
-      const voiceStyleNote = "Respond naturally in smooth, flowing spoken sentences without markdown symbols, bullet lists, or emojis so it sounds clear when read aloud.";
-      const outboundMessage = [langRule, `User message: ${spokenText}`, modeInstruction, voiceStyleNote]
-        .filter(Boolean)
-        .join('\n\n');
-
-      isGeneratingReply = true;
-      syncSendButtonState();
-      try {
-        const r = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: outboundMessage,
-            rawMessage: spokenText,
-            history: lockedHistory,
-            lang: currentLang,
-            forceLang: currentLang === 'all' ? 'auto' : currentLang,
-            targetLanguage: currentLang === 'all' ? detectedSpokenLang : ui.langName,
-            voiceGender: FIXED_VOICE_GENDER,
-            thinkingMode: currentThinkingMode
-          })
-        });
-        const data = await r.json();
-        if (r.ok && data.reply) {
-          return data.reply;
-        }
-        return data.error || ui.error;
-      } catch {
-        return ui.netErr;
-      } finally {
-        isGeneratingReply = false;
-        syncSendButtonState();
-      }
-    }
-
-    function toggleVoiceSession() {
-      if (voiceSessionActive || isListeningMic || isSpeakingAi) {
-        voiceSessionActive = false;
-        stopListeningMic();
-        cancelSpeechQueue();
-        updateVoiceStageUI();
-      } else {
-        voiceSessionActive = true;
-        updateVoiceStageUI();
-        startListeningMic();
-      }
-    }
-
-    function openVoiceChat() {
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.getVoices(); } catch {}
-      }
-      voiceModalOpen = true;
-      document.getElementById('voiceOverlay').classList.add('open');
-      voiceChatBtn.classList.add('active-mode');
-      updateVoiceTexts();
-      updateVoiceStageUI();
-    }
-
-    function exitVoiceChatToText() {
-      voiceModalOpen = false;
-      voiceSessionActive = false;
-      stopListeningMic();
-      cancelSpeechQueue();
-      document.getElementById('voiceOverlay').classList.remove('open');
-      voiceChatBtn.classList.remove('active-mode');
-      updateVoiceStageUI();
-      inp.focus();
-    }
-
-    function updateVoiceTexts() {
-      const ui = langUI[currentLang] || langUI.tr;
-      voiceChatLabel.textContent = ui.voiceChat;
-      document.getElementById('voiceModalTitle').textContent = ui.voiceModalTitle;
-      document.getElementById('voiceModalSub').textContent = ui.voiceModalSub;
-      document.getElementById('voiceExitBtn').textContent = ui.voiceExitBtn;
-      document.getElementById('voiceStopSpeechBtn').textContent = ui.voiceStopAudio;
-      document.getElementById('voicePreviewBtn').textContent = ui.voiceTestBtn;
-      updateVoiceStageUI();
-    }
-
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.getVoices();
-      };
-    }
-
-    /* ================= YAZILI SOHBET & AYARLAR ================= */
     function buildLockedHistory(lang) {
       const ui = langUI[lang] || langUI.tr;
       if (lang === 'all') {
@@ -1954,11 +1690,6 @@
       updateThinkingButtonsUI();
       refreshCopyButtons();
       syncSendButtonState();
-      updateVoiceTexts();
-
-      if (isListeningMic && voiceSessionActive) {
-        startListeningMic();
-      }
     }
 
     function autoResize(el) {
@@ -2081,10 +1812,6 @@
       const q = inp.value.trim();
       if (!q || isGeneratingReply) return;
 
-      if (currentLang === 'all') {
-        detectedSpokenLang = detectLanguageFromText(q);
-      }
-
       const ui = langUI[currentLang] || langUI.tr;
       const modeInstruction =
         (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
@@ -2115,7 +1842,7 @@
             history: lockedHistory,
             lang: currentLang,
             forceLang: currentLang === 'all' ? 'auto' : currentLang,
-            targetLanguage: currentLang === 'all' ? detectedSpokenLang : ui.langName,
+            targetLanguage: ui.langName,
             thinkingMode: currentThinkingMode
           })
         });
@@ -2143,8 +1870,6 @@
         chat.scrollTop = chat.scrollHeight;
       }
     }
-
-    updateVoiceTexts();
   </script>
 </body>
 </html>
