@@ -397,7 +397,7 @@
       border-color: var(--accent-1);
     }
 
-    /* Sesli Sohbet Modu (Voice Chat with Vyn AI) */
+    /* Sesli Sohbet Modu (Voice Chat with Vyn AI - Akıcı & Doğal Erkek Sesi) */
     #voiceOverlay {
       display: none;
       position: fixed;
@@ -414,7 +414,7 @@
     }
     #voiceModal {
       width: 100%;
-      max-width: 580px;
+      max-width: 560px;
       background: rgba(15, 23, 42, 0.96);
       border: 1px solid rgba(148, 163, 184, 0.28);
       border-radius: 26px;
@@ -456,49 +456,6 @@
       background: rgba(244, 63, 94, 0.28);
       color: #ffffff;
     }
-    .voice-picker-box {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background: rgba(30, 41, 59, 0.65);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 18px;
-      padding: 14px;
-    }
-    .voice-picker-label {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #cbd5e1;
-    }
-    .voice-options {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .voice-opt-btn {
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      background: rgba(15, 23, 42, 0.72);
-      color: #e2e8f0;
-      border-radius: 14px;
-      padding: 11px 13px;
-      font-size: 0.86rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.18s ease;
-    }
-    .voice-opt-btn:hover {
-      border-color: var(--accent-1);
-    }
-    .voice-opt-btn.active {
-      background: var(--active-grad);
-      border-color: transparent;
-      color: #ffffff;
-      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
-    }
     @keyframes voicePulseRing {
       0% {
         transform: scale(0.95);
@@ -518,12 +475,12 @@
       flex-direction: column;
       align-items: center;
       gap: 14px;
-      padding: 14px 8px;
+      padding: 12px 8px;
       text-align: center;
     }
     .voice-orb-btn {
-      width: 96px;
-      height: 96px;
+      width: 98px;
+      height: 98px;
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.25);
       background: var(--send-grad);
@@ -557,8 +514,8 @@
     }
     .voice-transcript-box {
       width: 100%;
-      min-height: 92px;
-      max-height: 170px;
+      min-height: 96px;
+      max-height: 175px;
       overflow-y: auto;
       background: rgba(9, 16, 33, 0.78);
       border: 1px solid rgba(148, 163, 184, 0.18);
@@ -846,9 +803,6 @@
       padding: 18px;
       border-radius: 22px;
     }
-    body.mode-mobile .voice-options {
-      grid-template-columns: 1fr;
-    }
 
     @media (max-width: 680px) {
       #starter-cards {
@@ -864,9 +818,6 @@
       }
       .think-modes {
         justify-content: center;
-      }
-      .voice-options {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -942,29 +893,15 @@
     </div>
   </div>
 
-  <!-- Sesli Sohbet Ekranı -->
+  <!-- Sesli Sohbet Ekranı (Sabit Doğal Erkek Sesi) -->
   <div id="voiceOverlay" role="dialog" aria-modal="true" aria-labelledby="voiceModalTitle">
     <div id="voiceModal">
       <div class="voice-top">
         <div>
           <div id="voiceModalTitle" class="voice-title">Voice chat with Vyn AI</div>
-          <div id="voiceModalSub" class="voice-sub">Sesini seç ve VYN AI ile sadece sesinle konuş</div>
+          <div id="voiceModalSub" class="voice-sub">VYN AI ile akıcı ve anlaşılır sesli sohbet</div>
         </div>
         <button id="voiceExitBtn" type="button" class="voice-exit-btn" onclick="exitVoiceChatToText()">Yazı ile Konuşmaya Geri Dön</button>
-      </div>
-
-      <div class="voice-picker-box">
-        <div id="voicePickerLabel" class="voice-picker-label">Konuşma Sesi Seçimi:</div>
-        <div class="voice-options">
-          <button type="button" id="voiceFemaleBtn" class="voice-opt-btn active" onclick="selectVoiceGender('female')">
-            <span>♀</span>
-            <span id="voiceFemaleLabel">Kadın Sesi</span>
-          </button>
-          <button type="button" id="voiceMaleBtn" class="voice-opt-btn" onclick="selectVoiceGender('male')">
-            <span>♂</span>
-            <span id="voiceMaleLabel">Erkek Sesi</span>
-          </button>
-        </div>
       </div>
 
       <div class="voice-stage">
@@ -976,7 +913,7 @@
           <span id="voiceOrbLabel">Başlat</span>
         </button>
 
-        <div id="voiceStatusText" class="voice-status-text">Bir ses seçip başlatabilirsin</div>
+        <div id="voiceStatusText" class="voice-status-text">Başlat'a bas ve konuş</div>
         <div id="voiceTranscriptBox" class="voice-transcript-box"></div>
 
         <div class="voice-actions-row">
@@ -1075,15 +1012,16 @@
     let activeAbortController = null;
     let isGeneratingReply = false;
 
-    /* ================= SESLİ SOHBET DURUMU ================= */
+    /* ================= SESLİ SOHBET DURUMU (AKICI & DOĞAL ERKEK SESİ) ================= */
     let voiceModalOpen = false;
-    let selectedVoiceGender = 'female'; // 'female' | 'male'
+    const FIXED_VOICE_GENDER = 'male';
     let voiceSessionActive = false;
     let isListeningMic = false;
     let isSpeakingAi = false;
     let detectedSpokenLang = 'tr';
     let speechRecognitionInstance = null;
     let speechQueueToken = 0;
+    let speechKeepAliveTimer = null;
 
     const langUI = {
       tr: {
@@ -1095,11 +1033,8 @@
         newChat: "Yeni Sohbet",
         voiceChat: "Voice chat with Vyn AI",
         voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Konuşmadan önce ses seç, ardından VYN AI ile sesli sohbete başla",
+        voiceModalSub: "VYN AI ile akıcı ve anlaşılır sesli sohbet",
         voiceExitBtn: "Yazı ile Konuşmaya Geri Dön",
-        voicePickerLabel: "Konuşma Sesi Seçimi:",
-        voiceFemale: "Kadın Sesi",
-        voiceMale: "Erkek Sesi",
         voiceStart: "Başlat",
         voiceStop: "Durdur",
         voiceReady: "Hazır · Başlat'a bas ve konuş",
@@ -1107,7 +1042,7 @@
         voiceThinking: "VYN AI düşünüyor...",
         voiceSpeaking: "VYN AI konuşuyor...",
         voiceNoSupport: "Bu tarayıcı sesli konuşmayı desteklemiyor (Chrome veya Edge dene).",
-        voicePreviewSample: "Selam! Ben VYN AI, kadın sesini seçtiysen tatlı ve net, erkek sesini seçtiysen tok ve akıcı konuşuyorum.",
+        voicePreviewSample: "Selam kankam! Ben VYN AI, şu an akıcı, doğal ve anlaşılır bir tonla seninle konuşuyorum.",
         voiceStopAudio: "Sesi Durdur / Dinle",
         voiceTestBtn: "Sesi Test Et",
         sendTitle: "Gönder",
@@ -1156,11 +1091,8 @@
         newChat: "New Chat",
         voiceChat: "Voice chat with Vyn AI",
         voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Choose a voice first, then talk with VYN AI using your voice",
+        voiceModalSub: "Smooth, clear, and natural voice chat with VYN AI",
         voiceExitBtn: "Back to Text Chat",
-        voicePickerLabel: "Voice Selection:",
-        voiceFemale: "Female Voice",
-        voiceMale: "Male Voice",
         voiceStart: "Start",
         voiceStop: "Stop",
         voiceReady: "Ready · Press Start and speak",
@@ -1168,7 +1100,7 @@
         voiceThinking: "VYN AI is thinking...",
         voiceSpeaking: "VYN AI is speaking...",
         voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
-        voicePreviewSample: "Hi! I am VYN AI, speaking smoothly with your selected voice.",
+        voicePreviewSample: "Hey there! I am VYN AI, speaking smoothly and clearly with a natural voice.",
         voiceStopAudio: "Stop Audio / Listen",
         voiceTestBtn: "Test Voice",
         sendTitle: "Send",
@@ -1217,11 +1149,8 @@
         newChat: "Nouveau Chat",
         voiceChat: "Voice chat with Vyn AI",
         voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Choisis une voix avant de parler avec VYN AI",
+        voiceModalSub: "Discussion vocale fluide et naturelle avec VYN AI",
         voiceExitBtn: "Retour au Chat Texte",
-        voicePickerLabel: "Choix de la Voix :",
-        voiceFemale: "Voix Féminine",
-        voiceMale: "Voix Masculine",
         voiceStart: "Démarrer",
         voiceStop: "Arrêter",
         voiceReady: "Prêt · Appuie sur Démarrer et parle",
@@ -1229,7 +1158,7 @@
         voiceThinking: "VYN AI réfléchit...",
         voiceSpeaking: "VYN AI parle...",
         voiceNoSupport: "La reconnaissance vocale n'est pas prise en charge ici (essaie Chrome ou Edge).",
-        voicePreviewSample: "Salut ! Je suis VYN AI avec la voix que tu as choisie.",
+        voicePreviewSample: "Salut ! Je suis VYN AI et je parle de façon claire et fluide.",
         voiceStopAudio: "Couper / Écouter",
         voiceTestBtn: "Tester la Voix",
         sendTitle: "Envoyer",
@@ -1278,11 +1207,8 @@
         newChat: "Nuevo Chat",
         voiceChat: "Voice chat with Vyn AI",
         voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Elige una voz primero y habla con VYN AI por voz",
+        voiceModalSub: "Chat de voz fluido, claro y natural con VYN AI",
         voiceExitBtn: "Volver al Chat de Texto",
-        voicePickerLabel: "Selección de Voz:",
-        voiceFemale: "Voz Femenina",
-        voiceMale: "Voz Masculina",
         voiceStart: "Iniciar",
         voiceStop: "Detener",
         voiceReady: "Listo · Pulsa Iniciar y habla",
@@ -1290,7 +1216,7 @@
         voiceThinking: "VYN AI está pensando...",
         voiceSpeaking: "VYN AI está hablando...",
         voiceNoSupport: "El reconocimiento de voz no es compatible aquí (prueba Chrome o Edge).",
-        voicePreviewSample: "¡Hola! Soy VYN AI hablando con fluidez con la voz elegida.",
+        voicePreviewSample: "¡Hola! Soy VYN AI hablando con total claridad y fluidez.",
         voiceStopAudio: "Detener Audio / Escuchar",
         voiceTestBtn: "Probar Voz",
         sendTitle: "Enviar",
@@ -1339,11 +1265,8 @@
         newChat: "New Chat",
         voiceChat: "Voice chat with Vyn AI",
         voiceModalTitle: "Voice chat with Vyn AI",
-        voiceModalSub: "Choose a voice and speak in any language — VYN AI replies in your language",
+        voiceModalSub: "Speak in any language — VYN AI replies smoothly in your language",
         voiceExitBtn: "Back to Text Chat",
-        voicePickerLabel: "Voice Selection:",
-        voiceFemale: "Female Voice",
-        voiceMale: "Male Voice",
         voiceStart: "Start",
         voiceStop: "Stop",
         voiceReady: "Ready · Speak in any language",
@@ -1351,7 +1274,7 @@
         voiceThinking: "VYN AI is thinking...",
         voiceSpeaking: "VYN AI is speaking...",
         voiceNoSupport: "Voice recognition is not supported in this browser (try Chrome or Edge).",
-        voicePreviewSample: "Hi! I am VYN AI speaking smoothly with your selected voice.",
+        voicePreviewSample: "Hi! I am VYN AI speaking smoothly and clearly in your language.",
         voiceStopAudio: "Stop Audio / Listen",
         voiceTestBtn: "Test Voice",
         sendTitle: "Send",
@@ -1420,85 +1343,95 @@
       return ui.speechLocale || 'tr-TR';
     }
 
-    /* ================= KADIN & ERKEK SES SEÇİCİ + TAKILMASIZ KUYRUK ================= */
-    function pickBestVoice(gender, locale) {
+    /* ================= DOĞAL & AKICI ERKEK SESİ MOTORU ================= */
+    function pickNaturalMaleVoice(locale) {
       if (!('speechSynthesis' in window)) return null;
       const voices = window.speechSynthesis.getVoices() || [];
       if (!voices.length) return null;
 
       const langPrefix = (locale || 'tr-TR').slice(0, 2).toLowerCase();
-      const femaleKeywords = [
-        'female', 'woman', 'girl', 'lady',
-        'yelda', 'emel', 'seda', 'zeynep', 'elif', 'ayşe', 'ayse', 'deniz',
-        'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'aria', 'jenny', 'claire',
-        'amelie', 'audrey', 'julie', 'helena', 'paulina', 'monica', 'lucia', 'sofia', 'elena', 'maria',
-        'google español', 'google français', 'google uk english female'
-      ];
+      const langMatches = voices.filter(v => (v.lang || '').toLowerCase().startsWith(langPrefix));
+      const pool = langMatches.length ? langMatches : voices;
+
       const maleKeywords = [
         'male', 'man', 'boy', 'guy',
         'tolga', 'ahmet', 'mehmet', 'emre', 'kaan', 'mert',
-        'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'george', 'ryan', 'thomas',
+        'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'george', 'ryan', 'thomas', 'guy', 'christopher', 'andrew',
         'jorge', 'diego', 'pablo', 'carlos',
         'google uk english male'
       ];
+      const femaleKeywords = [
+        'female', 'woman', 'girl', 'lady',
+        'yelda', 'emel', 'seda', 'zeynep', 'elif', 'ayşe', 'ayse',
+        'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'aria', 'jenny', 'claire',
+        'amelie', 'audrey', 'julie', 'helena', 'paulina', 'monica', 'lucia', 'sofia', 'elena', 'maria'
+      ];
 
-      const targetHints = gender === 'female' ? femaleKeywords : maleKeywords;
-      const oppositeHints = gender === 'female' ? maleKeywords : femaleKeywords;
-
-      const scored = voices.map(v => {
+      const scored = pool.map(v => {
         const nameLower = (v.name || '').toLowerCase();
         const voiceLang = (v.lang || '').toLowerCase();
         let score = 0;
 
-        if (voiceLang === (locale || '').toLowerCase()) score += 25;
-        else if (voiceLang.startsWith(langPrefix)) score += 15;
-
-        if (targetHints.some(h => nameLower.includes(h))) score += 60;
-        if (oppositeHints.some(h => nameLower.includes(h))) score -= 55;
-        if (nameLower.includes('natural') || nameLower.includes('online') || nameLower.includes('neural')) score += 10;
+        if (voiceLang === (locale || '').toLowerCase()) score += 20;
+        if (nameLower.includes('google') || nameLower.includes('natural') || nameLower.includes('neural') || nameLower.includes('online')) {
+          score += 45;
+        }
+        if (maleKeywords.some(h => nameLower.includes(h))) score += 50;
+        if (femaleKeywords.some(h => nameLower.includes(h))) score -= 45;
 
         return { voice: v, score };
       });
 
       scored.sort((a, b) => b.score - a.score);
-      return scored[0] ? scored[0].voice : voices[0];
+      return scored[0] ? scored[0].voice : pool[0];
     }
 
-    function splitIntoSmoothChunks(text) {
-      const cleaned = text
-        .replace(/[#*_`~]/g, ' ')
-        .replace(/([.!?;:]+)/g, '$1|')
-        .replace(/,\s+/g, ', |');
+    function sanitizeSpeechText(rawText) {
+      return rawText
+        .replace(/```[\s\S]*?```/g, ' ')
+        .replace(/[#*_`~|>[\]{}]/g, ' ')
+        .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, ' ')
+        .replace(/\n+/g, '. ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
 
-      const rawParts = cleaned
-        .split('|')
-        .map(s => s.replace(/\s+/g, ' ').trim())
-        .filter(Boolean);
+    function splitIntoNaturalSentences(text) {
+      const cleaned = sanitizeSpeechText(text);
+      if (!cleaned) return [];
 
-      const chunks = [];
-      for (const part of rawParts) {
-        if (part.length <= 180) {
-          chunks.push(part);
+      // Sadece gerçek cümle sonlarında (. ! ?) böl; virgüllerde kesinti yapma
+      const sentences = cleaned
+        .match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [cleaned];
+
+      const result = [];
+      let current = '';
+
+      for (const rawSent of sentences) {
+        const s = rawSent.trim();
+        if (!s) continue;
+        if ((current + ' ' + s).trim().length <= 240) {
+          current = (current + ' ' + s).trim();
         } else {
-          const words = part.split(' ');
-          let buf = '';
-          for (const w of words) {
-            if ((buf + ' ' + w).trim().length > 170) {
-              if (buf.trim()) chunks.push(buf.trim());
-              buf = w;
-            } else {
-              buf = (buf + ' ' + w).trim();
-            }
-          }
-          if (buf.trim()) chunks.push(buf.trim());
+          if (current) result.push(current);
+          current = s;
         }
       }
-      return chunks;
+      if (current) result.push(current);
+      return result;
+    }
+
+    function stopKeepAliveTimer() {
+      if (speechKeepAliveTimer) {
+        clearInterval(speechKeepAliveTimer);
+        speechKeepAliveTimer = null;
+      }
     }
 
     function cancelSpeechQueue() {
       speechQueueToken++;
       isSpeakingAi = false;
+      stopKeepAliveTimer();
       if ('speechSynthesis' in window) {
         try {
           window.speechSynthesis.cancel();
@@ -1514,42 +1447,54 @@
 
       cancelSpeechQueue();
       const token = speechQueueToken;
-      const chunks = splitIntoSmoothChunks(text);
-      if (!chunks.length) {
+      const sentences = splitIntoNaturalSentences(text);
+      if (!sentences.length) {
         if (typeof onDone === 'function') onDone();
         return;
       }
 
       const locale = getActiveSpeechLocale();
-      const chosenVoice = pickBestVoice(selectedVoiceGender, locale);
+      const chosenVoice = pickNaturalMaleVoice(locale);
       const voiceNameLower = (chosenVoice?.name || '').toLowerCase();
-      const voiceLooksFemale = ['female', 'woman', 'girl', 'yelda', 'emel', 'seda', 'zira', 'hazel', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'claire', 'amelie', 'helena', 'paulina', 'monica', 'sofia', 'elena'].some(k => voiceNameLower.includes(k));
+      const isNaturalOrGoogle =
+        voiceNameLower.includes('google') ||
+        voiceNameLower.includes('natural') ||
+        voiceNameLower.includes('neural') ||
+        voiceNameLower.includes('online');
       const voiceLooksMale = ['male', 'man', 'boy', 'tolga', 'ahmet', 'david', 'mark', 'daniel', 'arthur', 'alex', 'fred', 'thomas', 'jorge', 'diego', 'pablo'].some(k => voiceNameLower.includes(k));
 
-      let pitch = 1.0;
-      let rate = 1.0;
-      if (selectedVoiceGender === 'female') {
-        pitch = voiceLooksFemale ? 1.12 : 1.34;
-        rate = 1.02;
-      } else {
-        pitch = voiceLooksMale ? 0.92 : 0.80;
-        rate = 0.96;
-      }
+      // Robotumsu olmaması için doğal perde (0.94 - 0.98) ve akıcı konuşma temposu (1.03)
+      const pitch = (isNaturalOrGoogle || voiceLooksMale) ? 0.97 : 0.92;
+      const rate = 1.03;
 
       isSpeakingAi = true;
       updateVoiceStageUI();
 
+      // Chrome'da uzun okumalarda motorun duraksamasını engelleyen canlı tutucu
+      speechKeepAliveTimer = setInterval(() => {
+        if (!isSpeakingAi || token !== speechQueueToken) {
+          stopKeepAliveTimer();
+          return;
+        }
+        try {
+          if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+          }
+        } catch {}
+      }, 2500);
+
       let idx = 0;
-      const playNextChunk = () => {
+      const speakNextSentence = () => {
         if (token !== speechQueueToken) return;
-        if (idx >= chunks.length) {
+        if (idx >= sentences.length) {
+          stopKeepAliveTimer();
           isSpeakingAi = false;
           updateVoiceStageUI();
           if (typeof onDone === 'function') onDone();
           return;
         }
 
-        const utter = new SpeechSynthesisUtterance(chunks[idx]);
+        const utter = new SpeechSynthesisUtterance(sentences[idx]);
         idx++;
         utter.lang = locale;
         if (chosenVoice) utter.voice = chosenVoice;
@@ -1557,31 +1502,24 @@
         utter.rate = rate;
         utter.volume = 1.0;
 
-        let advanced = false;
-        const goNext = () => {
-          if (advanced || token !== speechQueueToken) return;
-          advanced = true;
-          setTimeout(playNextChunk, 45);
+        let finished = false;
+        const nextImmediate = () => {
+          if (finished || token !== speechQueueToken) return;
+          finished = true;
+          speakNextSentence();
         };
 
-        utter.onend = goNext;
-        utter.onerror = goNext;
+        utter.onend = nextImmediate;
+        utter.onerror = nextImmediate;
 
         try {
           window.speechSynthesis.speak(utter);
         } catch {
-          goNext();
+          nextImmediate();
         }
       };
 
-      playNextChunk();
-    }
-
-    function selectVoiceGender(gender) {
-      selectedVoiceGender = gender === 'male' ? 'male' : 'female';
-      document.getElementById('voiceFemaleBtn').classList.toggle('active', selectedVoiceGender === 'female');
-      document.getElementById('voiceMaleBtn').classList.toggle('active', selectedVoiceGender === 'male');
-      updateVoiceStageUI();
+      speakNextSentence();
     }
 
     function previewSelectedVoice() {
@@ -1722,7 +1660,7 @@
             if (voiceSessionActive && voiceModalOpen && !isSpeakingAi) {
               startListeningMic();
             }
-          }, 350);
+          }, 250);
         } else {
           updateVoiceStageUI();
         }
@@ -1735,7 +1673,7 @@
             if (voiceSessionActive && voiceModalOpen && !isSpeakingAi && !isGeneratingReply) {
               startListeningMic();
             }
-          }, 220);
+          }, 180);
         } else {
           updateVoiceStageUI();
         }
@@ -1755,7 +1693,7 @@
         (ui.thinkInstructions && ui.thinkInstructions[currentThinkingMode]) || '';
       const langRule = ui.langLockRule || '';
       const lockedHistory = buildLockedHistory(currentLang);
-      const voiceStyleNote = "Keep the spoken response clear, natural, and conversational for voice chat.";
+      const voiceStyleNote = "Respond naturally in smooth, flowing spoken sentences without markdown symbols, bullet lists, or emojis so it sounds clear when read aloud.";
       const outboundMessage = [langRule, `User message: ${spokenText}`, modeInstruction, voiceStyleNote]
         .filter(Boolean)
         .join('\n\n');
@@ -1773,6 +1711,7 @@
             lang: currentLang,
             forceLang: currentLang === 'all' ? 'auto' : currentLang,
             targetLanguage: currentLang === 'all' ? detectedSpokenLang : ui.langName,
+            voiceGender: FIXED_VOICE_GENDER,
             thinkingMode: currentThinkingMode
           })
         });
@@ -1830,9 +1769,6 @@
       document.getElementById('voiceModalTitle').textContent = ui.voiceModalTitle;
       document.getElementById('voiceModalSub').textContent = ui.voiceModalSub;
       document.getElementById('voiceExitBtn').textContent = ui.voiceExitBtn;
-      document.getElementById('voicePickerLabel').textContent = ui.voicePickerLabel;
-      document.getElementById('voiceFemaleLabel').textContent = ui.voiceFemale;
-      document.getElementById('voiceMaleLabel').textContent = ui.voiceMale;
       document.getElementById('voiceStopSpeechBtn').textContent = ui.voiceStopAudio;
       document.getElementById('voicePreviewBtn').textContent = ui.voiceTestBtn;
       updateVoiceStageUI();
